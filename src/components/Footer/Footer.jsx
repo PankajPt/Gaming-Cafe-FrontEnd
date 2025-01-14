@@ -154,6 +154,7 @@ export default function Footer() {
                     </div>
                 </div>
             </div>
+            <p>&copy; 2025 MadGear Gaming Cafe. All Rights Reserved.</p>
         </footer>
     );
 }

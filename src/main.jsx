@@ -4,15 +4,12 @@ import App from './App.jsx'
 import './index.css'
 import { Route, RouterProvider, createBrowserRouter, createRoutesFromElements } from 'react-router-dom'
 import Layout from './Layout.jsx'
-import {
-  User,
-  githubInfoLoader,
-  Github, 
-  Example } from "./components/index.js"
+import { User,Example } from "./components/index.js"
 import {
   Contact,
   Home,
-  About } from './pages/index.js'
+  About,
+  GameCatelogue } from './pages/index.js'
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -21,12 +18,8 @@ const router = createBrowserRouter(
       <Route path='about' element={<About />} />
       <Route path='contact' element={<Contact />} />
       <Route path='user/:userid' element={<User />} />
-      <Route 
-      loader={githubInfoLoader}
-      path='github' 
-      element={<Github />}
-       />
-       <Route path='pricing' element={<Example />}/>
+      <Route path='game-catalogue' element={<GameCatelogue />}/>
+      <Route path='pricing' element={<Example />}/>
     </Route>
   )
 )

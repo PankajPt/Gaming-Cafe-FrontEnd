@@ -1,14 +1,16 @@
 import GameDescription from './Catelogue.jsx'
 import React, { useState } from 'react'
 // import images from /src/assets
-import BMW from '../../assets/BMW.jpeg'
-import CHAIN from '../../assets/CHAIN.webp'
-import CS2 from '../../assets/CS2.jpg'
-import gmod from '../../assets/gmod.jpg'
-import GTA5 from '../../assets/GTA5.webp'
-import PUBG from '../../assets/PUBG.png'
-import SOT from '../../assets/SOT.png'
-import VALORANT from '../../assets/VALORANT.jpg'
+import {
+    BMW, 
+    CHAIN, 
+    CS2, 
+    gmod, 
+    GTA5, 
+    PUBG, 
+    SOT, 
+    VALORANT
+} from '../../assets/index.assets.js'
 import './GameCatelogue.css'
 
 let height = 450
@@ -188,30 +190,49 @@ const GameCatelogue = () => {
                 />
             })
         }
-            <div className="pagination">
-                <button
-                onClick={() => handlePageChange(currentPage - 1)}
-                disabled={currentPage === 1}
-                >
-                Previous
-                </button>
-                {Array.from({ length: totalPages }, (_, i) => (
-                <button
-                    key={i}
-                    onClick={() => handlePageChange(i + 1)}
-                    className={currentPage === i + 1 ? 'active' : ''}
-                >
-                    {i + 1}
-                </button>
-                ))}
+            <div className="flex justify-center space-x-4 mt-6">
+  {/* Previous Button */}
+        <button
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+            className={`py-2 px-4 rounded-lg font-semibold transition-colors duration-300 ${
+            currentPage === 1
+                ? 'bg-gray-500 text-gray-300 cursor-not-allowed'
+                : 'bg-blue-600 text-white hover:bg-blue-700'
+            }`}
+        >
+            Previous
+        </button>
 
-                <button
-                onClick={() => handlePageChange(currentPage + 1)}
-                disabled={currentPage === totalPages}
-                >
-                Next
-                </button>
-            </div>
+        {/* Page Number Buttons */}
+        {Array.from({ length: totalPages }, (_, i) => (
+            <button
+            key={i}
+            onClick={() => handlePageChange(i + 1)}
+            className={`py-2 px-4 rounded-lg font-semibold transition-colors duration-300 ${
+                currentPage === i + 1
+                ? 'bg-blue-600 text-white'
+                : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+            }`}
+            >
+            {i + 1}
+            </button>
+        ))}
+
+        {/* Next Button */}
+        <button
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+            className={`py-2 px-4 rounded-lg font-semibold transition-colors duration-300 ${
+            currentPage === totalPages
+                ? 'bg-gray-500 text-gray-300 cursor-not-allowed'
+                : 'bg-blue-600 text-white hover:bg-blue-700'
+            }`}
+        >
+            Next
+        </button>
+        </div>
+
     </div>
 }
 

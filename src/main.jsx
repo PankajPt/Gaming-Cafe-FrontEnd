@@ -8,18 +8,22 @@ import { User,Example } from "./components/index.js"
 import {
   Contact,
   Home,
-  About,
-  GameCatelogue } from './pages/index.js'
+  Events,
+  GameCatelogue,
+  LoginPage,
+  RegisterPage, } from './pages/index.js'
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path='/' element={<Layout />}>
       <Route path='' element={<Home />} />
-      <Route path='about' element={<About />} />
+      <Route path='events' element={<Events />} />
       <Route path='contact' element={<Contact />} />
       <Route path='user/:userid' element={<User />} />
       <Route path='game-catalogue' element={<GameCatelogue />}/>
       <Route path='pricing' element={<Example />}/>
+      <Route path='login' element={<LoginPage />}/>
+      <Route path='register' element={<RegisterPage />}/>
     </Route>
   )
 )

@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom';
-
+import {gmod, GTA5, PUBG} from '../../assets/index.assets.js'
 // export default function Home() {
 //     return (
 //         <div className="mx-auto w-full max-w-7xl">
@@ -50,16 +50,35 @@ const Home = () => {
   return (
     <div className="bg-gray-900 text-white">
       {/* Hero Section */}
-      <section className="relative bg-cover bg-center h-screen" style={{ backgroundImage: "url('https://your-image-url.com')" }}>
-        <div className="absolute inset-0 bg-black opacity-50"></div>
+      <section
+        className="relative bg-cover bg-center"
+        style={{
+          backgroundImage: `
+            linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+            url(${gmod}),
+            url(${PUBG}), 
+            url(${GTA5})
+            `,
+          backgroundSize: '33.33% 100%',
+          backgroundPosition: 'left, center, right',
+          backgroundRepeat: 'no-repeat'
+        }}
+      >
+        <div className="absolute inset-0 bg-black opacity-35"></div>
         <div className="relative z-10 text-center py-20">
-          <h1 className="text-6xl font-bold">MadGear Gaming Cafe</h1>
-          <p className="mt-4 text-xl">Level Up Your Gaming Experience</p>
+          <h1 className="text-6xl font-bold text-white">MadGear Gaming Cafe</h1>
+          <p className="mt-4 text-xl text-white-300">Level Up Your Gaming Experience</p>
           <div className="mt-6">
-            <a href="#booking" className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-6 rounded-lg">Book a Slot</a>
+            <a
+              href="#booking"
+              className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-6 rounded-lg"
+            >
+              Book a Slot
+            </a>
           </div>
         </div>
       </section>
+
 
       {/* Services Section */}
       <section className="py-20 bg-gray-800">
@@ -83,20 +102,6 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Upcoming Events Section */}
-      <section className="py-20 bg-gray-900">
-        <div className="max-w-7xl mx-auto text-center text-white">
-          <h2 className="text-4xl font-bold">Upcoming Events</h2>
-          <p className="mt-4 text-lg">Join us for tournaments, competitions, and more!</p>
-          <div className="mt-8">
-            <div className="bg-blue-600 p-6 rounded-lg">
-              <h3 className="text-2xl font-semibold">Monthly Tournament</h3>
-              <p className="mt-2">Get ready to compete! Join our monthly gaming tournament and win exciting prizes.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Booking Section */}
       <section id="booking" className="py-20 bg-gray-800 text-center">
         <div className="max-w-7xl mx-auto">
@@ -105,19 +110,6 @@ const Home = () => {
           <a href="#" className="mt-6 inline-block bg-blue-600 hover:bg-blue-700 text-white py-2 px-6 rounded-lg">Book Now</a>
         </div>
       </section>
-
-      {/* Contact Section */}
-      <section className="py-20 bg-gray-900">
-        <div className="max-w-7xl mx-auto text-center text-white">
-          <h2 className="text-4xl font-bold">Contact Us</h2>
-          <p className="mt-4 text-lg">Have any questions? Get in touch with us!</p>
-          <div className="mt-6">
-            <p className="text-lg">Phone: (123) 456-7890</p>
-            <p className="text-lg">Email: contact@madgear.com</p>
-          </div>
-        </div>
-      </section>
-
       {/* Footer */}
       <footer className="py-6 bg-gray-800 text-center text-white">
         <p>&copy; 2025 MadGear Gaming Cafe. All Rights Reserved.</p>

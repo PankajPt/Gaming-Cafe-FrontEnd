@@ -33,12 +33,12 @@ export default function Footer() {
                             <ul className="text-gray-500 font-medium">
                                 <li className="mb-4">
                                 <Link to="/" className="hover:underline">
-                                        Github
+                                        Instagram
                                     </Link>
                                 </li>
                                 <li>
                                     <Link to="/" className="hover:underline">
-                                        Discord
+                                        Facebook
                                     </Link>
                                 </li>
                             </ul>

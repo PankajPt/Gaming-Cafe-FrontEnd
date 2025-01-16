@@ -7,11 +7,11 @@ const LoginPage = () => {
         <h2 className="text-3xl font-bold text-center text-white">Login</h2>
         <form className="space-y-4">
           <div>
-            <label htmlFor="email" className="block text-lg text-gray-300">
+            <label htmlFor="text" className="block text-lg text-gray-300">
             </label>
             <input
-              type="email"
-              id="email"
+              type="text"
+              id="text"
               placeholder="Email Address or Username"
               className="w-full px-4 py-2 mt-1 text-black-900 bg-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 placeholder: text-black-900"
             />

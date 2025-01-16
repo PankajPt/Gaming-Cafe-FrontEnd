@@ -11,7 +11,7 @@ import {
   Events,
   GameCatelogue,
   LoginPage,
-  RegisterPage, } from './pages/index.js'
+  RegisterPage, UserPage, } from './pages/index.js'
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -24,6 +24,7 @@ const router = createBrowserRouter(
       <Route path='pricing' element={<Example />}/>
       <Route path='login' element={<LoginPage />}/>
       <Route path='register' element={<RegisterPage />}/>
+      <Route path='user' element={<UserPage />}/>
     </Route>
   )
 )

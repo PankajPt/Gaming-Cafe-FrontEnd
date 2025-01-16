@@ -4,7 +4,7 @@ import Events from "./Events/Events.jsx"
 import GameCatelogue from "./Catelogue/GameCatelog.jsx"
 import LoginPage from './Login/Login.jsx'
 import RegisterPage from './Register/Register.jsx'
-
+import UserPage from './User/User.jsx'
 
 export {
     Contact,
@@ -13,5 +13,6 @@ export {
     GameCatelogue,
     LoginPage,
     RegisterPage,
-
+    UserPage,
+    
 }

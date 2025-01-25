@@ -4,13 +4,14 @@ import App from './App.jsx'
 import './index.css'
 import { Route, RouterProvider, createBrowserRouter, createRoutesFromElements } from 'react-router-dom'
 import Layout from './Layout.jsx'
-import { User,Example } from "./components/index.js"
+import { User } from "./components/index.js"
 import {
   Contact,
   Home,
   Events,
   GameCatelogue,
   LoginPage,
+  Pricing,
   RegisterPage, UserPage, } from './pages/index.js'
 
 const router = createBrowserRouter(
@@ -21,7 +22,7 @@ const router = createBrowserRouter(
       <Route path='contact' element={<Contact />} />
       <Route path='user/:userid' element={<User />} />
       <Route path='game-catalogue' element={<GameCatelogue />}/>
-      <Route path='pricing' element={<Example />}/>
+      <Route path='pricing' element={<Pricing />}/>
       <Route path='login' element={<LoginPage />}/>
       <Route path='register' element={<RegisterPage />}/>
       <Route path='user' element={<UserPage />}/>

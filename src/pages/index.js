@@ -5,6 +5,7 @@ import GameCatelogue from "./Catelogue/GameCatelog.jsx"
 import LoginPage from './Login/Login.jsx'
 import RegisterPage from './Register/Register.jsx'
 import UserPage from './User/User.jsx'
+import Pricing from './Pricing/Pricing.jsx'
 
 export {
     Contact,
@@ -14,5 +15,6 @@ export {
     LoginPage,
     RegisterPage,
     UserPage,
+    Pricing,
     
 }

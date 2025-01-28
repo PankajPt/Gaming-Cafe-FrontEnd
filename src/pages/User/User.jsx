@@ -1,152 +1,155 @@
 import React, { useState } from 'react';
 import { userLogo } from '../../assets/index.assets.js';
-import { FaEdit, FaCalendarAlt, FaRegClock, FaRegHeart, FaCheckCircle } from 'react-icons/fa';
-import { MdFitnessCenter, MdEventNote, MdPayment, MdVerified } from 'react-icons/md';
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
+import { FaEdit } from 'react-icons/fa';
 
 const UserPage = () => {
-  const [selectedSection, setSelectedSection] = useState('profile');
-  const [activePlan] = useState('Premium Membership');
-  const [upcomingEvents] = useState([
-    { name: 'Yoga Workshop', date: 'March 25, 2024' },
-    { name: 'HIIT Challenge', date: 'April 2, 2024' }
-  ]);
-  const [isVerified, setIsVerified] = useState(false);
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedSection, setSelectedSection] = useState(null);
+
+  const handleSectionClick = (section) => {
+    setSelectedSection(section); // Set the selected section on click
+  };
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     console.log("Uploaded file:", file);
   };
 
+  // User details (example data)
   const userDetails = {
     fullname: 'Johny Johny Yes Papa',
     username: 'John Doe',
     email: 'john.doe@example.com',
-    bio: 'Fitness enthusiast passionate about strength training and holistic wellness. Always looking for new challenges!',
+    profile: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero.',
   };
 
   return (
-    <div className="flex min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
+    <div className="flex h-screen bg-gray-100">
       {/* Left Sidebar */}
-      <div className="w-64 bg-gradient-to-b from-blue-800 to-blue-600 text-white p-6 shadow-xl rounded-r-3xl sticky top-0 h-screen">
+      <div className="w-64 bg-gradient-to-b from-blue-600 to-blue-500 text-white p-6 shadow-lg rounded-r-3xl">
         <div className="flex flex-col items-center mb-8">
-          <div className="relative group">
-            <img
-              src={userLogo}
-              alt="Profile"
-              className="rounded-full w-32 h-32 border-4 border-blue-200 shadow-xl mb-4 transform transition duration-300 hover:scale-105"
-            />
-            <label className="absolute bottom-2 right-2 bg-orange-500 p-2 rounded-full cursor-pointer hover:bg-orange-600 shadow-md transition duration-200">
-              <FaEdit className="text-white" />
-              <input
-                type="file"
-                className="hidden"
-                onChange={handleFileChange}
-              />
-            </label>
-          </div>
-          <h2 className="text-xl font-bold text-blue-100">{userDetails.username}</h2>
-          <div className="flex items-center mt-1">
-            {isVerified ? (
-              <>
-                <MdVerified className="text-green-400 mr-1" />
-                <span className="text-sm text-green-400">Verified</span>
-              </>
-            ) : (
-              <span className="text-sm text-yellow-400">Not Verified</span>
-            )}
-          </div>
+          {/* Profile Picture */}
+          <img
+            src={userLogo}
+            alt="Profile"
+            className="rounded-full w-32 h-32 border-4 border-white shadow-md mb-4"
+          />
+          <h2 className="text-xl font-semibold">John Doe</h2>
         </div>
 
-        <ul className="space-y-3">
-          {['profile', 'my-plan', 'book-slot', 'events', 'logout'].map((section) => (
-            <li
-              key={section}
-              className={`p-3 rounded-xl cursor-pointer transition duration-200 flex items-center ${
-                selectedSection === section 
-                ? 'bg-blue-900 shadow-inner border-2 border-blue-300' 
-                : 'hover:bg-blue-700/80 hover:shadow-md'
-              }`}
-              onClick={() => setSelectedSection(section)}
-            >
-              <span className="capitalize">{section.replace('-', ' ')}</span>
-            </li>
-          ))}
+        {/* Navigation Links */}
+        <ul className="space-y-6">
+          <li
+            className="hover:bg-blue-700 p-3 rounded-xl cursor-pointer transition duration-300 ease-in-out transform hover:scale-105"
+            onClick={() => handleSectionClick('profile')}
+          >
+            Profile
+          </li>
+          <li
+            className="hover:bg-blue-700 p-3 rounded-xl cursor-pointer transition duration-300 ease-in-out transform hover:scale-105"
+            onClick={() => handleSectionClick('my-plan')}
+          >
+            My Plan
+          </li>
+          <li
+            className="hover:bg-blue-700 p-3 rounded-xl cursor-pointer transition duration-300 ease-in-out transform hover:scale-105"
+            onClick={() => handleSectionClick('book-slot')}
+          >
+            Book Slot
+          </li>
+          <li
+            className="hover:bg-blue-700 p-3 rounded-xl cursor-pointer transition duration-300 ease-in-out transform hover:scale-105"
+            onClick={() => handleSectionClick('events')}
+          >
+            Events
+          </li>
+          <li
+            className="hover:bg-blue-700 p-3 rounded-xl cursor-pointer transition duration-300 ease-in-out transform hover:scale-105"
+            onClick={() => handleSectionClick('logout')}
+          >
+            Log Out
+          </li>
         </ul>
       </div>
 
-      {/* Main Content */}
-      <div className="flex-1 p-8 max-w-4xl">
-        {/* Profile Section */}
-        {selectedSection === 'profile' && (
-          <div className="bg-white p-8 rounded-2xl shadow-2xl space-y-6">
-            <h1 className="text-4xl font-bold text-blue-600 mb-6">Profile Settings</h1>
-            
-            {/* Account Verification Status */}
-            {!isVerified && (
-              <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-200 flex items-center justify-between">
-                <div>
-                  <h3 className="font-semibold text-yellow-800">Account Not Verified</h3>
-                  <p className="text-sm text-yellow-700">Verify your account to access all features</p>
+      {/* Right Content (Main Area) */}
+      <div className="flex-1 p-8">
+      {selectedSection === 'profile' && (
+        <div className="bg-white p-6 border-2 border-gray-300 shadow-lg space-y-6 rounded-lg">
+            <h2 className="text-3xl font-semibold text-gray-800 mb-4">Profile Details</h2>
+            <div className="flex justify-center relative">
+                <div className="w-32 h-32 rounded-full bg-gray-300 flex items-center justify-center text-white text-3xl">
+                {/* Placeholder for profile picture */}
+                <img src={userLogo} />
                 </div>
-                <button 
-                  onClick={() => setIsVerified(true)}
-                  className="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg transition-colors"
-                >
-                  Verify Now
-                </button>
-              </div>
-            )}
-
+                {/* Edit Icon */}
+                <label htmlFor="file-upload" className="absolute bottom-0 right-0 bg-gray-700 text-white p-2 rounded-full cursor-pointer">
+                <FaEdit />
+                </label>
+                {/* File Input */}
+                <input
+                type="file"
+                id="file-upload"
+                className="hidden"
+                onChange={handleFileChange}
+                />
+            </div>
             <div className="space-y-6">
-              {/* ... (existing profile fields remain same) ... */}
-            </div>
-          </div>
-        )}
-
-        {/* Book Slot Section */}
-        {selectedSection === 'book-slot' && (
-          <div className="bg-white p-8 rounded-2xl shadow-2xl">
-            <h2 className="text-3xl font-bold text-blue-600 mb-6">Book a Session</h2>
-            
-            {/* Date Picker */}
-            <div className="mb-8">
-              <label className="block text-lg font-medium text-gray-700 mb-2">Select Date</label>
-              <DatePicker
-                selected={selectedDate}
-                onChange={(date) => setSelectedDate(date)}
-                minDate={new Date()}
-                className="border-2 border-blue-200 rounded-lg p-2 w-full max-w-xs focus:ring-2 focus:ring-blue-500"
-                dateFormat="MMMM d, yyyy"
-              />
-            </div>
-
-            <div className="grid grid-cols-2 gap-6">
-              <div className="bg-blue-50 p-6 rounded-xl">
-                <FaCalendarAlt className="text-4xl text-blue-600 mb-4" />
-                <h3 className="text-xl font-semibold mb-2">Available Slots</h3>
-                <div className="space-y-3">
-                  {['9:00 AM', '10:30 AM', '2:00 PM', '4:30 PM'].map((slot) => (
-                    <div key={slot} className="bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition cursor-pointer flex items-center justify-between">
-                      <div>
-                        <FaRegClock className="inline mr-2 text-blue-500" />
-                        {slot}
-                      </div>
-                      <button className="bg-blue-500 text-white px-3 py-1 rounded-md text-sm hover:bg-blue-600">
-                        Book
-                      </button>
+            {/* Username Section */}
+                <div className="bg-gray-50 p-6 border-2 border-gray-300 rounded-lg hover:shadow-lg transition-transform duration-300 ease-in-out transform hover:scale-105">
+                    <div className="flex space-x-4 text-gray-700 text-xl">
+                        <strong className="font-semibold">Username:</strong>
+                        <span>{userDetails.username}</span>
                     </div>
-                  ))}
                 </div>
-              </div>
-              {/* ... (rest of book slot section remains same) ... */}
+
+            {/* Email Section */}
+                <div className="bg-gray-50 p-6 border-2 border-gray-300 rounded-lg hover:shadow-lg transition-transform duration-300 ease-in-out transform hover:scale-105">
+                    <div className="flex space-x-4 text-gray-700 text-xl">
+                        <strong className="font-semibold">Email-id:</strong>
+                        <span>{userDetails.email}</span>
+                    </div>
+                </div>
+
+            {/* Profile Section */}
+                <div className="bg-gray-50 p-6 border-2 border-gray-300 rounded-lg hover:shadow-lg transition-transform duration-300 ease-in-out transform hover:scale-105">
+                    <div className="flex space-x-4 text-gray-700 text-xl">
+                        <strong className="font-semibold">Full Name:</strong>
+                        <span>{userDetails.fullname}</span>
+                    </div>
+                </div>
             </div>
+        </div>
+)}
+
+
+
+        {selectedSection === 'my-plan' && (
+          <div className="bg-white p-6 rounded-lg shadow-lg">
+            <h2 className="text-2xl font-semibold text-gray-700">My Plan</h2>
+            {/* Add content related to the user's plan */}
           </div>
         )}
 
-        {/* ... (other sections remain similar with verified status indicators where appropriate) ... */}
+        {selectedSection === 'book-slot' && (
+          <div className="bg-white p-6 rounded-lg shadow-lg">
+            <h2 className="text-2xl font-semibold text-gray-700">Book Slot</h2>
+            {/* Add content related to booking a slot */}
+          </div>
+        )}
+
+        {selectedSection === 'events' && (
+          <div className="bg-white p-6 rounded-lg shadow-lg">
+            <h2 className="text-2xl font-semibold text-gray-700">Events</h2>
+            {/* Add content related to events */}
+          </div>
+        )}
+
+        {selectedSection === 'logout' && (
+          <div className="bg-white p-6 rounded-lg shadow-lg">
+            <h2 className="text-2xl font-semibold text-gray-700">Logging Out</h2>
+            {/* Add content or trigger logout functionality */}
+          </div>
+        )}
       </div>
     </div>
   );

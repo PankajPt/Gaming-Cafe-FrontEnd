@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import dotenv from 'dotenv'
+import App from './App.jsx'
 import './index.css'
 import { Route, RouterProvider, createBrowserRouter, createRoutesFromElements } from 'react-router-dom'
 import Layout from './Layout.jsx'
@@ -13,8 +13,6 @@ import {
   LoginPage,
   Pricing,
   RegisterPage, UserPage, } from './pages/index.js'
-
-dotenv.config()
 
 const router = createBrowserRouter(
   createRoutesFromElements(

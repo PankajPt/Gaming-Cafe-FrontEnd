@@ -2,11 +2,11 @@ import React, { useState } from "react";
 
 const RegisterPage = () => {
   const [formData, setFormData] = useState({
-    name: "",
+    fullname: "",
     username: "",
     email: "",
     password: "",
-    profilePicture: null,  // Optional field
+    avatar: null,  // Optional field
   });
 
   const [error, setError] = useState(null);
@@ -35,6 +35,18 @@ const RegisterPage = () => {
   // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
+    fetch(`${process.env.BACKEND_BASE_URI}/users/register`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({fullname, username, password, email, avatar})
+      },
+    ).then(response => response.json())
+    .then(data => console.log(data))
+    .catch(error => console.log(error))
+
     if (isFormValid()) {
       // Dummy registration logic
       const isRegisterValid = true;
@@ -68,9 +80,9 @@ const RegisterPage = () => {
             <input
               type="text"
               id="name"
-              name="name"
+              name="fullname"
               placeholder="Enter your full name"
-              value={formData.name}
+              value={formData.fullname}
               onChange={handleChange}
               className="w-full px-4 py-3 text-gray-900 bg-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-600 placeholder:text-gray-900 transition duration-300 hover:bg-gray-200"
             />
@@ -115,7 +127,7 @@ const RegisterPage = () => {
             <input
               type="file"
               id="profilePicture"
-              name="profilePicture"
+              name="avatar"
               accept="image/*"
               onChange={handleChange}
               className="w-full px-4 py-3 text-gray-900 bg-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-600 transition duration-300 hover:bg-gray-200"

@@ -14,6 +14,8 @@ const RegisterPage = () => {
 
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
+  const [loading, setLoading] = useState(false);
+
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -23,6 +25,7 @@ const RegisterPage = () => {
       setFormData((prev) => ({ ...prev, [name]: value }));
     }
   };
+  
 
   const isFormValid = () => {
     return formData.fullname && formData.username && formData.email && formData.password;
@@ -33,8 +36,10 @@ const RegisterPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
+    setLoading(true);
 
     if (!isFormValid()) {
+      setLoading(false)
       setError("Please fill out all required fields.");
       return;
     }
@@ -47,18 +52,26 @@ const RegisterPage = () => {
       formPayload.append('password', formData.password);
       
       if (formData.avatar) formPayload.append('avatar', formData.avatar);
-      const response = await fetch(`${process.env.BACKEND_BASE_URI}/users/register`, {
+      const response = await fetch(`https://madgearapi.onrender.com/api/v1/users/register`, {
         method: 'POST',
-        body: formPayload,
+        body: formPayload
       });
 
-      if (!response.ok) throw new Error('Registration failed');
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        setLoading(false)
+        setError(errorData.message || 'Something went wrong during registration.')
+        return
+      }
       
       setSuccess(true);
+      setLoading(false)
       setTimeout(() => {
-        navigate('login')
+        navigate('/login')
       }, 2000);
     } catch (err) {
+      setLoading(false)
       setError(err.message || "Something went wrong during registration.");
     }
   };
@@ -67,8 +80,8 @@ const RegisterPage = () => {
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-blue-100 flex items-center justify-center px-4">
       <div className="w-full max-w-md transform transition-all duration-300 hover:scale-[1.01]">
         <div className="bg-white rounded-3xl shadow-2xl p-8 space-y-6 relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-indigo-600 to-blue-500 opacity-5" />
-          
+          {/* <div className="absolute inset-0 bg-gradient-to-br from-indigo-600 to-blue-500 opacity-5" /> */}
+          <div className="absolute inset-0 bg-gradient-to-br from-indigo-600 to-blue-500 opacity-5 pointer-events-none" />
           <div className="text-center space-y-2">
             <h1 className="text-4xl font-bold bg-gradient-to-r from-indigo-600 to-blue-500 bg-clip-text text-transparent">
               Join Our Community
@@ -148,23 +161,29 @@ const RegisterPage = () => {
                 className="w-full pl-12 pr-4 py-3 rounded-lg border border-gray-200 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
               />
             </div>
-
-            <button
-              type="submit"
-              disabled={!isFormValid()}
-              className={`w-full py-3 px-6 rounded-lg font-medium text-white transition-all ${
-                isFormValid() 
-                  ? 'bg-gradient-to-r from-indigo-600 to-blue-500 hover:from-indigo-700 hover:to-blue-600 shadow-lg hover:shadow-indigo-200'
-                  : 'bg-gray-300 cursor-not-allowed'
-              }`}
-            >
-              Create Account
-            </button>
+            {loading ? (
+              <div className="flex justify-center items-center space-x-2">
+                <div className="w-6 h-6 border-4 border-t-4 border-indigo-600 rounded-full animate-spin"></div>
+                <span>Loading...</span>
+              </div>
+            ) : (
+              <button
+                type="submit"
+                disabled={!isFormValid() || loading}
+                className={`w-full py-3 px-6 rounded-lg font-medium text-white transition-all ${
+                  isFormValid() && !loading
+                    ? 'bg-gradient-to-r from-indigo-600 to-blue-500 hover:from-indigo-700 hover:to-blue-600 shadow-lg hover:shadow-indigo-200'
+                    : 'bg-gray-300 cursor-not-allowed'
+                }`}
+              >
+                Create Account
+              </button>
+            )}
           </form>
 
           <p className="text-center text-gray-500">
             Already have an account?{" "}
-            <a href="/login" className="text-indigo-600 hover:underline font-medium">
+            <a href="login" className="text-indigo-600 hover:underline font-medium">
               Sign in
             </a>
           </p>

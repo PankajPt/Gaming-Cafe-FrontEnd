@@ -1,4 +1,7 @@
 import React, { useState } from "react";
+import { FaUser, FaEnvelope, FaLock, FaCamera, FaCheckCircle } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+
 
 const RegisterPage = () => {
   const [formData, setFormData] = useState({
@@ -6,150 +9,166 @@ const RegisterPage = () => {
     username: "",
     email: "",
     password: "",
-    avatar: null,  // Optional field
+    avatar: null,
   });
 
   const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(false);
 
-  // Handle input changes and update form data
   const handleChange = (e) => {
     const { name, value, files } = e.target;
-    if (name === "profilePicture") {
-      setFormData((prevData) => ({
-        ...prevData,
-        [name]: files[0],  // Save the file object for profile picture
-      }));
+    if (name === "avatar") {
+      setFormData((prev) => ({ ...prev, [name]: files[0] }));
     } else {
-      setFormData((prevData) => ({
-        ...prevData,
-        [name]: value,
-      }));
+      setFormData((prev) => ({ ...prev, [name]: value }));
     }
   };
 
-  // Check if all required fields are filled
   const isFormValid = () => {
-    return formData.name && formData.username && formData.email && formData.password;
+    return formData.fullname && formData.username && formData.email && formData.password;
   };
 
-  // Handle form submission
-  const handleSubmit = (e) => {
+  const navigate = useNavigate()
+  
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    fetch(`${process.env.BACKEND_BASE_URI}/users/register`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({fullname, username, password, email, avatar})
-      },
-    ).then(response => response.json())
-    .then(data => console.log(data))
-    .catch(error => console.log(error))
+    setError(null);
 
-    if (isFormValid()) {
-      // Dummy registration logic
-      const isRegisterValid = true;
-      if (isRegisterValid) {
-        // Redirect or continue if registration is successful
-      } else {
-        setError("Something went wrong during registration.");
-      }
-    } else {
+    if (!isFormValid()) {
       setError("Please fill out all required fields.");
+      return;
+    }
+
+    try {
+      const formPayload = new FormData();
+      formPayload.append('fullname', formData.fullname);
+      formPayload.append('username', formData.username);
+      formPayload.append('email', formData.email);
+      formPayload.append('password', formData.password);
+      
+      if (formData.avatar) formPayload.append('avatar', formData.avatar);
+      const response = await fetch(`${process.env.BACKEND_BASE_URI}/users/register`, {
+        method: 'POST',
+        body: formPayload,
+      });
+
+      if (!response.ok) throw new Error('Registration failed');
+      
+      setSuccess(true);
+      setTimeout(() => {
+        navigate('login')
+      }, 2000);
+    } catch (err) {
+      setError(err.message || "Something went wrong during registration.");
     }
   };
 
   return (
-    <div className="relative isolate bg-white px-6 py-24 sm:py-32 lg:px-8">
-      <div className="mx-auto max-w-4xl text-center">
-        <h2 className="text-3xl font-bold text-indigo-600">Register</h2>
-        <p className="mt-2 text-lg text-gray-600">Create an account to get started with our platform.</p>
-      </div>
-      <div className="mx-auto mt-16 w-full max-w-md p-8 space-y-6 bg-white text-black rounded-3xl shadow-lg ring-1 ring-gray-300 transition-transform duration-300 hover:bg-gray-800 hover:text-white hover:scale-105 hover:shadow-xl hover:ring-indigo-500">
-        
-        {/* Error Message Section */}
-        {error && (
-          <div className="text-center text-red-600 bg-red-100 p-2 rounded-lg mb-4">
-            {error}
-          </div>
-        )}
-
-        <form className="space-y-4" onSubmit={handleSubmit}>
-          <div className="pt-6">
-            <input
-              type="text"
-              id="name"
-              name="fullname"
-              placeholder="Enter your full name"
-              value={formData.fullname}
-              onChange={handleChange}
-              className="w-full px-4 py-3 text-gray-900 bg-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-600 placeholder:text-gray-900 transition duration-300 hover:bg-gray-200"
-            />
-          </div>
-          <div className="pt-4">
-            <input
-              type="text"
-              id="username"
-              name="username"
-              placeholder="Enter Username"
-              value={formData.username}
-              onChange={handleChange}
-              className="w-full px-4 py-3 text-gray-900 bg-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-600 placeholder:text-gray-900 transition duration-300 hover:bg-gray-200"
-            />
-          </div>
-          <div className="pt-4">
-            <input
-              type="email"
-              id="email"
-              name="email"
-              placeholder="Enter your email"
-              value={formData.email}
-              onChange={handleChange}
-              className="w-full px-4 py-3 text-gray-900 bg-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-600 placeholder:text-gray-900 transition duration-300 hover:bg-gray-200"
-            />
-          </div>
-          <div className="pt-4">
-            <input
-              type="password"
-              id="password"
-              name="password"
-              placeholder="Create a password"
-              value={formData.password}
-              onChange={handleChange}
-              className="w-full px-4 py-3 text-gray-900 bg-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-600 transition duration-300 hover:bg-gray-200"
-            />
-          </div>
-          <div className="pt-4">
-            <label htmlFor="profilePicture" className="block text-sm text-gray-600">
-              Profile Picture (Optional)
-            </label>
-            <input
-              type="file"
-              id="profilePicture"
-              name="avatar"
-              accept="image/*"
-              onChange={handleChange}
-              className="w-full px-4 py-3 text-gray-900 bg-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-600 transition duration-300 hover:bg-gray-200"
-            />
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-blue-100 flex items-center justify-center px-4">
+      <div className="w-full max-w-md transform transition-all duration-300 hover:scale-[1.01]">
+        <div className="bg-white rounded-3xl shadow-2xl p-8 space-y-6 relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-indigo-600 to-blue-500 opacity-5" />
+          
+          <div className="text-center space-y-2">
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-indigo-600 to-blue-500 bg-clip-text text-transparent">
+              Join Our Community
+            </h1>
+            <p className="text-gray-500">Create your account in seconds</p>
           </div>
 
-          <button
-            type="submit"
-            disabled={!isFormValid()}  // Disable button if form is not valid
-            className={`w-full px-4 py-3 text-white ${isFormValid() ? 'bg-green-600' : 'bg-gray-400'} rounded-lg hover:${isFormValid() ? 'bg-green-700' : 'bg-gray-500'} focus:ring-2 focus:ring-green-500 focus:ring-offset-2 mt-6`}
-          >
-            Register
-          </button>
-        </form>
+          {success && (
+            <div className="bg-green-100 p-4 rounded-lg flex items-center gap-3">
+              <FaCheckCircle className="text-green-600 text-xl" />
+              <span className="text-green-600">Registration successful! Redirecting...</span>
+            </div>
+          )}
 
-        {/* "Already have an account?" Link */}
-        <p className="text-sm text-center text-gray-400 mt-4">
-          Already have an account?{" "}
-          <a href="/login" className="text-green-500 hover:underline">
-            Login
-          </a>
-        </p>
+          {error && (
+            <div className="bg-red-100 p-4 rounded-lg flex items-center gap-3">
+              <FaCheckCircle className="text-red-600 text-xl" />
+              <span className="text-red-600">{error}</span>
+            </div>
+          )}
+
+          <form className="space-y-4" onSubmit={handleSubmit}>
+            <div className="relative">
+              <FaUser className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+              <input
+                type="text"
+                name="fullname"
+                placeholder="Full Name"
+                value={formData.fullname}
+                onChange={handleChange}
+                className="w-full pl-12 pr-4 py-3 rounded-lg border border-gray-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all"
+              />
+            </div>
+
+            <div className="relative">
+              <FaUser className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+              <input
+                type="text"
+                name="username"
+                placeholder="Username"
+                value={formData.username}
+                onChange={handleChange}
+                className="w-full pl-12 pr-4 py-3 rounded-lg border border-gray-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all"
+              />
+            </div>
+
+            <div className="relative">
+              <FaEnvelope className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+              <input
+                type="email"
+                name="email"
+                placeholder="Email Address"
+                value={formData.email}
+                onChange={handleChange}
+                className="w-full pl-12 pr-4 py-3 rounded-lg border border-gray-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all"
+              />
+            </div>
+
+            <div className="relative">
+              <FaLock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+              <input
+                type="password"
+                name="password"
+                placeholder="Password"
+                value={formData.password}
+                onChange={handleChange}
+                className="w-full pl-12 pr-4 py-3 rounded-lg border border-gray-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all"
+              />
+            </div>
+
+            <div className="relative">
+              <FaCamera className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+              <input
+                type="file"
+                name="avatar"
+                onChange={handleChange}
+                className="w-full pl-12 pr-4 py-3 rounded-lg border border-gray-200 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={!isFormValid()}
+              className={`w-full py-3 px-6 rounded-lg font-medium text-white transition-all ${
+                isFormValid() 
+                  ? 'bg-gradient-to-r from-indigo-600 to-blue-500 hover:from-indigo-700 hover:to-blue-600 shadow-lg hover:shadow-indigo-200'
+                  : 'bg-gray-300 cursor-not-allowed'
+              }`}
+            >
+              Create Account
+            </button>
+          </form>
+
+          <p className="text-center text-gray-500">
+            Already have an account?{" "}
+            <a href="/login" className="text-indigo-600 hover:underline font-medium">
+              Sign in
+            </a>
+          </p>
+        </div>
       </div>
     </div>
   );

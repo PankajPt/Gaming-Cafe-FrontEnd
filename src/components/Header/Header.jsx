@@ -6,156 +6,109 @@ import { Logo } from '../index.js';
 export default function Header({ isLoggedIn, onLogout }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
-
-  const closeMenu = () => {
-    setIsMenuOpen(false);
-  };
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+  const closeMenu = () => setIsMenuOpen(false);
 
   return (
-    <header className="shadow sticky z-50 top-0">
-      <nav className="bg-white border-gray-200 px-4 lg:px-6 py-2.5">
+    <header className="shadow-lg sticky z-50 top-0 bg-gradient-to-r from-blue-900 to-indigo-900">
+      <nav className="border-gray-200 px-4 lg:px-6 py-3">
         <div className="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl">
-          <Link to="/" className="flex items-center">
-            <Logo />
+          <Link to="/" className="flex items-center hover:scale-105 transition-transform duration-300">
+            <Logo className="h-12 w-48" />
           </Link>
+          
+          {/* Hamburger Menu Button */}
           <button
             onClick={toggleMenu}
-            className="inline-flex items-center p-2 ml-1 text-sm text-gray-500 rounded-lg lg:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200"
-            aria-controls="mobile-menu"
+            className="lg:hidden p-2 ml-1 rounded-lg hover:bg-indigo-800 focus:outline-none focus:ring-2 focus:ring-white"
             aria-expanded={isMenuOpen}
           >
             <span className="sr-only">Open main menu</span>
             <svg
-              className="w-6 h-6"
+              className="w-6 h-6 text-white"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M4 6h16M4 12h16m-7 6h7"
-              ></path>
+              {isMenuOpen ? (
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              ) : (
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 6h16M4 12h16m-7 6h7"
+                />
+              )}
             </svg>
           </button>
+
+          {/* Navigation Menu */}
           <div
             className={`${
               isMenuOpen ? 'block' : 'hidden'
-            } lg:flex lg:items-center lg:order-2 w-full lg:w-auto mt-4 lg:mt-0`}
-            id="mobile-menu"
+            } lg:flex lg:items-center lg:order-2 w-full lg:w-auto mt-4 lg:mt-0 transition-all duration-300`}
           >
-            <ul className="flex flex-col lg:flex-row font-medium lg:space-x-8">
-              <li>
-                <NavLink
-                  to="/"
-                  onClick={closeMenu}
-                  className={({ isActive }) =>
-                    `block py-2 pr-4 pl-3 duration-200 ${
-                      isActive ? 'text-orange-700' : 'text-gray-700'
-                    } border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 hover:text-orange-700 lg:p-0`
-                  }
-                >
-                  Home
-                </NavLink>
-              </li>
-              <li>
-                <NavLink
-                  to="/game-catalogue"
-                  onClick={closeMenu}
-                  className={({ isActive }) =>
-                    `block py-2 pr-4 pl-3 duration-200 ${
-                      isActive ? 'text-orange-700' : 'text-gray-700'
-                    } border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 hover:text-orange-700 lg:p-0`
-                  }
-                >
-                  Game Catalogue
-                </NavLink>
-              </li>
-              <li>
-                <NavLink
-                  to="/events"
-                  onClick={closeMenu}
-                  className={({ isActive }) =>
-                    `block py-2 pr-4 pl-3 duration-200 ${
-                      isActive ? 'text-orange-700' : 'text-gray-700'
-                    } border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 hover:text-orange-700 lg:p-0`
-                  }
-                >
-                  Events
-                </NavLink>
-              </li>
-              <li>
-                <NavLink
-                  to="/contact"
-                  onClick={closeMenu}
-                  className={({ isActive }) =>
-                    `block py-2 pr-4 pl-3 duration-200 ${
-                      isActive ? 'text-orange-700' : 'text-gray-700'
-                    } border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 hover:text-orange-700 lg:p-0`
-                  }
-                >
-                  Contact
-                </NavLink>
-              </li>
-              <li>
-                <NavLink
-                  to="/pricing"
-                  onClick={closeMenu}
-                  className={({ isActive }) =>
-                    `block py-2 pr-4 pl-3 duration-200 ${
-                      isActive ? 'text-orange-700' : 'text-gray-700'
-                    } border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 hover:text-orange-700 lg:p-0`
-                  }
-                >
-                  Pricing
-                </NavLink>
-              </li>
-              {!isLoggedIn && (
-                <>
-                  <li>
-                    <NavLink
-                      to="/login"
-                      onClick={closeMenu}
-                      className={({ isActive }) =>
-                        `block py-2 pr-4 pl-3 duration-200 text-sm font-bold rounded-lg border border-gray-300 hover:border-orange-700 ${
-                          isActive ? 'text-orange-700' : 'text-gray-700'
-                        } hover:bg-gray-50 lg:hover:bg-transparent lg:border lg:px-4 lg:py-2`
-                      }
-                    >
-                      Log in
-                    </NavLink>
-                  </li>
-                  <li>
-                    <NavLink
-                      to="/register"
-                      onClick={closeMenu}
-                      className={({ isActive }) =>
-                        `block py-2 pr-4 pl-3 duration-200 text-sm font-bold rounded-lg bg-orange-600 text-white px-6 py-2 hover:bg-orange-700 lg:px-6 lg:py-2 lg:rounded-lg`
-                      }
-                    >
-                      Register
-                    </NavLink>
-                  </li>
-                </>
-              )}
-              {isLoggedIn && (
-                <li>
-                  <button
-                    onClick={() => {
-                      onLogout();
-                      closeMenu();
-                    }}
-                    className="block text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 lg:mr-2 focus:outline-none"
+            <ul className="flex flex-col lg:flex-row items-center space-y-4 lg:space-y-0 lg:space-x-8 font-medium">
+              {['/', '/game-catalogue', '/events', '/contact', '/pricing'].map((path) => (
+                <li key={path}>
+                  <NavLink
+                    to={path}
+                    onClick={closeMenu}
+                    className={({ isActive }) =>
+                      `relative text-white px-3 py-2 hover:text-orange-300 transition-colors duration-300
+                      ${isActive ? 'font-bold text-orange-400' : ''}
+                      after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 
+                      after:bg-orange-400 after:transition-all after:duration-300 hover:after:w-full`
+                    }
                   >
-                    Logout
-                  </button>
+                    {path === '/' ? 'Home' : path.slice(1).replace('-', ' ')}
+                  </NavLink>
                 </li>
-              )}
+              ))}
+
+              {/* Auth Buttons */}
+              <div className="flex flex-col lg:flex-row items-center gap-4 lg:ml-8 mt-4 lg:mt-0">
+                {!isLoggedIn ? (
+                  <>
+                    <li>
+                      <NavLink
+                        to="/login"
+                        onClick={closeMenu}
+                        className="px-6 py-2 text-white border-2 border-white rounded-full hover:bg-white hover:text-indigo-900 transition-colors duration-300"
+                      >
+                        Log in
+                      </NavLink>
+                    </li>
+                    <li>
+                      <NavLink
+                        to="/register"
+                        onClick={closeMenu}
+                        className="px-6 py-2 bg-orange-500 text-white rounded-full hover:bg-orange-600 transform hover:scale-105 transition-all duration-300 shadow-lg"
+                      >
+                        Register
+                      </NavLink>
+                    </li>
+                  </>
+                ) : (
+                  <li>
+                    <button
+                      onClick={() => {
+                        onLogout();
+                        closeMenu();
+                      }}
+                      className="px-6 py-2 bg-red-500 text-white rounded-full hover:bg-red-600 transform hover:scale-105 transition-all duration-300 shadow-lg"
+                    >
+                      Logout
+                    </button>
+                  </li>
+                )}
+              </div>
             </ul>
           </div>
         </div>

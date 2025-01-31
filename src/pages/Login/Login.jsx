@@ -1,83 +1,158 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom"; // For proper routing
+import { useNavigate } from "react-router-dom";
+import { useAuth } from '../../context/Auth.Context.jsx'
 
 const LoginPage = () => {
-  const [error, setError] = useState(null);  // Manage error state
-  const [attemptFailed, setAttemptFailed] = useState(false);  // Track failed attempts
+  const [error, setError] = useState(null);
+  const [attemptFailed, setAttemptFailed] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    username: "",
+    password: ""
+  });
+  const { login } = useAuth()
+  const navigate = useNavigate()
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Dummy logic for failed login attempt
-    const isLoginValid = false;  // This would be replaced with actual login logic
+    setIsLoading(true);
+    setError(null);
+    const isLoginValid = formData.username && formData.password; // Basic validation
 
-    if (isLoginValid) {
-      // Redirect or continue if login is successful
+    if (!isLoginValid){
+      setIsLoading(false)
+      setError("Username and password are required to continue.");
+    }
+    // console.log(formData.username, formData.password)
+    const response = await login(formData.username, formData.password)
+    // const responseBody = response.json()
+    console.log(response)
+    setIsLoading(false)
+    const userRole = localStorage.getItem(userData.role) || ""
+
+    if(userRole === 'admin'){
+      navigate('/admin')
+    } else if (userRole === 'manager'){
+      navigate('/manager')
+    } else if ( userRole === 'user'){
+      navigate('/user')
     } else {
-      // Set error message after failed attempt
-      setError("Invalid email or password.");
-      setAttemptFailed(true);
+      setError(response || 'Please check username and password')
+      return
     }
   };
 
+  const handleInputChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.id]: e.target.value
+    });
+  };
+
   return (
-    <div className="relative isolate bg-white px-6 py-24 sm:py-32 lg:px-8">
-      <div className="mx-auto max-w-4xl text-center">
-        <h2 className="text-3xl font-bold text-indigo-600">Login</h2>
-        <p className="mt-2 text-lg text-gray-600">Access your account to manage your plans and settings.</p>
-      </div>
-      <div className="mx-auto mt-16 w-full max-w-md p-8 space-y-6 bg-white text-black rounded-3xl shadow-lg ring-1 ring-gray-300 transition-transform duration-300 hover:bg-gray-800 hover:text-white hover:scale-105 hover:shadow-xl hover:ring-indigo-500">
-        
-        {/* Error Message Section */}
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-purple-900 to-indigo-900">
+      <div className="relative w-full max-w-md px-8 py-12 space-y-8 bg-gray-900 rounded-3xl shadow-2xl border-2 border-indigo-500 transform transition-transform duration-500 hover:scale-105 group">
+        <div className="absolute -inset-2 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-3xl blur opacity-30 group-hover:opacity-50 transition duration-500 animate-pulse pointer-events-none"></div>
+        <div className="text-center space-y-2">
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-400 to-indigo-400 bg-clip-text text-transparent">
+            Player Login
+          </h1>
+          <p className="text-gray-300 text-lg">Continue your gaming journey</p>
+        </div>
+
         {error && (
-          <div className="text-center text-red-600 bg-red-100 p-2 rounded-lg mb-4">
-            {error}
+          <div className="p-3 text-red-400 bg-red-900/50 rounded-lg border border-red-400/50">
+            ⚠️ {error}
           </div>
-        )}
-        
-        <form className="space-y-4" onSubmit={handleSubmit}>  {/* Reduced space between input fields */}
-          <div className="pt-6">  {/* Increased padding above the input */}
-            <input
-              type="text"
-              id="email"
-              placeholder="Enter your email or username"
-              className="w-full px-4 py-3 text-gray-900 bg-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-600 placeholder:text-gray-900 transition duration-300 hover:bg-gray-200"
-            />
-          </div>
-          <div className="pt-2">  {/* Padding above the password input */}
-            <input
-              type="password"
-              id="password"
-              placeholder="Enter your password"
-              className="w-full px-4 py-3 text-gray-900 bg-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-600 transition duration-300 hover:bg-gray-200"
-            />
-          </div>
-          
-          {/* Reduced space between password and login button */}
-          <button
-            type="submit"
-            className="w-full px-4 py-3 text-white bg-indigo-600 rounded-lg hover:bg-indigo-500 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition duration-300 mt-4"
-          >
-            Login
-          </button>
-        </form>
-        
-        {/* "Forgot Password?" Link: Only visible on failed attempts */}
-        {attemptFailed && (
-          <p className="text-sm text-center text-indigo-500 mt-4">
-            <a href="/forgot-password" className="hover:underline">
-              Forgot Password?
-            </a>
-          </p>
         )}
 
-        <p className="text-sm text-center text-gray-400 mt-4">
-          Don't have an account?{" "}
-          <a href="/register" className="text-indigo-500 hover:underline">
-            Register
-          </a>
-        </p>
+        <form className="space-y-6" onSubmit={handleSubmit}>
+          <div className="space-y-4">
+            <div className="relative">
+              <input
+                id="username"
+                type="text"
+                value={formData.username}
+                onChange={handleInputChange}
+                placeholder="Username or Email-Id"
+                className="w-full px-4 py-3 text-gray-100 bg-gray-800 rounded-lg border-2 border-gray-700 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 placeholder:text-gray-400 transition-all"
+              />
+              <svg
+                className="absolute right-3 top-3.5 w-6 h-6 text-gray-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
+            </div>
+
+            <div className="relative">
+              <input
+                id="password"
+                type={showPassword ? "text" : "password"}
+                value={formData.password}
+                onChange={handleInputChange}
+                placeholder="Password"
+                className="w-full px-4 py-3 text-gray-100 bg-gray-800 rounded-lg border-2 border-gray-700 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 placeholder:text-gray-400 transition-all"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-3.5 text-gray-400 hover:text-indigo-400 transition-colors"
+              >
+                {showPassword ? "👁️" : "👁️‍🗨️"}
+              </button>
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="w-full px-6 py-3 text-lg font-semibold text-white bg-gradient-to-r from-purple-600 to-indigo-600 rounded-lg hover:from-purple-500 hover:to-indigo-500 transition-all transform hover:scale-[1.02] flex items-center justify-center gap-2"
+          >
+            {isLoading ? (
+              <>
+                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
+                <span>Authenticating...</span>
+              </>
+            ) : (
+              <>
+                <span>Login</span>
+                <svg className="w-5 h-5 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+              </>
+            )}
+          </button>
+        </form>
+
+        <div className="text-center space-y-4">
+          {attemptFailed && (
+            <Link
+              to="/forgot-password"
+              className="text-indigo-400 hover:text-indigo-300 text-sm inline-block transition-colors"
+            >
+              Forgot your password?
+            </Link>
+          )}
+          <div className="text-center space-y-4">
+            <div className="text-gray-400 text-sm">
+              Not registered?{" "}
+              <Link
+                to="/register"
+                className="text-purple-400 hover:text-purple-300 font-semibold underline transition-colors hover:scale-105 inline-block"
+              >
+                Create account
+              </Link>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
 };
 
-export default LoginPage;
+export default LoginPage; 

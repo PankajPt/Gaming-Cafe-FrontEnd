@@ -11,7 +11,9 @@ import {
   GameCatelogue,
   LoginPage,
   Pricing,
-  RegisterPage, UserPage, } from './pages/index.js'
+  RegisterPage, UserPage, AdminDashboard} from './pages/index.js'
+import ProtectedRoute from './routes/Protected.routes.jsx'
+import { AuthProvider } from './context/Auth.Context.jsx'
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -24,13 +26,18 @@ const router = createBrowserRouter(
       <Route path='pricing' element={<Pricing />}/>
       <Route path='login' element={<LoginPage />}/>
       <Route path='register' element={<RegisterPage />}/>
-      <Route path='user' element={<UserPage />}/>
+
+      {/* Protected routes */}
+      <Route path='user' element={<ProtectedRoute><UserPage /></ProtectedRoute>}/>
+      <Route path='admin' element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
     </Route>
   )
 )
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
   </React.StrictMode>,
 )

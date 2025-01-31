@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
-import logo from '../../assets/logo.webp';
 import { Logo } from '../index.js';
+import { useAuth } from '../../context/Auth.Context.jsx';
 
-export default function Header({ isLoggedIn, onLogout }) {
+export default function Header() {
+  const { userRole, logout } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
@@ -72,9 +73,9 @@ export default function Header({ isLoggedIn, onLogout }) {
                 </li>
               ))}
 
-              {/* Auth Buttons */}
+              {/* Auth Buttons - Show Logout if Logged In */}
               <div className="flex flex-col lg:flex-row items-center gap-4 lg:ml-8 mt-4 lg:mt-0">
-                {!isLoggedIn ? (
+                {!userRole ? (
                   <>
                     <li>
                       <NavLink
@@ -99,7 +100,7 @@ export default function Header({ isLoggedIn, onLogout }) {
                   <li>
                     <button
                       onClick={() => {
-                        onLogout();
+                        logout();
                         closeMenu();
                       }}
                       className="px-6 py-2 bg-red-500 text-white rounded-full hover:bg-red-600 transform hover:scale-105 transition-all duration-300 shadow-lg"

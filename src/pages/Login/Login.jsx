@@ -1,53 +1,55 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom"; // For proper routing
-import { useNavigate } from "react-router-dom";
-import { useAuth } from '../../context/Auth.Context.jsx'
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/Auth.Context.jsx";
 
 const LoginPage = () => {
   const [error, setError] = useState(null);
-  const [attemptFailed, setAttemptFailed] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     username: "",
-    password: ""
+    password: "",
   });
-  const { login } = useAuth()
-  const navigate = useNavigate()
+
+  const { login, userRole } = useAuth();
+  const navigate = useNavigate();
+
+  // Enable button only when both fields are filled
+  const isFormValid = formData.username.trim() !== "" && formData.password.trim() !== "";
+
+  useEffect(() => {
+    if (userRole === "admin") {
+      navigate("/admin");
+    } else if (userRole === "manager") {
+      navigate("/manager");
+    } else if (userRole === "user") {
+      navigate("/user");
+    }
+  }, [userRole, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     setError(null);
-    const isLoginValid = formData.username && formData.password; // Basic validation
 
-    if (!isLoginValid){
-      setIsLoading(false)
+    if (!isFormValid) {
+      setIsLoading(false);
       setError("Username and password are required to continue.");
+      return;
     }
-    // console.log(formData.username, formData.password)
-    const response = await login(formData.username, formData.password)
-    // const responseBody = response.json()
-    console.log(response)
-    setIsLoading(false)
-    const userRole = localStorage.getItem(userData.role) || ""
 
-    if(userRole === 'admin'){
-      navigate('/admin')
-    } else if (userRole === 'manager'){
-      navigate('/manager')
-    } else if ( userRole === 'user'){
-      navigate('/user')
-    } else {
-      setError(response || 'Please check username and password')
-      return
+    const response = await login(formData.username, formData.password);
+    setIsLoading(false);
+
+    if (typeof response === "string") {
+      setError(response);
     }
   };
 
   const handleInputChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.id]: e.target.value
+      [e.target.id]: e.target.value,
     });
   };
 
@@ -110,8 +112,12 @@ const LoginPage = () => {
 
           <button
             type="submit"
-            disabled={isLoading}
-            className="w-full px-6 py-3 text-lg font-semibold text-white bg-gradient-to-r from-purple-600 to-indigo-600 rounded-lg hover:from-purple-500 hover:to-indigo-500 transition-all transform hover:scale-[1.02] flex items-center justify-center gap-2"
+            disabled={!isFormValid || isLoading}
+            className={`w-full px-6 py-3 text-lg font-semibold text-white rounded-lg transition-all transform hover:scale-[1.02] flex items-center justify-center gap-2 ${
+              !isFormValid || isLoading
+                ? "bg-gray-600 cursor-not-allowed"
+                : "bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500"
+            }`}
           >
             {isLoading ? (
               <>
@@ -130,24 +136,14 @@ const LoginPage = () => {
         </form>
 
         <div className="text-center space-y-4">
-          {attemptFailed && (
+          <div className="text-gray-400 text-sm">
+            Not registered?{" "}
             <Link
-              to="/forgot-password"
-              className="text-indigo-400 hover:text-indigo-300 text-sm inline-block transition-colors"
+              to="/register"
+              className="text-purple-400 hover:text-purple-300 font-semibold underline transition-colors hover:scale-105 inline-block"
             >
-              Forgot your password?
+              Create account
             </Link>
-          )}
-          <div className="text-center space-y-4">
-            <div className="text-gray-400 text-sm">
-              Not registered?{" "}
-              <Link
-                to="/register"
-                className="text-purple-400 hover:text-purple-300 font-semibold underline transition-colors hover:scale-105 inline-block"
-              >
-                Create account
-              </Link>
-            </div>
           </div>
         </div>
       </div>
@@ -155,4 +151,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage; 
+export default LoginPage;

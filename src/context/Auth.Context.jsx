@@ -9,8 +9,8 @@ export const AuthProvider = ({ children }) => {
         const storedUser = localStorage.getItem("userData");
         if (storedUser) {
             const parsedUser = JSON.parse(storedUser);
-            if (parsedUser && parsedUser.data && parsedUser.data.role) {
-                setUserRole(parsedUser.data.role);
+            if (parsedUser && parsedUser.role) {
+                setUserRole(parsedUser.role);
             }
         }
     }, []);
@@ -23,6 +23,7 @@ export const AuthProvider = ({ children }) => {
             const response = await fetch(`${import.meta.env.VITE_BACKEND_BASE_URI}/users/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
                 body: JSON.stringify(loginData),
             });
 

@@ -15,6 +15,9 @@ const UserPage = () => {
   }
   const userDetails = JSON.parse(userData);
   const [selectedSection, setSelectedSection] = useState('profile');
+  const [isVerificationSent, setIsVerificationSent] = useState(false);
+  const [verificationError, setVerificationError] = useState(null);
+  const [selectedDate, setSelectedDate] = useState(new Date());
 
   const [activePlan] = useState('Premium Membership');
   const [upcomingEvents] = useState([
@@ -26,8 +29,6 @@ const UserPage = () => {
   if(userDetails.isActiveUser === 'active'){
     isVerified = true
   }
-
-  const [selectedDate, setSelectedDate] = useState(new Date());
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -42,11 +43,14 @@ const UserPage = () => {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to send verification email');
+        setVerificationError('Failed to send verification email. Please try again.');
       }
+      setIsVerificationSent(true); // Hide the verification banner
+      setVerificationError(null); // Clear any previous errors
       alert('Verification email sent successfully! Please check your inbox.');
     } catch (error) {
-      alert('Something went wrong while sending the verification email. Please try again.');
+      setVerificationError('An error occurred. Please try again later.');
+      console.error('Error sending verification email:', error);
     }
   };
 
@@ -125,6 +129,23 @@ const UserPage = () => {
                 </button>
               </div>
             )}
+                  {/* Success Message */}
+            {isVerificationSent && (
+              <div className="bg-green-50 p-4 rounded-lg border border-green-200">
+                <h3 className="font-semibold text-green-800">Verification Email Sent</h3>
+                <p className="text-sm text-green-700">
+                  A verification link has been sent to your registered email address. Please check your inbox.
+                </p>
+              </div>
+            )}
+
+            {/* Error Message */}
+            {verificationError && (
+              <div className="bg-red-50 p-4 rounded-lg border border-red-200">
+                <h3 className="font-semibold text-red-800">Error</h3>
+                <p className="text-sm text-red-700">{verificationError}</p>
+              </div>
+            )}
 
             {/* User Details Section */}
             <div className="space-y-6">
@@ -135,14 +156,14 @@ const UserPage = () => {
 
               <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow">
                 <label className="text-sm font-semibold text-blue-500">Username</label>
-                <p className="text-gray-700 mt-2 leading-relaxed">
+                <p className="text-2xl text-gray-800 mt-1">
                   {userDetails.username}
                 </p>
               </div>
 
               <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow">
                 <label className="text-sm font-semibold text-blue-500">EMAIL ADDRESS</label>
-                <p className="text-xl text-gray-800 mt-1 flex items-center">
+                <p className="text-2xl text-gray-800 mt-1 flex items-center">
                   <MdFitnessCenter className="mr-2 text-blue-500" />
                   {userDetails.email}
                 </p>
@@ -151,7 +172,105 @@ const UserPage = () => {
           </div>
         )}
 
-        {/* Other Sections */}
+        {/* Membership Sections */}
+        {selectedSection === 'my-plan' && (
+          <div className="bg-white p-8 rounded-2xl shadow-2xl">
+            <h2 className="text-3xl font-bold text-blue-600 mb-6">My Membership</h2>
+            
+            {/* Membership Details */}
+            <div className="bg-gradient-to-r from-green-500 to-blue-600 text-white p-6 rounded-xl shadow-lg">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-2xl font-bold">{activePlan}</h3>
+                  <p className="mt-2 opacity-90">Valid until: December 31, 2024</p>
+                </div>
+                <MdPayment className="text-4xl opacity-90" />
+              </div>
+              <div className="mt-6 grid grid-cols-3 gap-4">
+                <div className="text-center">
+                  <div className="text-2xl font-bold">12</div>
+                  <div className="text-sm opacity-90">Sessions Left</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold">5</div>
+                  <div className="text-sm opacity-90">Active Challenges</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold">Gold</div>
+                  <div className="text-sm opacity-90">Member Tier</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Previous Plan Details */}
+            <div className="mt-8">
+              <h3 className="text-2xl font-semibold text-gray-800 mb-4">Previous Plans</h3>
+              <div className="space-y-4">
+                <div className="bg-gray-50 p-4 rounded-lg shadow-sm">
+                  <h4 className="font-semibold text-gray-700">Basic Membership</h4>
+                  <p className="text-sm text-gray-600">Valid until: June 30, 2023</p>
+                </div>
+                <div className="bg-gray-50 p-4 rounded-lg shadow-sm">
+                  <h4 className="font-semibold text-gray-700">Trial Membership</h4>
+                  <p className="text-sm text-gray-600">Valid until: March 31, 2023</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Book Slot Section */}
+        {selectedSection === 'book-slot' && (
+          <div className="bg-white p-8 rounded-2xl shadow-2xl">
+            <h2 className="text-3xl font-bold text-blue-600 mb-6">Book a Session</h2>
+            <div className="grid grid-cols-2 gap-6">
+              <div className="bg-blue-50 p-6 rounded-xl">
+                <FaCalendarAlt className="text-4xl text-blue-600 mb-4" />
+                <h3 className="text-xl font-semibold mb-2">Available Slots</h3>
+                <div className="space-y-3">
+                  {['Mon 9:00 AM', 'Wed 2:00 PM', 'Fri 7:00 AM'].map((slot) => (
+                    <div key={slot} className="bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition cursor-pointer">
+                      <FaRegClock className="inline mr-2 text-blue-500" />
+                      {slot}
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="bg-green-50 p-6 rounded-xl">
+                <FaRegHeart className="text-4xl text-green-600 mb-4" />
+                <h3 className="text-xl font-semibold mb-2">Your Bookings</h3>
+                <div className="space-y-3">
+                  {['March 25 - Yoga Session', 'April 1 - PT Session'].map((booking) => (
+                    <div key={booking} className="bg-white p-3 rounded-lg shadow-sm">
+                      {booking}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+        
+        {/* Events Section */}
+        {selectedSection === 'events' && (
+          <div className="bg-white p-8 rounded-2xl shadow-2xl">
+            <h2 className="text-3xl font-bold text-blue-600 mb-6">Upcoming Events</h2>
+            <div className="grid gap-6 md:grid-cols-2">
+              {upcomingEvents.map((event, index) => (
+                <div key={index} className="bg-gradient-to-r from-purple-50 to-pink-50 p-6 rounded-xl shadow-sm hover:shadow-md transition">
+                  <MdEventNote className="text-3xl text-purple-600 mb-3" />
+                  <h3 className="text-xl font-semibold mb-2">{event.name}</h3>
+                  <p className="text-gray-600">{event.date}</p>
+                  <button className="mt-4 bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition">
+                    Register Now
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        
         {/* Add other sections here as per your current logic */}
 
         {/* Logout Section */}

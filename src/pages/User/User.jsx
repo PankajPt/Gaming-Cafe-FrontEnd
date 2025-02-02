@@ -5,9 +5,14 @@ import { MdFitnessCenter, MdEventNote, MdPayment, MdVerified } from 'react-icons
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useAuth } from '../../context/Auth.Context.jsx'
+import { useNavigate } from 'react-router-dom';
 
 const UserPage = () => {
+  const navigate = useNavigate()
   const userData = localStorage.getItem('userData');
+  if(!userData){
+    navigate('/login')
+  }
   const userDetails = JSON.parse(userData);
   const [selectedSection, setSelectedSection] = useState('profile');
 
@@ -31,7 +36,7 @@ const UserPage = () => {
 
   const sendVerificationMail = async () => {
     try {
-      const response = await fetch(`${import.meta.env.VITE_LOCAL_BACKEND_BASE_URI}/users/verify-email-jwt`, {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_BASE_URI}/users/verify-email-jwt`, {
         method: 'GET',
         credentials: 'include',
       });

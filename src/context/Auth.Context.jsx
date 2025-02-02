@@ -20,7 +20,7 @@ export const AuthProvider = ({ children }) => {
 
         try {
             console.log(import.meta.env)
-            const response = await fetch(`${import.meta.env.VITE_LOCAL_BACKEND_BASE_URI}/users/login`, {
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_BASE_URI}/users/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(loginData),
@@ -43,7 +43,7 @@ export const AuthProvider = ({ children }) => {
 
     const logout = async() => {
         try {
-            const response = await fetch(`${import.meta.env.VITE_LOCAL_BACKEND_BASE_URI}/users/logout`, {
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_BASE_URI}/users/logout`, {
                 method: 'GET',
                 credentials: 'include'
             });

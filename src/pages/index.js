@@ -7,6 +7,7 @@ import RegisterPage from './Register/Register.jsx'
 import UserPage from './User/User.jsx'
 import Pricing from './Pricing/Pricing.jsx'
 import AdminDashboard from './Admin/AdminDashboard.jsx'
+import ForgotPasswordPage from './Login/ForgotPassword.jsx'
 
 export {
     Contact,
@@ -17,5 +18,6 @@ export {
     RegisterPage,
     UserPage,
     Pricing,
-    AdminDashboard
+    AdminDashboard,
+    ForgotPasswordPage
 }

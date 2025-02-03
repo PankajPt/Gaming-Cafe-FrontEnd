@@ -28,7 +28,7 @@ export const AuthProvider = ({ children }) => {
             });
 
             const userData = await response.json();
-            console.log(userData);
+            // console.log(userData);
 
             if (!response.ok) {
                 return userData.message;

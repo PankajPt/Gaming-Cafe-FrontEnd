@@ -6,6 +6,7 @@ const LoginPage = () => {
   const [error, setError] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [attemptFailed, setAttemptFailed] = useState(false);
   const [formData, setFormData] = useState({
     username: "",
     password: "",
@@ -43,6 +44,9 @@ const LoginPage = () => {
 
     if (typeof response === "string") {
       setError(response);
+      if(response === 'Invalid password'){
+        setAttemptFailed(true)
+      }
     }
   };
 
@@ -134,6 +138,17 @@ const LoginPage = () => {
             )}
           </button>
         </form>
+
+        {attemptFailed && (
+          <p className="text-sm text-center text-indigo-500 mt-4">
+            <Link
+            to="/forgot-password"
+            className="hover:underline"
+            >
+              Forgot Password?
+            </Link>
+          </p>
+        )}
 
         <div className="text-center space-y-4">
           <div className="text-gray-400 text-sm">

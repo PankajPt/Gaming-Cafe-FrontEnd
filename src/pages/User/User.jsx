@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { userLogo } from '../../assets/index.assets.js';
 import { FaEdit, FaCalendarAlt, FaRegClock, FaRegHeart, FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
 import { MdFitnessCenter, MdEventNote, MdPayment, MdVerified } from 'react-icons/md';
@@ -6,6 +6,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useAuth } from '../../context/Auth.Context.jsx'
 import { useNavigate } from 'react-router-dom';
+import { fetchData } from '../../services/api.js'
 
 const UserPage = () => {
   const navigate = useNavigate()
@@ -18,27 +19,34 @@ const UserPage = () => {
   const [isVerificationSent, setIsVerificationSent] = useState(false);
   const [verificationError, setVerificationError] = useState(null);
   const [selectedDate, setSelectedDate] = useState(new Date());
+
+  // update password
   const [showPasswordUpdate, setShowPasswordUpdate] = useState(false);
-const [passwords, setPasswords] = useState({
+  const [passwords, setPasswords] = useState({
   current: '',
-  new: '',
+  newPassword: '',
   confirm: ''
-});
-const [passwordsMatch, setPasswordsMatch] = useState(false);
-
-const handlePasswordChange = (e) => {
-  setPasswords({
-    ...passwords,
-    [e.target.name]: e.target.value
   });
-};
+  const [passwordsMatch, setPasswordsMatch] = useState(false);
 
-const handlePasswordSubmit = (e) => {
-  e.preventDefault();
-  // Add your password update logic here
-  console.log('Password update submitted:', passwords);
-};
+  const handlePasswordChange = (e) => {
+    setPasswords({
+      ...passwords,
+      [e.target.name]: e.target.value
+    });
+  };
 
+  useEffect(() => {
+    setPasswordsMatch(passwords.newPassword === passwords.confirm && passwords.newPassword.length > 0);
+  }, [passwords.newPassword, passwords.confirm]);
+
+  const handlePasswordSubmit = async(e) => {
+    e.preventDefault();
+    const response = await fetchData('users/reset-passwd-jwt', 'POST', passwords)
+    console.log(response)
+  };
+
+  // membership details
   const [activePlan] = useState('Premium Membership');
   const [upcomingEvents] = useState([
     { name: 'Yoga Workshop', date: 'March 25, 2024' },
@@ -50,11 +58,14 @@ const handlePasswordSubmit = (e) => {
     isVerified = true
   }
 
+  // update avatar
   const handleFileChange = (e) => {
     const file = e.target.files[0];
+
     console.log("Uploaded file:", file);
   };
 
+  // account verification mail
   const sendVerificationMail = async () => {
     try {
       const response = await fetch(`${import.meta.env.VITE_BACKEND_BASE_URI}/users/verify-email-jwt`, {
@@ -75,7 +86,7 @@ const handlePasswordSubmit = (e) => {
   };
 
 
-  const { logout } = useAuth();
+  const { logout } = useAuth(); 
 
   return (
     <div className="flex min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
@@ -84,7 +95,7 @@ const handlePasswordSubmit = (e) => {
         <div className="flex flex-col items-center mb-8">
           <div className="relative group">
             <img
-              src={userLogo}
+              src={userDetails.avatar || userLogo}
               alt="Profile"
               className="rounded-full w-32 h-32 border-4 border-blue-200 shadow-xl mb-4 transform transition duration-300 hover:scale-105"
             />
@@ -218,8 +229,8 @@ const handlePasswordSubmit = (e) => {
                       </label>
                       <input
                         type="password"
-                        name="new"
-                        value={passwords.new}
+                        name="newPassword"
+                        value={passwords.newPassword}
                         onChange={handlePasswordChange}
                         className="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500"
                         required

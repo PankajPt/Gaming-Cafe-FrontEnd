@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { userLogo } from '../../assets/index.assets.js';
-import { FaEdit, FaCalendarAlt, FaRegClock, FaRegHeart, FaCheckCircle } from 'react-icons/fa';
+import { FaEdit, FaCalendarAlt, FaRegClock, FaRegHeart, FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
 import { MdFitnessCenter, MdEventNote, MdPayment, MdVerified } from 'react-icons/md';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -18,6 +18,26 @@ const UserPage = () => {
   const [isVerificationSent, setIsVerificationSent] = useState(false);
   const [verificationError, setVerificationError] = useState(null);
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const [showPasswordUpdate, setShowPasswordUpdate] = useState(false);
+const [passwords, setPasswords] = useState({
+  current: '',
+  new: '',
+  confirm: ''
+});
+const [passwordsMatch, setPasswordsMatch] = useState(false);
+
+const handlePasswordChange = (e) => {
+  setPasswords({
+    ...passwords,
+    [e.target.name]: e.target.value
+  });
+};
+
+const handlePasswordSubmit = (e) => {
+  e.preventDefault();
+  // Add your password update logic here
+  console.log('Password update submitted:', passwords);
+};
 
   const [activePlan] = useState('Premium Membership');
   const [upcomingEvents] = useState([
@@ -129,7 +149,7 @@ const UserPage = () => {
                 </button>
               </div>
             )}
-                  {/* Success Message */}
+            {/* Success Message */}
             {isVerificationSent && (
               <div className="bg-green-50 p-4 rounded-lg border border-green-200">
                 <h3 className="font-semibold text-green-800">Verification Email Sent</h3>
@@ -167,6 +187,81 @@ const UserPage = () => {
                   <MdFitnessCenter className="mr-2 text-blue-500" />
                   {userDetails.email}
                 </p>
+              </div>
+              <div className="mt-8">
+                <button 
+                  onClick={() => setShowPasswordUpdate(!showPasswordUpdate)}
+                  className="text-blue-600 hover:text-blue-800 font-semibold flex items-center"
+                >
+                  {showPasswordUpdate ? '▲ Hide' : '▼ Change Password'}
+                </button>
+
+                {showPasswordUpdate && (
+                  <form onSubmit={handlePasswordSubmit} className="mt-4 space-y-6 max-w-md">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Current Password
+                      </label>
+                      <input
+                        type="password"
+                        name="current"
+                        value={passwords.current}
+                        onChange={handlePasswordChange}
+                        className="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500"
+                        required
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        New Password
+                      </label>
+                      <input
+                        type="password"
+                        name="new"
+                        value={passwords.new}
+                        onChange={handlePasswordChange}
+                        className="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500"
+                        required
+                      />
+                    </div>
+
+                    <div className="relative">
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Confirm New Password
+                      </label>
+                      <input
+                        type="password"
+                        name="confirm"
+                        value={passwords.confirm}
+                        onChange={handlePasswordChange}
+                        className="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500"
+                        required
+                      />
+                      {passwords.confirm.length > 0 && (
+                        <span className="absolute right-3 top-9">
+                          {passwordsMatch ? (
+                            <FaCheckCircle className="text-green-500" />
+                          ) : (
+                            <FaTimesCircle className="text-red-500" />
+                          )}
+                        </span>
+                      )}
+                    </div>
+
+                    <button
+                      type="submit"
+                      disabled={!passwordsMatch || !passwords.current}
+                      className={`w-full py-2 px-4 rounded-md text-white font-semibold ${
+                        passwordsMatch && passwords.current 
+                          ? 'bg-blue-600 hover:bg-blue-700' 
+                          : 'bg-gray-400 cursor-not-allowed'
+                      }`}
+                    >
+                      Update Password
+                    </button>
+                  </form>
+                )}
               </div>
             </div>
           </div>

@@ -4,68 +4,79 @@ import { FaEdit, FaCalendarAlt, FaRegClock, FaRegHeart, FaCheckCircle, FaTimesCi
 import { MdFitnessCenter, MdEventNote, MdPayment, MdVerified } from 'react-icons/md';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { useAuth } from '../../context/Auth.Context.jsx'
+import { useAuth } from '../../context/Auth.Context.jsx';
 import { useNavigate } from 'react-router-dom';
 import { fetchData } from '../../services/api.js'
 
 const UserPage = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const userData = localStorage.getItem('userData');
-  if(!userData){
-    navigate('/login')
+  if (!userData) {
+    navigate('/login');
   }
   const userDetails = JSON.parse(userData);
   const [selectedSection, setSelectedSection] = useState('profile');
   const [isVerificationSent, setIsVerificationSent] = useState(false);
   const [verificationError, setVerificationError] = useState(null);
   const [selectedDate, setSelectedDate] = useState(new Date());
-
-  // update password
   const [showPasswordUpdate, setShowPasswordUpdate] = useState(false);
   const [passwords, setPasswords] = useState({
-  current: '',
-  newPassword: '',
-  confirm: ''
+    current: '',
+    newPassword: '',
+    confirm: '',
   });
   const [passwordsMatch, setPasswordsMatch] = useState(false);
+  const [updateStatus, setUpdateStatus] = useState(null);
+
+  const { logout } = useAuth();
+
+  useEffect(() => {
+    setPasswordsMatch(passwords.newPassword === passwords.confirm);
+  }, [passwords.newPassword, passwords.confirm]);
 
   const handlePasswordChange = (e) => {
     setPasswords({
       ...passwords,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
-  useEffect(() => {
-    setPasswordsMatch(passwords.newPassword === passwords.confirm && passwords.newPassword.length > 0);
-  }, [passwords.newPassword, passwords.confirm]);
-
-  const handlePasswordSubmit = async(e) => {
+  const handlePasswordSubmit = async (e) => {
     e.preventDefault();
-    const response = await fetchData('users/reset-passwd-jwt', 'POST', passwords)
-    console.log(response)
+    try {
+      // Simulate API call for password update
+      // const response = await fetch(`${import.meta.env.VITE_BACKEND_BASE_URI}/users/update-password`, {
+      //   method: 'POST',
+      //   credentials: 'include',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+      //   body: JSON.stringify({
+      //     current: passwords.current,
+      //     newPassword: passwords.newPassword,
+      //     confirm: passwords.confirm
+      //   }),
+      // });
+
+      const response = await fetchData('users/reset-passwd-jwt', 'POST', passwords)
+      if (!response.success) {
+        setUpdateStatus({ type: 'error', message: response.error });
+        return
+      }
+      setUpdateStatus({ type: 'success', message: 'Password updated successfully!' });
+      setPasswords({ current: '', newPassword: '', confirm: '' });
+      setTimeout(() => setShowPasswordUpdate(false), 2000);
+    } catch (error) {
+      setUpdateStatus({ type: 'error', message: 'Failed to update password. Please try again.' });
+      console.error('Error updating password:', error);
+    }
   };
 
-  // membership details
-  const [activePlan] = useState('Premium Membership');
-  const [upcomingEvents] = useState([
-    { name: 'Yoga Workshop', date: 'March 25, 2024' },
-    { name: 'HIIT Challenge', date: 'April 2, 2024' }
-  ]);
-
-  let isVerified = false
-  if(userDetails.isActiveUser === 'active'){
-    isVerified = true
-  }
-
-  // update avatar
   const handleFileChange = (e) => {
     const file = e.target.files[0];
-
-    console.log("Uploaded file:", file);
+    console.log('Uploaded file:', file);
   };
 
-  // account verification mail
   const sendVerificationMail = async () => {
     try {
       const response = await fetch(`${import.meta.env.VITE_BACKEND_BASE_URI}/users/verify-email-jwt`, {
@@ -85,8 +96,16 @@ const UserPage = () => {
     }
   };
 
+  const [activePlan] = useState('Premium Membership');
+  const [upcomingEvents] = useState([
+    { name: 'Yoga Workshop', date: 'March 25, 2024' },
+    { name: 'HIIT Challenge', date: 'April 2, 2024' },
+  ]);
 
-  const { logout } = useAuth(); 
+  let isVerified = false;
+  if (userDetails.isActiveUser === 'active') {
+    isVerified = true;
+  }
 
   return (
     <div className="flex min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
@@ -95,17 +114,13 @@ const UserPage = () => {
         <div className="flex flex-col items-center mb-8">
           <div className="relative group">
             <img
-              src={userDetails.avatar || userLogo}
+              src={userLogo}
               alt="Profile"
               className="rounded-full w-32 h-32 border-4 border-blue-200 shadow-xl mb-4 transform transition duration-300 hover:scale-105"
             />
             <label className="absolute bottom-2 right-2 bg-orange-500 p-2 rounded-full cursor-pointer hover:bg-orange-600 shadow-md transition duration-200">
               <FaEdit className="text-white" />
-              <input
-                type="file"
-                className="hidden"
-                onChange={handleFileChange}
-              />
+              <input type="file" className="hidden" onChange={handleFileChange} />
             </label>
           </div>
           <h2 className="text-xl font-bold text-blue-100">{userDetails.username}</h2>
@@ -126,9 +141,9 @@ const UserPage = () => {
             <li
               key={section}
               className={`p-3 rounded-xl cursor-pointer transition duration-200 flex items-center ${
-                selectedSection === section 
-                ? 'bg-blue-900 shadow-inner border-2 border-blue-300' 
-                : 'hover:bg-blue-700/80 hover:shadow-md'
+                selectedSection === section
+                  ? 'bg-blue-900 shadow-inner border-2 border-blue-300'
+                  : 'hover:bg-blue-700/80 hover:shadow-md'
               }`}
               onClick={() => setSelectedSection(section)}
             >
@@ -144,7 +159,7 @@ const UserPage = () => {
         {selectedSection === 'profile' && (
           <div className="bg-white p-8 rounded-2xl shadow-2xl space-y-6">
             <h1 className="text-4xl font-bold text-blue-600 mb-6">Profile Settings</h1>
-            
+
             {/* Account Verification Status */}
             {!isVerified && (
               <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-200 flex items-center justify-between">
@@ -152,7 +167,7 @@ const UserPage = () => {
                   <h3 className="font-semibold text-yellow-800">Account Not Verified</h3>
                   <p className="text-sm text-yellow-700">Verify your account to access all features</p>
                 </div>
-                <button 
+                <button
                   onClick={sendVerificationMail}
                   className="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg transition-colors"
                 >
@@ -160,6 +175,7 @@ const UserPage = () => {
                 </button>
               </div>
             )}
+
             {/* Success Message */}
             {isVerificationSent && (
               <div className="bg-green-50 p-4 rounded-lg border border-green-200">
@@ -187,9 +203,7 @@ const UserPage = () => {
 
               <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow">
                 <label className="text-sm font-semibold text-blue-500">Username</label>
-                <p className="text-2xl text-gray-800 mt-1">
-                  {userDetails.username}
-                </p>
+                <p className="text-2xl text-gray-800 mt-1">{userDetails.username}</p>
               </div>
 
               <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow">
@@ -199,8 +213,10 @@ const UserPage = () => {
                   {userDetails.email}
                 </p>
               </div>
+
+              {/* Password Update Section */}
               <div className="mt-8">
-                <button 
+                <button
                   onClick={() => setShowPasswordUpdate(!showPasswordUpdate)}
                   className="text-blue-600 hover:text-blue-800 font-semibold flex items-center"
                 >
@@ -210,9 +226,7 @@ const UserPage = () => {
                 {showPasswordUpdate && (
                   <form onSubmit={handlePasswordSubmit} className="mt-4 space-y-6 max-w-md">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Current Password
-                      </label>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Current Password</label>
                       <input
                         type="password"
                         name="current"
@@ -224,9 +238,7 @@ const UserPage = () => {
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        New Password
-                      </label>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">New Password</label>
                       <input
                         type="password"
                         name="newPassword"
@@ -238,9 +250,7 @@ const UserPage = () => {
                     </div>
 
                     <div className="relative">
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Confirm New Password
-                      </label>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Confirm New Password</label>
                       <input
                         type="password"
                         name="confirm"
@@ -264,8 +274,8 @@ const UserPage = () => {
                       type="submit"
                       disabled={!passwordsMatch || !passwords.current}
                       className={`w-full py-2 px-4 rounded-md text-white font-semibold ${
-                        passwordsMatch && passwords.current 
-                          ? 'bg-blue-600 hover:bg-blue-700' 
+                        passwordsMatch && passwords.current
+                          ? 'bg-blue-600 hover:bg-blue-700'
                           : 'bg-gray-400 cursor-not-allowed'
                       }`}
                     >
@@ -273,13 +283,24 @@ const UserPage = () => {
                     </button>
                   </form>
                 )}
+
+                {/* Password Update Status */}
+                {updateStatus && (
+                  <div
+                    className={`mt-4 p-4 rounded-lg ${
+                      updateStatus.type === 'success' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                    }`}
+                  >
+                    {updateStatus.message}
+                  </div>
+                )}
               </div>
             </div>
           </div>
         )}
 
-        {/* Membership Sections */}
-        {selectedSection === 'my-plan' && (
+                {/* Membership Sections */}
+                {selectedSection === 'my-plan' && (
           <div className="bg-white p-8 rounded-2xl shadow-2xl">
             <h2 className="text-3xl font-bold text-blue-600 mb-6">My Membership</h2>
             
@@ -375,9 +396,6 @@ const UserPage = () => {
             </div>
           </div>
         )}
-
-        
-        {/* Add other sections here as per your current logic */}
 
         {/* Logout Section */}
         {selectedSection === 'logout' && (

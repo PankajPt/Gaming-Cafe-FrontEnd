@@ -44,20 +44,6 @@ const UserPage = () => {
   const handlePasswordSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Simulate API call for password update
-      // const response = await fetch(`${import.meta.env.VITE_BACKEND_BASE_URI}/users/update-password`, {
-      //   method: 'POST',
-      //   credentials: 'include',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      //   body: JSON.stringify({
-      //     current: passwords.current,
-      //     newPassword: passwords.newPassword,
-      //     confirm: passwords.confirm
-      //   }),
-      // });
-
       const response = await fetchData('users/reset-passwd-jwt', 'POST', passwords)
       if (!response.success) {
         setUpdateStatus({ type: 'error', message: response.error });

@@ -7,6 +7,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { useAuth } from '../../context/Auth.Context.jsx';
 import { useNavigate } from 'react-router-dom';
 import { fetchData } from '../../services/api.js'
+import { refreshAndRetry } from '../../services/tokenHandler.js'
 
 const UserPage = () => {
   const navigate = useNavigate();
@@ -46,9 +47,34 @@ const UserPage = () => {
     try {
       const response = await fetchData('users/reset-passwd-jwt', 'POST', passwords)
       if (!response.success) {
+        if(response.error === 'jwt expired'){
+          const isTokenRefreshed = await refreshAndRetry()
+          if(!isTokenRefreshed){
+            navigate('/logout')
+            return
+          }
+
+          const retryWithNewToken = await fetchData('users/reset-passwd-jwt', 'POST', passwords)
+          if(retryWithNewToken.success){
+            setUpdateStatus({ type: 'success', message: 'Password updated successfully!' });
+            setPasswords({ current: '', newPassword: '', confirm: '' });
+            setTimeout(() => setShowPasswordUpdate(false), 2000);
+          }
+
+        } else if (response.error === 'jwt malformed' || response.error === 'invalid signature'){
+          try {
+            await logout()
+          } catch (error) {
+            console.log(error.message)
+          }finally{
+            navigate('/logout') 
+          }
+        }
+        
         setUpdateStatus({ type: 'error', message: response.error });
         return
       }
+
       setUpdateStatus({ type: 'success', message: 'Password updated successfully!' });
       setPasswords({ current: '', newPassword: '', confirm: '' });
       setTimeout(() => setShowPasswordUpdate(false), 2000);

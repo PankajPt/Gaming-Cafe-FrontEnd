@@ -24,5 +24,9 @@ export const fetchData = async(endpoint, method = 'GET', data = null)=>{
         return responseData
     } catch (error) {
         console.error(`${method} request error:`, error);
+        return {
+            success: false,
+            error: error?.message
+        }
     }
 }

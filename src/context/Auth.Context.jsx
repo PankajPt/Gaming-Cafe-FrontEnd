@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect } from "react"; 
+import { Navigate } from "react-router-dom";
 
 export const AuthContext = createContext(null);
 
@@ -48,18 +49,17 @@ export const AuthProvider = ({ children }) => {
                 method: 'GET',
                 credentials: 'include'
             });
-
             const data = await response.json();
             if (!response.ok) {
                 throw new Error(data.message || 'Logout failed');
-            }
-
-            setUserRole(null);
-            localStorage.removeItem("userData");
+            }  
             return data.messages || 'Successfully logged out';
         } catch (error) {
             console.error(error);
             return error.message || 'An error occurred during logout';
+        } finally {
+            setUserRole(null);
+            localStorage.removeItem("userData");
         }
     };
 

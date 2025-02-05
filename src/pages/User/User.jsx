@@ -7,7 +7,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { useAuth } from '../../context/Auth.Context.jsx';
 import { useNavigate } from 'react-router-dom';
 import { fetchData } from '../../services/api.js'
-import { refreshAndRetry } from '../../services/tokenHandler.js'
+import { useAuthHandler } from '../../hooks/authHandler.js'
 
 const UserPage = () => {
   const navigate = useNavigate();
@@ -30,6 +30,7 @@ const UserPage = () => {
   const [updateStatus, setUpdateStatus] = useState(null);
 
   const { logout } = useAuth();
+  const { refreshAndRetry, handleInvalidJWT } = useAuthHandler()
 
   useEffect(() => {
     setPasswordsMatch(passwords.newPassword === passwords.confirm);
@@ -47,31 +48,27 @@ const UserPage = () => {
     try {
       const response = await fetchData('users/reset-passwd-jwt', 'POST', passwords)
       if (!response.success) {
-        if(response.error === 'jwt expired'){
-          const isTokenRefreshed = await refreshAndRetry()
-          if(!isTokenRefreshed){
-            navigate('/logout')
+        // using hook to check whether jwt is expired
+        if(response.message === 'jwt expired'){
+          const isTokenRefrshed = await refreshAndRetry()
+          if(!isTokenRefrshed.success){
             return
           }
-
           const retryWithNewToken = await fetchData('users/reset-passwd-jwt', 'POST', passwords)
           if(retryWithNewToken.success){
             setUpdateStatus({ type: 'success', message: 'Password updated successfully!' });
             setPasswords({ current: '', newPassword: '', confirm: '' });
             setTimeout(() => setShowPasswordUpdate(false), 2000);
+          } else {
+            setUpdateStatus({ type: 'error', message: retryWithNewToken.message });
+            return
           }
 
-        } else if (response.error === 'jwt malformed' || response.error === 'invalid signature'){
-          try {
-            await logout()
-          } catch (error) {
-            console.log(error.message)
-          }finally{
-            navigate('/logout') 
-          }
+        } else if (response.message === 'jwt malformed' || response.message === 'invalid signature'){
+          await handleInvalidJWT()
+          return
         }
-        
-        setUpdateStatus({ type: 'error', message: response.error });
+        setUpdateStatus({ type: 'error', message: response.message });
         return
       }
 
@@ -91,12 +88,13 @@ const UserPage = () => {
 
   const sendVerificationMail = async () => {
     try {
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_BASE_URI}/users/verify-email-jwt`, {
-        method: 'GET',
-        credentials: 'include',
-      });
+      // const response = await fetch(`${import.meta.env.VITE_BACKEND_BASE_URI}/users/verify-email-jwt`, {
+      //   method: 'GET',
+      //   credentials: 'include',
+      // });
+      const response = await fetchData('users/verify-email-jwt', 'GET')
 
-      if (!response.ok) {
+      if (!response.success) {
         setVerificationError('Failed to send verification email. Please try again.');
       }
       setIsVerificationSent(true); // Hide the verification banner

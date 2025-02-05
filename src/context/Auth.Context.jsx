@@ -1,5 +1,4 @@
 import { createContext, useContext, useState, useEffect } from "react"; 
-import { Navigate } from "react-router-dom";
 
 export const AuthContext = createContext(null);
 
@@ -20,7 +19,6 @@ export const AuthProvider = ({ children }) => {
         const loginData = { username, password };
 
         try {
-            console.log(import.meta.env)
             const response = await fetch(`${import.meta.env.VITE_BACKEND_BASE_URI}/users/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },

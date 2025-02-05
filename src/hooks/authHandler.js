@@ -1,29 +1,33 @@
-import { useAuth } from '../context/Auth.Context'
-import { useNavigate } from 'react-router-dom'
-
+import { useAuth } from '../context/Auth.Context.jsx'
+import { fetchData } from '../services/api.js';
 
 export const useAuthHandler = () => {
+    const { logout } = useAuth()
     const refreshAndRetry = async () => {
-        const { logout } = useAuth()
-        const navigate = useNavigate()
-        const options = {
-            method: 'GET',
-            credentials: 'include',
-        }
-
-        const response = await fetch(`${import.meta.env.VITE_BACKEND_BASE_URI}/users/refresh`, options)
-        if(!response.ok){
-            try {
-                await logout()
-            } catch (error) {
-                console.log(error.message)
-            } finally{
-                navigate('/logout')
-                return false
+        try {
+            const response = await fetchData('users/refresh', 'GET')    
+            if (response.success) {
+                return response;
             }
+            console.log(response)
+
+            if (response.success === false && response.message === 'FRL') {
+                await logout();
+                return { success: false, forceLogout: true, message: response.error };
+            }
+            return response;
+    
+        } catch (error) {
+            console.error('Network error during token refresh:', error);
+            return { success: false, forceLogout: false, message: 'Network error' };
         }
-        return true
+    };
+    
+
+    const handleInvalidJWT = async() => {
+        await logout()
+        return
     }
 
-    return refreshAndRetry
+    return { refreshAndRetry, handleInvalidJWT }
 }

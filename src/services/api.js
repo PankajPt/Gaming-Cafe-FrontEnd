@@ -18,7 +18,7 @@ export const fetchData = async(endpoint, method = 'GET', data = null)=>{
             return {
                 success: false,
                 status: responseData?.statusCode,
-                error: responseData?.message
+                message: responseData?.message
             }
         }
         return responseData
@@ -26,7 +26,7 @@ export const fetchData = async(endpoint, method = 'GET', data = null)=>{
         console.error(`${method} request error:`, error);
         return {
             success: false,
-            error: error?.message
+            message: error?.message
         }
     }
 }

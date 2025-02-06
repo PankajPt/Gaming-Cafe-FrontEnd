@@ -50,19 +50,14 @@ const UserPage = () => {
       if (!response.success) {
         // using hook to check whether jwt is expired
         if(response.message === 'jwt expired'){
-          const isTokenRefrshed = await refreshAndRetry()
-          if(!isTokenRefrshed.success){
-            return
-          }
-          const retryWithNewToken = await fetchData('users/reset-passwd-jwt', 'POST', passwords)
-          if(retryWithNewToken.success){
-            setUpdateStatus({ type: 'success', message: 'Password updated successfully!' });
-            setPasswords({ current: '', newPassword: '', confirm: '' });
-            setTimeout(() => setShowPasswordUpdate(false), 2000);
-          } else {
+          const retryWithNewToken = await refreshAndRetry('users/reset-passwd-jwt', 'POST', passwords)
+          if(!retryWithNewToken.success){
             setUpdateStatus({ type: 'error', message: retryWithNewToken.message });
             return
           }
+          setUpdateStatus({ type: 'success', message: 'Password updated successfully!' });
+          setPasswords({ current: '', newPassword: '', confirm: '' });
+          setTimeout(() => setShowPasswordUpdate(false), 2000);
 
         } else if (response.message === 'jwt malformed' || response.message === 'invalid signature'){
           await handleInvalidJWT()
@@ -88,21 +83,30 @@ const UserPage = () => {
 
   const sendVerificationMail = async () => {
     try {
-      // const response = await fetch(`${import.meta.env.VITE_BACKEND_BASE_URI}/users/verify-email-jwt`, {
-      //   method: 'GET',
-      //   credentials: 'include',
-      // });
-      const response = await fetchData('users/verify-email-jwt', 'GET')
-
+      const response = await fetchData('users/send-verification-link', 'GET')
       if (!response.success) {
+        if(response.message === 'jwt expired'){
+          const retryWithNewToken = await refreshAndRetry('users/send-verification-link', 'GET')
+          if(!retryWithNewToken.success){
+            setVerificationError('An error occurred. Please try again later.');
+            return
+          }
+          setIsVerificationSent(true); // Hide the verification banner
+          setVerificationError(null); // Clear any previous errors
+          alert('Verification email sent successfully! Please check your inbox.');
+
+        } else if (response.message === 'jwt malformed' || response.message === 'invalid signature'){
+          await handleInvalidJWT()
+          return
+        }
         setVerificationError('Failed to send verification email. Please try again.');
+        return
       }
       setIsVerificationSent(true); // Hide the verification banner
       setVerificationError(null); // Clear any previous errors
       alert('Verification email sent successfully! Please check your inbox.');
     } catch (error) {
       setVerificationError('An error occurred. Please try again later.');
-      console.error('Error sending verification email:', error);
     }
   };
 

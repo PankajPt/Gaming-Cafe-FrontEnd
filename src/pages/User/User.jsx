@@ -1,7 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { userLogo } from '../../assets/index.assets.js';
-import { FaEdit } from 'react-icons/fa';
-import { MdVerified } from 'react-icons/md';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useAuth } from '../../context/Auth.Context.jsx';
@@ -53,11 +50,17 @@ const UserPage = () => {
   const handlePasswordSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetchData('users/reset-passwd-jwt', 'POST', passwords)
+      const options = {
+        method: 'POST',
+        data: passwords,
+        file: null,
+        isBinary: false
+    }
+      const response = await fetchData('users/reset-passwd-jwt', options)
       if (!response.success) {
         // using hook to check whether jwt is expired
         if(response.message === 'jwt expired'){
-          const retryWithNewToken = await refreshAndRetry('users/reset-passwd-jwt', 'POST', passwords)
+          const retryWithNewToken = await refreshAndRetry('users/reset-passwd-jwt', options)
           if(!retryWithNewToken.success){
             setUpdateStatus({ type: 'error', message: retryWithNewToken.message });
             return
@@ -83,17 +86,19 @@ const UserPage = () => {
     }
   };
 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    console.log('Uploaded file:', file);
-  };
 
   const sendVerificationMail = async () => {
     try {
-      const response = await fetchData('users/send-verification-link', 'GET')
+      const options = {
+        method: 'GET',
+        data: null,
+        file: null,
+        isBinary: false
+    }
+      const response = await fetchData('users/send-verification-link', options)
       if (!response.success) {
         if(response.message === 'jwt expired'){
-          const retryWithNewToken = await refreshAndRetry('users/send-verification-link', 'GET')
+          const retryWithNewToken = await refreshAndRetry('users/send-verification-link', options)
           if(!retryWithNewToken.success){
             setVerificationError('An error occurred. Please try again later.');
             return
@@ -132,8 +137,6 @@ const UserPage = () => {
     <div className="flex min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
       {/* Left Sidebar */}
       <LeftSideBar
-      userLogo={userLogo}
-      handleFileChange={handleFileChange}
       userDetails={userDetails}
       isVerified={isVerified}
       selectedSection={selectedSection}

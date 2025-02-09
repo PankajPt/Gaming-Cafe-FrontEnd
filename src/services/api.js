@@ -1,18 +1,16 @@
 
-export const fetchData = async(endpoint, method = 'GET', data = null)=>{
+const BASE_URL = import.meta.env.VITE_BACKEND_BASE_URI;
+
+export const fetchData = async(endpoint, {method = 'GET', data = null, file = null, isBinary = false} = {})=>{
     try {
         const config = {
             method,
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: isBinary ? {} : { 'Content-Type': 'application/json'},
+            body: isBinary && file ? file : data ? JSON.stringify(data) : null,
             credentials: 'include'
         }
 
-        if(data && (method === 'POST' || method === 'PATCH' || method === 'PUT')){
-            config.body = JSON.stringify(data)
-        }
-        const response = await fetch(`${import.meta.env.VITE_BACKEND_BASE_URI}/${endpoint}`,config)
+        const response = await fetch(`${BASE_URL}/${endpoint}`, config)
         const responseData = await response.json();
         if(!response.ok){
             return {

@@ -3,11 +3,11 @@ import { fetchData } from '../services/api.js';
 
 export const useAuthHandler = () => {
     const { logout } = useAuth()
-    const refreshAndRetry = async (endpoint, method, data) => {
+    const refreshAndRetry = async (endpoint, options) => {
         try {
-            const response = await fetchData('users/refresh', 'GET')    
+            const response = await fetchData('users/refresh', options)    
             if (response.success) {
-                const retry = await fetchData(endpoint, method, data)
+                const retry = await fetchData(endpoint, options)
                 return retry                
             }
             if (response.success === false && response.message === 'FRL') {

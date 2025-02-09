@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { FaUser, FaEnvelope, FaLock, FaCamera, FaCheckCircle } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { fetchData } from "../../services/api";
 
 
 const RegisterPage = () => {
@@ -24,6 +25,7 @@ const RegisterPage = () => {
     } else {
       setFormData((prev) => ({ ...prev, [name]: value }));
     }
+    console.log(files)
   };
   
 
@@ -52,27 +54,30 @@ const RegisterPage = () => {
       formPayload.append('password', formData.password);
       
       if (formData.avatar) formPayload.append('avatar', formData.avatar);
-      const response = await fetch(`https://madgearapi.onrender.com/api/v1/users/register`, {
+
+      const options = {
         method: 'POST',
-        body: formPayload
-      });
+        data: null,
+        file: formPayload,
+        isBinary: true
+      }
+      
+    console.log(options)
+      const response = await fetchData('users/register', options)
 
-
-      if (!response.ok) {
+      if (!response.success) {
         const errorData = await response.json()
-        setLoading(false)
         setError(errorData.message || 'Something went wrong during registration.')
         return
       }
-      
       setSuccess(true);
-      setLoading(false)
       setTimeout(() => {
         navigate('/login')
       }, 2000);
     } catch (err) {
-      setLoading(false)
       setError(err.message || "Something went wrong during registration.");
+    } finally {
+      setLoading(false)
     }
   };
 

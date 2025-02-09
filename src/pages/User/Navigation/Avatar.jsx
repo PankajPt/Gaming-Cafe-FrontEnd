@@ -2,27 +2,31 @@ import { useState } from "react";
 import { userLogo } from '../../../assets/index.assets.js';
 import { FaEdit } from 'react-icons/fa';
 import { fetchData } from "../../../services/api.js";
+import { useAuthHandler } from '../../../hooks/authHandler.js'
 
 const Avatar = () => {
       const [profilePic, setProfilePic] = useState(userLogo);
       const [popup, setPopup] = useState(null)
+      const { refreshAndRetry, handleInvalidJWT } = useAuthHandler()
       const handleFileChange = async(e) => {
         const file = e.target.files[0];
-        
+        // console.log(file)
         if (file) {
           const formPayload = new FormData()
           formPayload.append('avatar', file)
-          console.log(formPayload)
+          console.log(formPayload.get('avatar'))
           const options = {
             method: 'PATCH',
             data: null,
-            file,
+            file: formPayload,
             isBinary: true
         }
         const response = await fetchData('users/update-avatar', options)
+
         if (!response.success) {
             if(response.message === 'jwt expired'){
               const retryWithNewToken = await refreshAndRetry('users/update-avatar', options)
+              console.log(retryWithNewToken)
               if(!retryWithNewToken.success){
                 setPopup('An error occurred. Please try again later.');
                 return

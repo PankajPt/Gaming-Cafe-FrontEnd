@@ -5,11 +5,19 @@ export const useAuthHandler = () => {
     const { logout } = useAuth()
     const refreshAndRetry = async (endpoint, options) => {
         try {
-            const response = await fetchData('users/refresh', options)    
+            const refreshOptions = {
+                method: 'GET',
+                data: null,
+                file: null,
+                isBinary: false
+            }
+            const response = await fetchData('users/refresh', refreshOptions)
+            
             if (response.success) {
                 const retry = await fetchData(endpoint, options)
                 return retry                
             }
+            console.log(response)
             if (response.success === false && response.message === 'FRL') {
                 await logout();
                 return { success: false, forceLogout: true, message: response.error };

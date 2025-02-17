@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { MdPeople, MdVerified } from 'react-icons/md';
-import { FaGamepad, FaRegSave } from 'react-icons/fa';
+import { FaRegSave } from 'react-icons/fa';
   
 
 const UserManagement = () => {

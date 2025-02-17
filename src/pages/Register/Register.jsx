@@ -61,8 +61,6 @@ const RegisterPage = () => {
         file: formPayload,
         isBinary: true
       }
-      
-    console.log(options)
       const response = await fetchData('users/register', options)
 
       if (!response.success) {

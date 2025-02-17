@@ -68,7 +68,6 @@ const UserPage = () => {
           setUpdateStatus({ type: 'success', message: 'Password updated successfully!' });
           setPasswords({ current: '', newPassword: '', confirm: '' });
           setTimeout(() => setShowPasswordUpdate(false), 2000);
-
         } else if (response.message === 'jwt malformed' || response.message === 'invalid signature'){
           await handleInvalidJWT()
           return

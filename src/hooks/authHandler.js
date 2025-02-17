@@ -3,6 +3,7 @@ import { fetchData } from '../services/api.js';
 
 export const useAuthHandler = () => {
     const { logout } = useAuth()
+    // expect retry api endpoint and options as input
     const refreshAndRetry = async (endpoint, options) => {
         try {
             const refreshOptions = {

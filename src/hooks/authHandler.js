@@ -1,5 +1,5 @@
 import { useAuth } from '../context/Auth.Context.jsx'
-import { fetchData } from '../services/api.js';
+import { fetchData } from '../services/api.service.js';
 
 export const useAuthHandler = () => {
     const { logout } = useAuth()

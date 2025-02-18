@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { userLogo } from '../../../assets/index.assets.js';
 import { FaEdit } from 'react-icons/fa';
-import { fetchData } from "../../../services/api.js";
+import { fetchData } from "../../../services/api.service.js";
 import { useAuthHandler } from '../../../hooks/authHandler.js';
 
 const Avatar = () => {

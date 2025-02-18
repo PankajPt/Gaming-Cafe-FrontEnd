@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { FaUser, FaEnvelope, FaLock, FaCamera, FaCheckCircle } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import { fetchData } from "../../services/api";
+import { fetchData } from "../../services/api.service.js";
 
 
 const RegisterPage = () => {

@@ -8,7 +8,7 @@ import { useState } from 'react';
   import { EventManagement } from './EventManagement.jsx';
 
 const AdminDashboard = () => {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  // const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const [activeSection, setActiveSection] = useState('users');
   const handleSection = (sectionId) => {

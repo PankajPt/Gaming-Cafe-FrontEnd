@@ -8,9 +8,9 @@ import { useAuthHandler } from '../../hooks/authHandler.js'
 
 // components
 import UserProfile from './UserProfile/UserProfile.jsx'
-import Membership from './Membership/Membership.jsx'
-import BookSlot from './BookSlot/BookSlot.jsx'
-import Events from './Events/Events.jsx';
+import Membership from './Membership.jsx'
+import BookSlot from './BookSlot.jsx'
+import Events from './Events.jsx';
 import LeftSideBar from './Navigation/LeftSidebar.jsx';
 
 const UserPage = () => {
@@ -68,7 +68,7 @@ const UserPage = () => {
           setUpdateStatus({ type: 'success', message: 'Password updated successfully!' });
           setPasswords({ current: '', newPassword: '', confirm: '' });
           setTimeout(() => setShowPasswordUpdate(false), 2000);
-        } else if (response.message === 'jwt malformed' || response.message === 'invalid signature'){
+        } else if (response.message === 'jwt malformed' || response.message === 'invalid signature' || response.message === 'Unauthorized request'){
           await handleInvalidJWT()
           return
         }
@@ -106,7 +106,7 @@ const UserPage = () => {
           setVerificationError(null); // Clear any previous errors
           alert('Verification email sent successfully! Please check your inbox.');
 
-        } else if (response.message === 'jwt malformed' || response.message === 'invalid signature'){
+        } else if (response.message === 'jwt malformed' || response.message === 'invalid signature' || response.message === 'Unauthorized request'){
           await handleInvalidJWT()
           return
         }

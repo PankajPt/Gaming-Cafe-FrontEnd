@@ -10,7 +10,8 @@ export default function Header() {
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const closeMenu = () => setIsMenuOpen(false);
   const handleProfileClick = () => {
-    navigate('/user'); // Navigate to the '/users' route
+    userRole === 'admin' ? navigate('/admin') : navigate('/user'); 
+    // Navigate to the '/users' route
   };
 
   return (

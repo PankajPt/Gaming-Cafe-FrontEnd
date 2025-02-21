@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { MdSportsEsports, MdDelete } from 'react-icons/md';
 import { fetchData } from '../../services/api.service.js';
 import { useAuthHandler } from '../../hooks/authHandler.js';
@@ -7,7 +7,6 @@ import { fetchGameCatalogue } from '../../services/game.service.js';
 
 const ManageCatalogue = () => {
     const [games, setGames] = useState([]);
-
     const [newGame, setNewGame] = useState({ title: '', description: '', image: '' });
     const [error, setError] = useState(null);
     const [success, setSuccess] = useState(null);
@@ -15,22 +14,36 @@ const ManageCatalogue = () => {
     const [popupMessage, setPopupMessage] = useState(null);
     const [showDeletePopup, setShowDeletePopup] = useState(null);
     const { refreshAndRetry, handleInvalidJWT } = useAuthHandler();
+    const isFetched = useRef(false);
 
     const isValidForm = () => {
         return newGame.title && newGame.description && newGame.thumbnail;
     };
 
     useEffect(() => {
+        // console.log(games)
+        const catalogue = sessionStorage.getItem('gameCatalogue')
+        // console.log(catalogueData)
+        if (isFetched.current) return;
+    
         const getGames = async () => {
             const games = await fetchGameCatalogue();
-            if(!games.success){
+            if (!games.success) {
                 setPopupMessage({ type: 'error', message: games.message || 'Failed to load game catalog' });
                 setTimeout(() => setPopupMessage(null), 2000);
                 return;
             }
+            sessionStorage.setItem('gameCatalogue', JSON.stringify(games.data));
             setGames(games.data);
         };
-        getGames();
+        
+        if (!catalogue) {
+            getGames();
+            isFetched.current = true;
+        } else {
+            const catalogueData = JSON.parse(catalogue)
+            setGames(catalogueData);
+        }
     }, []);
 
     const handleChange = (e) => {
@@ -96,9 +109,46 @@ const ManageCatalogue = () => {
         }
     };
 
-    const deleteGame = (gameId) => {
-        setGames(games.filter(game => game.id !== gameId));
-    };
+    const handleDeleteGame = async(gameId) => {
+        const options = {
+            method: 'DELETE',
+            data: { gameId },
+            file: null,
+            isBinary: false
+        }
+        try {
+            const response = await fetchData('admin/delete-game', options)
+            if (!response.success) {
+                if(response.message === 'jwt expired'){
+                  const retryWithNewToken = await refreshAndRetry('admin/delete-game', options)
+                  if(!retryWithNewToken.success){
+                    setError({ type: 'error', message: response.message });
+                    return
+                  }
+                  setSuccess({ type: 'success', message: 'game deleted successfully!!' });
+                  sessionStorage.setItem('gameCatalogue', JSON.stringify(retryWithNewToken.data));
+
+                } else if (response.message === 'jwt malformed' || response.message === 'invalid signature' || response.message === 'Unauthorized request'){
+                  await handleInvalidJWT()
+                  return
+                }
+                setError({ type: 'error', message: response.message });
+                return
+              }
+              
+            setSuccess({ type: 'success', message: 'game deleted successfully!!' });
+            sessionStorage.setItem('gameCatalogue', JSON.stringify(response.data));
+
+        } catch (error) {
+            setError({ type: 'error', message: response.message });
+        } finally {
+            setShowDeletePopup(null),
+            setTimeout(()=>{
+                setError(null),
+                setSuccess(null)
+            }, 5000)
+        }
+    }
 
     return (
         <div className="bg-white p-8 rounded-2xl shadow-2xl">
@@ -132,7 +182,7 @@ const ManageCatalogue = () => {
                         <p className="text-lg font-semibold mb-4">Are you sure you want to delete this game?</p>
                         <div className="flex justify-center gap-4">
                             <button
-                                onClick={() => deleteGame(showDeletePopup)}
+                                onClick={() => handleDeleteGame(showDeletePopup)}
                                 className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
                             >
                                 Yes, Delete

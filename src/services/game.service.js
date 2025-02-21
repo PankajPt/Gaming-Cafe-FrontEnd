@@ -8,6 +8,7 @@ export const fetchGameCatalogue = async () => {
     };
     try {
         const response = await fetchData(`users/catalogue`, options)
+        sessionStorage.setItem('gameCatalogue', JSON.stringify(response.data));
         return response
     } catch (error) {
         return {

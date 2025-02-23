@@ -154,7 +154,8 @@ const UserManagement = () => {
                 <MdPeople className="text-4xl" /> User Management
             </h2>
             {success && <div className="text-center text-green-500 font-bold mb-4">{success}</div>}
-            <div className="overflow-x-auto rounded-xl shadow-inner">
+            {/* <div className="overflow-x-auto rounded-xl shadow-inner"> */}
+            <div className="overflow-x-auto overflow-y-auto max-h-96 rounded-xl shadow-inner">
                 <table className="w-full">
                     <thead className="bg-blue-50">
                         <tr>

@@ -72,7 +72,7 @@ export default function Header() {
                       after:bg-orange-400 after:transition-all after:duration-300 hover:after:w-full`
                     }
                   >
-                    {path === '/' ? 'Home' : path.slice(1).replace('-', ' ')}
+                    {path === '/' ? 'Home' : path.slice(1).replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}
                   </NavLink>
                 </li>
               ))}

@@ -59,6 +59,7 @@ export const AuthProvider = ({ children }) => {
         } finally {
             setUserRole(null);
             localStorage.removeItem("userData");
+            sessionStorage.removeItem("subPlans")
         }
     };
     

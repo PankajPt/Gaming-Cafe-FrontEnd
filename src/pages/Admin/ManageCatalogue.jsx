@@ -21,11 +21,6 @@ const ManageCatalogue = () => {
     };
 
     useEffect(() => {
-        // console.log(games)
-        const catalogue = sessionStorage.getItem('gameCatalogue')
-        // console.log(catalogueData)
-        if (isFetched.current) return;
-    
         const getGames = async () => {
             const games = await fetchGameCatalogue();
             if (!games.success) {
@@ -33,16 +28,12 @@ const ManageCatalogue = () => {
                 setTimeout(() => setPopupMessage(null), 2000);
                 return;
             }
-            sessionStorage.setItem('gameCatalogue', JSON.stringify(games.data));
             setGames(games.data);
+            isFetched.current = true;
         };
         
-        if (!catalogue) {
+        if (!isFetched.current) {
             getGames();
-            isFetched.current = true;
-        } else {
-            const catalogueData = JSON.parse(catalogue)
-            setGames(catalogueData);
         }
     }, []);
 

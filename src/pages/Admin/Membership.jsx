@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { MdDelete } from 'react-icons/md';
 import { fetchData } from "../../services/api.service.js";
 import { useAuthHandler } from "../../hooks/authHandler.js";
+import { subscriptionPlans } from "../../services/subscription.service.js"
 
 const MembershipPlans = () => {
     const [plans, setPlans] = useState([]);
@@ -12,7 +13,7 @@ const MembershipPlans = () => {
         price: '', 
         paymentQR: null 
     });
-    const [featuresArray, setFeaturesArray] = useState([])
+    
     const [error, setError] = useState(null);
     const [success, setSuccess] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -25,53 +26,28 @@ const MembershipPlans = () => {
     };
 
     useEffect(() => {
-        const existingPlansRaw = sessionStorage.getItem('subPlans')
-        if(isPlansFetched.current) return
-
         const fetchPlans = async () => {
-            const options = {
-                method: 'GET',
-                data: null,
-                file: null,
-                isBinary: false
-            };
-            const response = await fetchData('users/subs-plans', options)
-            if (!response.success) {
-                if (response.message === 'jwt expired') {
-                    const retryWithNewToken = await refreshAndRetry('users/subs-plans', options);
-                    if (!retryWithNewToken.success) {
-                        setError({ type: 'error', message: retryWithNewToken.message });
-                        setTimeout(() => setError(null), 5000);
-                        return;
-                    }
-                    setSuccess({ type: 'success', message: retryWithNewToken.message });
-                    sessionStorage.setItem('subPlans', JSON.stringify(retryWithNewToken.data));
-                    setPlans(retryWithNewToken.data)
-                    setTimeout(() => setSuccess(null), 5000);
-                    return;
-                } else if (response.message === 'jwt malformed' || response.message === 'invalid signature') {
-                    await handleInvalidJWT();
+            try {
+                const response = await subscriptionPlans();
+                if (!response.success) {
+                    setError({ type: 'error', message: response.message });
                     return;
                 }
-                setError({ type: 'error', message: response.message });
-                setTimeout(() => setError(null), 5000);
-                return;
+                const order = ['monthly', 'quarterly', 'yearly'];
+                const sortedPlans = response.data.sort((a, b) => order.indexOf(a.title) - order.indexOf(b.title));
+                setPlans(sortedPlans);
+            } catch (error) {
+                setError({ type: 'error', message: 'Failed to fetch subscription plans.' });
             }
-            setSuccess({ type: 'success', message: response.message });
-            setTimeout(() => setSuccess(null), 5000);
-            setPlans(response.data)
-            sessionStorage.setItem('subPlans', JSON.stringify(response.data));
-        }
+        };
 
-        if (!existingPlansRaw) {
-            fetchPlans()
-            isPlansFetched.current = true;
-        } else {
-            const existingPlans = JSON.parse(existingPlansRaw)
-            setPlans(existingPlans)
+        if(!isPlansFetched.current){
+            fetchPlans();
+            isPlansFetched.current = true
         }
-
-    }, [])
+    }, []);
+    
+    
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -229,7 +205,7 @@ const MembershipPlans = () => {
                     
                     <textarea
                         placeholder="Features (comma separated)"
-                        value={newPlan.features.join(", ")}
+                        value={newPlan.features}
                         name="features"
                         onChange={handleFeatureChange}
                         className="w-full border rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500"
@@ -366,7 +342,7 @@ const MembershipPlans = () => {
                                 <div>
                                     <h4 className="text-xl font-semibold capitalize">{plan.title}</h4>
                                     <p className="text-2xl font-bold text-blue-600 mt-1">
-                                        ${plan.price}<span className="text-sm text-gray-500">/month</span>
+                                    ₹{plan.price}<span className="text-sm text-gray-500">/month</span>
                                     </p>
                                 </div>
                                 <button

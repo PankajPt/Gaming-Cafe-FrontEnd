@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/Auth.Context.jsx";
 
@@ -17,16 +17,22 @@ const LoginPage = () => {
 
   // Enable button only when both fields are filled
   const isFormValid = formData.username.trim() !== "" && formData.password.trim() !== "";
-
+  const hasNavigated = useRef(false);
+  
   useEffect(() => {
-    if (userRole === "admin") {
-      navigate("/admin");
-    } else if (userRole === "manager") {
-      navigate("/manager");
-    } else if (userRole === "user") {
-      navigate("/user");
-    }
+    if (!userRole || hasNavigated.current) return;
+
+    hasNavigated.current = true;
+
+    const roleRoutes = {
+        admin: "/admin",
+        manager: "/manager",
+        user: "/user"
+    };
+
+    navigate(roleRoutes[userRole] || "/user");
   }, [userRole, navigate]);
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();

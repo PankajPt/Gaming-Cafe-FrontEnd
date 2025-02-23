@@ -9,11 +9,12 @@ export const AuthProvider = ({ children }) => {
         const storedUser = localStorage.getItem("userData");
         if (storedUser) {
             const parsedUser = JSON.parse(storedUser);
-            if (parsedUser && parsedUser.role) {
+            if (parsedUser?.role && parsedUser.role !== userRole) {
                 setUserRole(parsedUser.role);
             }
         }
-    }, []);
+    }, [userRole]);
+    
 
     const login = async (username, password) => {
         const loginData = { username, password };
@@ -41,7 +42,7 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
-    const logout = async() => {
+    const logout = async () => {
         try {
             const response = await fetch(`${import.meta.env.VITE_BACKEND_BASE_URI}/users/logout`, {
                 method: 'GET',
@@ -50,8 +51,8 @@ export const AuthProvider = ({ children }) => {
             const data = await response.json();
             if (!response.ok) {
                 throw new Error(data.message || 'Logout failed');
-            }  
-            return data.messages || 'Successfully logged out';
+            }
+            return data.message || 'Successfully logged out';
         } catch (error) {
             console.error(error);
             return error.message || 'An error occurred during logout';
@@ -60,6 +61,7 @@ export const AuthProvider = ({ children }) => {
             localStorage.removeItem("userData");
         }
     };
+    
 
     return (
         <AuthContext.Provider value={{ userRole, login, logout }}>

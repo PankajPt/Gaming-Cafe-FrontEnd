@@ -2,17 +2,17 @@ import React, { useEffect, useRef, useState } from "react";
 import { MdDelete } from 'react-icons/md';
 import { fetchData } from "../../services/api.service.js";
 import { useAuthHandler } from "../../hooks/authHandler.js";
-import { subscriptionPlans } from '../../services/subscription.service.js'
 
 const MembershipPlans = () => {
     const [plans, setPlans] = useState([]);
     const [newPlan, setNewPlan] = useState({ 
         title: '', 
         description: '', 
-        features: '', 
+        features: [], 
         price: '', 
         paymentQR: null 
     });
+    const [featuresArray, setFeaturesArray] = useState([])
     const [error, setError] = useState(null);
     const [success, setSuccess] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -24,7 +24,7 @@ const MembershipPlans = () => {
         return plan.title && plan.description && plan.features && plan.price && plan.paymentQR;
     };
 
-    useEffect(()=>{
+    useEffect(() => {
         const existingPlansRaw = sessionStorage.getItem('subPlans')
         if(isPlansFetched.current) return
 
@@ -80,6 +80,15 @@ const MembershipPlans = () => {
         } else {
             setNewPlan((prev) => ({ ...prev, [name]: value }));
         }
+    };
+
+    const handleFeatureChange = (e) => {
+        const value = e.target.value;
+        const featureArr = value.split(",").map((item) => item.trim()); // Convert to array
+        setNewPlan((prevPlan) => ({
+            ...prevPlan,
+            features: featureArr
+        }));
     };
 
     const handleFileChange = (e) => {
@@ -167,7 +176,7 @@ const MembershipPlans = () => {
                         return;
                     }
                     setSuccess({ type: 'success', message: retryWithNewToken.message });
-                    setPlans((prev) => prev.filter(plan => plan.id !== planId));
+                    setPlans((prev) => prev.filter(plan => plan._id !== planId));
                     setTimeout(() => setSuccess(null), 5000);
                     return;
                 } else if (response.message === 'jwt malformed' || response.message === 'invalid signature') {
@@ -179,7 +188,7 @@ const MembershipPlans = () => {
                 return;
             }
             setSuccess({ type: 'success', message: response.message });
-            setPlans((prev) => prev.filter(plan => plan.id !== planId));
+            setPlans((prev) => prev.filter(plan => plan._id !== planId));
             setTimeout(() => setSuccess(null), 5000);
         } catch (error) {
             setError({ type: 'error', message: error.message || 'Failed to delete plan' });
@@ -188,7 +197,6 @@ const MembershipPlans = () => {
             setPlanToDelete(null); // Close popup after operation
         }
     };
-
 
     return (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -221,9 +229,9 @@ const MembershipPlans = () => {
                     
                     <textarea
                         placeholder="Features (comma separated)"
-                        value={newPlan.features}
+                        value={newPlan.features.join(", ")}
                         name="features"
-                        onChange={handleChange}
+                        onChange={handleFeatureChange}
                         className="w-full border rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500"
                         rows="3"
                         required
@@ -325,7 +333,7 @@ const MembershipPlans = () => {
                     </div>
                 )}
             </div>
-			
+            
             {planToDelete && (
                 <div className="fixed inset-0 bg-black bg-opacity-30 flex justify-center items-center z-50">
                     <div className="bg-white p-6 rounded-xl shadow-lg text-center max-w-md w-full mx-4">
@@ -368,13 +376,12 @@ const MembershipPlans = () => {
                                     <MdDelete className="text-xl" />
                                 </button>
                             </div>
-                            {/* Rest of plan details */}
                             <p className="text-gray-600 mb-4">{plan.description}</p>
                             <ul className="space-y-2">
-                                {plan.features.split(',').map((feature, index) => (
+                                {plan.features.map((feature, index) => (
                                     <li key={index} className="flex items-center text-gray-600">
                                         <span className="mr-2">•</span>
-                                        {feature.trim()}
+                                        {feature}
                                     </li>
                                 ))}
                             </ul>

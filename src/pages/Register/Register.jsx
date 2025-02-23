@@ -71,7 +71,7 @@ const RegisterPage = () => {
       setSuccess(true);
       setTimeout(() => {
         navigate('/login')
-      }, 2000);
+      }, 5000);
     } catch (err) {
       setError(err.message || "Something went wrong during registration.");
     } finally {

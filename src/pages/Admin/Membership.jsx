@@ -46,8 +46,6 @@ const MembershipPlans = () => {
             isPlansFetched.current = true
         }
     }, []);
-    
-    
 
     const handleChange = (e) => {
         const { name, value } = e.target;

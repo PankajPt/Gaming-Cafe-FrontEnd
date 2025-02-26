@@ -6,7 +6,7 @@ export const AuthProvider = ({ children }) => {
     const [userRole, setUserRole] = useState(null);
 
     useEffect(() => {
-        const storedUser = localStorage.getItem("userData");
+        const storedUser = sessionStorage.getItem("userData");
         if (storedUser) {
             const parsedUser = JSON.parse(storedUser);
             if (parsedUser?.role && parsedUser.role !== userRole) {
@@ -35,7 +35,7 @@ export const AuthProvider = ({ children }) => {
             }
 
             setUserRole(userData.data.role);
-            localStorage.setItem("userData", JSON.stringify(userData.data));
+            sessionStorage.setItem("userData", JSON.stringify(userData.data));
             return userData;
         } catch (error) {
             return error.message;
@@ -58,7 +58,7 @@ export const AuthProvider = ({ children }) => {
             return error.message || 'An error occurred during logout';
         } finally {
             setUserRole(null);
-            localStorage.removeItem("userData");
+            sessionStorage.removeItem("userData");
             sessionStorage.removeItem("subPlans")
         }
     };

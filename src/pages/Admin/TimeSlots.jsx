@@ -1,84 +1,130 @@
-import { useState } from "react";
-import { MdDelete } from 'react-icons/md';
-
+import { useEffect, useState } from "react";
+import { fetchData } from "../../services/api.service";
+import { useAuthHandler } from "../../hooks/authHandler.js";
+import { FiChevronDown, FiClock, FiUser } from "react-icons/fi";
 
 const TimeSlots = () => {
-    const [newSlot, setNewSlot] = useState({ duration: '2hr', start: '', end: '' });
-    const [slots, setSlots] = useState([
-        { id: 1, duration: '2hr', start: '09:00', end: '11:00' },
-        { id: 2, duration: '1hr', start: '14:00', end: '15:00' }
-      ]);
+    const [slots, setSlots] = useState([]);
+    const [selectedDate, setSelectedDate] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const { refreshAndRetry, handleInvalidJWT } = useAuthHandler();
 
-
-    const handleAddSlot = (e) => {
-        e.preventDefault();
-        const slot = {
-          id: Date.now(),
-          ...newSlot,
-          timeRange: `${newSlot.start} - ${newSlot.end}`
+    useEffect(() => {
+        const options = {
+            method: 'GET',
+            data: null,
+            file: null,
+            isBinary: false
         };
-        setSlots([...slots, slot]);
-        setNewSlot({ duration: '2hr', start: '', end: '' });
-      };
+
+        const getBookings = async () => {
+            try {
+                const response = await fetchData('admin/get-bookings', options);
+                if (!response.success) {
+                    if (response.message === 'jwt expired') {
+                        const retryWithNewToken = await refreshAndRetry('admin/get-bookings', options);
+                        if (!retryWithNewToken.success) {
+                            return;
+                        }
+                    } else if (response.message === 'jwt malformed' || response.message === 'invalid signature') {
+                        await handleInvalidJWT();
+                        return;
+                    }
+                    return;
+                }
+                setSlots(response.data);
+            } catch (error) {
+                console.error("Error fetching slots:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        getBookings();
+    }, []);
+
+    // Group slots by date and then by timeFrame
+    const groupedByDateAndTime = slots.reduce((acc, slot) => {
+        if (!acc[slot.date]) acc[slot.date] = {};
+        if (!acc[slot.date][slot.timeFrame]) acc[slot.date][slot.timeFrame] = [];
+        acc[slot.date][slot.timeFrame].push(slot);
+        return acc;
+    }, {});
 
     return (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Add Slot Card */}
-            <div className="bg-white rounded-2xl shadow-xl p-6">
-                <h3 className="text-2xl font-semibold text-blue-600 mb-4">Create Time Slot</h3>
-                <form onSubmit={handleAddSlot} className="space-y-4">
-                    <select
-                    value={newSlot.duration}
-                    onChange={(e) => setNewSlot({...newSlot, duration: e.target.value})}
-                    className="w-full border rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500"
-                    >
-                    <option value="1hr">1 Hour</option>
-                    <option value="2hr">2 Hours</option>
-                    <option value="3hr">3 Hours</option>
-                    </select>
-                    
-                    <div className="grid grid-cols-2 gap-4">
-                    <input
-                        type="time"
-                        value={newSlot.start}
-                        onChange={(e) => setNewSlot({...newSlot, start: e.target.value})}
-                        className="border rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500"
-                    />
-                    <input
-                        type="time"
-                        value={newSlot.end}
-                        onChange={(e) => setNewSlot({...newSlot, end: e.target.value})}
-                        className="border rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500"
-                    />
-                    </div>
-                    <button className="w-full bg-blue-500 text-white py-3 rounded-xl hover:bg-blue-600 transition-colors">
-                    Create Slot
-                    </button>
-                </form>
-            </div>
-
-            {/* Slots List Card */}
-            <div className="bg-white rounded-2xl shadow-xl p-6">
-                <h3 className="text-2xl font-semibold text-blue-600 mb-6">Existing Time Slots</h3>
-                <div className="space-y-4">
-                    {slots.map(slot => (
-                    <div key={slot.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-xl hover:bg-blue-50 transition-colors">
-                        <div>
-                            <h4 className="font-medium">{slot.duration} Session</h4>
-                            <p className="text-sm text-gray-600">{slot.timeRange}</p>
-                        </div>
-                        <button 
-                        onClick={() => setSlots(slots.filter(s => s.id !== slot.id))}
-                        className="text-red-500 hover:text-red-700 p-2 rounded-full hover:bg-red-100 transition-colors"
-                        >
-                        <MdDelete className="text-xl" />
-                        </button>
-                    </div>
-                    ))}
+        <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 p-8 text-white">
+            <div className="max-w-4xl mx-auto">
+                <div className="flex items-center mb-8 gap-4">
+                    <span className="text-4xl text-purple-400 animate-pulse">🎮</span>
+                    <h1 className="text-3xl font-bold tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">
+                        Game Sessions
+                    </h1>
                 </div>
+
+                {loading ? (
+                    <div className="flex flex-col items-center justify-center h-64">
+                        <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-purple-500"></div>
+                        <p className="mt-4 text-purple-300 font-mono animate-pulse">
+                            Loading Battle Stations...
+                        </p>
+                    </div>
+                ) : (
+                    Object.keys(groupedByDateAndTime).map((date) => (
+                        <div key={date} className="mb-4 group">
+                            <div 
+                                className="bg-gradient-to-r from-gray-800 to-gray-700 p-4 rounded-lg cursor-pointer 
+                                hover:from-gray-700 hover:to-gray-600 transition-all duration-300 shadow-lg
+                                border-l-4 border-purple-500 flex justify-between items-center"
+                                onClick={() => setSelectedDate(selectedDate === date ? null : date)}
+                            >
+                                <div className="flex items-center gap-3">
+                                    <FiClock className="text-purple-400" />
+                                    <span className="font-mono text-lg tracking-wide">
+                                        {new Date(date).toDateString()}
+                                    </span>
+                                </div>
+                                <FiChevronDown className={`text-purple-400 transition-transform duration-300 ${
+                                    selectedDate === date ? "rotate-180" : ""
+                                }`} />
+                            </div>
+                            
+                            {selectedDate === date && (
+                                <div className="mt-2 ml-6 p-4 bg-gray-800 rounded-lg border-l-4 border-blue-400 
+                                animate-fadeIn shadow-lg space-y-4">
+                                    {Object.keys(groupedByDateAndTime[date]).map((timeFrame) => (
+                                        <div key={timeFrame} className="mb-4">
+                                            <div className="flex items-center gap-2 mb-2">
+                                                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                                                <span className="font-mono text-blue-300">
+                                                    {timeFrame}
+                                                </span>
+                                            </div>
+                                            <div className="space-y-2">
+                                                {groupedByDateAndTime[date][timeFrame].map((slot) => (
+                                                    <div key={slot._id} className="p-3 bg-gray-700 rounded-md hover:bg-gray-600 
+                                                    transition-colors duration-200 border border-gray-600 hover:border-purple-400">
+                                                        <div className="flex items-center gap-2 text-sm">
+                                                            <FiUser className="text-purple-300" />
+                                                            <span className="text-gray-300">
+                                                                {slot.fullname} 
+                                                                <span className="ml-2 text-purple-200">
+                                                                    @{slot.username}
+                                                                </span>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    ))
+                )}
             </div>
         </div>
-    )
-}
+    );
+};
 
-export { TimeSlots }
+export { TimeSlots };

@@ -15,7 +15,7 @@ import LeftSideBar from './Navigation/LeftSidebar.jsx';
 
 const UserPage = () => {
   const navigate = useNavigate();
-  const userData = localStorage.getItem('userData');
+  const userData = sessionStorage.getItem('userData');
   if (!userData) {
     navigate('/login');
   }

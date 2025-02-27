@@ -1,14 +1,13 @@
 import { useEffect, useState,useMemo } from "react";
 import { fetchData } from "../../services/api.service";
 import { useAuthHandler } from "../../hooks/authHandler.js";
-import { FaCalendarAlt, FaRegClock, FaRegHeart, FaGamepad, FaSkullCrossbones } from "react-icons/fa";
-import { toast } from "react-toastify";
+import { FaCalendarAlt, FaRegClock, FaRegHeart, FaGamepad, FaSkullCrossbones, FaTrash } from "react-icons/fa";
+import { ToastContainer, toast } from "react-toastify";
 
 const BookSlot = () => {
     const [availableSlots, setAvailableSlots] = useState([]);
     const [userBookings, setUserBookings] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [selectedDate, setSelectedDate] = useState(null);
     const [selectedTimeFrame, setSelectedTimeFrame] = useState(null);
     const [isSlotExpired, setIsSlotExpired] = useState(false);
     const { refreshAndRetry, handleInvalidJWT } = useAuthHandler();
@@ -91,7 +90,13 @@ const BookSlot = () => {
 
     // Fetch available slots with auth handling
     const fetchAvailableSlots = async () => {
-        const response = await handleApiCall('users/get-slots', { method: 'GET' });
+        const options = {
+            method: 'GET',
+            data: null,
+            file: null,
+            isBinary: false
+        };
+        const response = await handleApiCall('users/get-slots', options);
         if (response?.success) {
             setAvailableSlots(response.data);
         }
@@ -99,7 +104,13 @@ const BookSlot = () => {
 
     // Fetch user bookings with auth handling
     const fetchUserBookings = async () => {
-        const response = await handleApiCall('users/view-slots', { method: 'GET' });
+        const options = {
+            method: 'GET',
+            data: null,
+            file: null,
+            isBinary: false
+        };
+        const response = await handleApiCall('users/view-slots', options);
         if (response?.success) {
             setUserBookings(response.data);
         } else if (response?.statusCode === 404) {
@@ -117,28 +128,139 @@ const BookSlot = () => {
 
     // Handle slot booking with retry logic
     const handleBookSlot = async () => {
-        if (!selectedDate || !selectedTimeFrame) {
-            toast.error("Please select a date and time frame");
+        if (!activeDate || !selectedTimeFrame) {
+            toast.error(
+                <div className="flex items-center gap-3 p-2 bg-red-800/80 backdrop-blur-sm rounded-lg border border-red-400">
+                    <div className="text-red-400 animate-pulse">⛔</div>
+                    <div>
+                        <p className="font-bold text-red-100">MISSING PARAMETERS!</p>
+                        <p className="text-sm text-red-200">Select date and timeframe</p>
+                    </div>
+                </div>,
+                { position: 'top-center', autoClose: 3000 }
+            );
             return;
         }
-
+    
         const options = {
             method: "POST",
             data: { 
-                date: selectedDate,
+                date: activeDate,
                 timeFrame: selectedTimeFrame 
             }
         };
+        
+        try {
+            const response = await handleApiCall('users/book-slot', options);
+            if (response?.success) {
+                toast.success(
+                    <div className="flex items-center gap-4 p-4">
+                        <span className="text-3xl">🎯</span>
+                        <div>
+                            <p className="font-bold text-xl text-green-400 mb-1">DEPLOYMENT CONFIRMED!</p>
+                            <p className="text-sm text-green-200">{response.message}</p>
+                            <p className="text-xs text-green-300 mt-1">Squad mobilized at {selectedTimeFrame}</p>
+                        </div>
+                    </div>,
+                    {
+                        position: "bottom-center",
+                        autoClose: 5000,
+                        className: 'border-green-500',
+                    }
+                );
+    
+                // Refresh data
+                await Promise.all([fetchAvailableSlots(), fetchUserBookings()]);
+                
+                // Animate button
+                setSelectedTimeFrame(null);
+                const deployBtn = document.getElementById('deploy-btn');
+                if (deployBtn) {
+                    deployBtn.classList.add('animate-pulse');
+                    setTimeout(() => {
+                        deployBtn.classList.remove('animate-pulse');
+                    }, 1000);
+                }
+    
+            } else if (response) {
+                toast.error(
+                    <div className="flex items-center gap-4 p-4">
+                        <span className="text-3xl">🔥</span>
+                        <div>
+                            <p className="font-bold text-xl text-red-400 mb-1">ENGAGEMENT FAILED!</p>
+                            <p className="text-sm text-red-200">{response.message}</p>
+                            <p className="text-xs text-red-300 mt-1">Status Code: {response.statusCode}</p>
+                        </div>
+                    </div>,
+                    {
+                        position: "bottom-center",
+                        autoClose: 5000,
+                        className: 'border-red-500',
+                    }
+                );
+            }
+        } catch (error) {
+            toast.error(
+                <div className="flex items-center gap-4 p-4">
+                    <span className="text-3xl">💥</span>
+                    <div>
+                        <p className="font-bold text-xl text-red-500 mb-1">CRITICAL FAILURE!</p>
+                        <p className="text-sm text-red-300">Connection to command center lost</p>
+                        <p className="text-xs text-red-400 mt-1">Error: {error.message}</p>
+                    </div>
+                </div>,
+                {
+                    position: "bottom-center",
+                    autoClose: 5000,
+                    className: 'border-red-700',
+                }
+            );
+        }
+    };
 
-        const response = await handleApiCall('users/book-slot', options);
-        if (response?.success) {
-            toast.success(response.message);
-            // Refresh data after successful booking
-            await Promise.all([fetchAvailableSlots(), fetchUserBookings()]);
-            setSelectedDate(null);
-            setSelectedTimeFrame(null);
-        } else if (response) {
-            toast.error(response.message);
+    const handleDeleteBooking = async (bookingId) => {
+        try {
+            const response = await handleApiCall(`users/delete-slot/${bookingId}`, {
+                method: 'DELETE'
+            });
+    
+            if (response?.success) {
+                toast.success(
+                    <div className="flex items-center gap-3 p-2 bg-green-900/80 rounded-lg">
+                        <span className="text-2xl">🔥</span>
+                        <div>
+                            <p className="font-bold text-green-300">MISSION ABORTED!</p>
+                            <p className="text-sm text-green-200">{response.message}</p>
+                        </div>
+                    </div>,
+                    { position: 'bottom-center' }
+                );
+                
+                // Update bookings list immediately
+                setUserBookings(prev => prev.filter(b => b._id !== bookingId));
+            } else {
+                toast.error(
+                    <div className="flex items-center gap-3 p-2 bg-red-900/80 rounded-lg">
+                        <span className="text-2xl">💥</span>
+                        <div>
+                            <p className="font-bold text-red-300">ABORT FAILED!</p>
+                            <p className="text-sm text-red-200">{response?.message || 'Failed to cancel mission'}</p>
+                        </div>
+                    </div>,
+                    { position: 'bottom-center' }
+                );
+            }
+        } catch (error) {
+            toast.error(
+                <div className="flex items-center gap-3 p-2 bg-red-900/80 rounded-lg">
+                    <span className="text-2xl">⚠️</span>
+                    <div>
+                        <p className="font-bold text-red-300">COMMUNICATION ERROR!</p>
+                        <p className="text-sm text-red-200">Failed to reach command center</p>
+                    </div>
+                </div>,
+                { position: 'bottom-center' }
+            );
         }
     };
 
@@ -184,7 +306,7 @@ const BookSlot = () => {
     }, {});
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 p-8 text-white">   
+        <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 p-8 text-white">  
             <div className="max-w-6xl mx-auto">
                 <div className="flex items-center mb-8 gap-4">
                     <FaGamepad className="text-4xl text-purple-400 animate-pulse" />
@@ -293,7 +415,7 @@ const BookSlot = () => {
                         ) : (
                             <div className="space-y-3 max-h-96 overflow-y-auto scrollbar-glow">
                                 {userBookings.map((booking) => (
-                                    <div key={booking._id} className="bg-gray-700 p-3 rounded-md border-l-4 border-green-500">
+                                    <div key={booking._id} className="group relative bg-gray-700 p-3 rounded-md border-l-4 border-green-500 hover:border-purple-400 transition-all">
                                         <div className="flex justify-between items-center">
                                             <div>
                                                 <div className="text-sm">
@@ -303,9 +425,21 @@ const BookSlot = () => {
                                                     {battleMessages[Math.floor(Math.random() * battleMessages.length)]}
                                                 </div>
                                             </div>
-                                            <span className="text-xs bg-gray-900 px-2 py-1 rounded">
-                                                {booking.timeFrame}
-                                            </span>
+                                            <div className="flex items-center gap-2">
+                                                <span className="text-xs bg-gray-900 px-2 py-1 rounded">
+                                                    {booking.timeFrame}
+                                                </span>
+                                                <button 
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        handleDeleteBooking(booking._id);
+                                                    }}
+                                                    className="p-2 text-red-500 hover:text-red-400 transition-colors opacity-0 group-hover:opacity-100"
+                                                    title="Abort Mission"
+                                                >
+                                                    <FaTrash className="w-5 h-5" />
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 ))}
@@ -317,19 +451,32 @@ const BookSlot = () => {
                 {/* Deployment Control */}
                 <div className="mt-8 text-center">
                     <button
-                        className={`bg-purple-600 px-8 py-3 rounded-lg font-bold transition-all 
-                            ${selectedTimeFrame && !isSlotExpired ? 'hover:bg-purple-700 glow-purple' : 'opacity-50 cursor-not-allowed'}
-                            ${isSlotExpired ? '!bg-red-600' : ''}`}
+                        id="deploy-btn"
+                        className={`px-8 py-3 rounded-lg font-bold transition-all duration-300 ${
+                            isSlotExpired 
+                            ? 'bg-red-600 cursor-not-allowed animate-pulse' 
+                            : selectedTimeFrame 
+                                ? 'bg-purple-600 hover:bg-purple-700 hover:scale-105' 
+                                : 'bg-gray-600 cursor-not-allowed opacity-50'
+                        } ${
+                            selectedTimeFrame && !isSlotExpired 
+                            ? 'ring-2 ring-yellow-400 shadow-lg shadow-purple-500/50' 
+                            : ''
+                        }`}
                         onClick={handleBookSlot}
                         disabled={!selectedTimeFrame || isSlotExpired}
                     >
-                        {isSlotExpired ? (
-                            "MISSION TIMELINE EXPIRED"
-                        ) : selectedTimeFrame ? (
-                            `DEPLOY AT ${selectedTimeFrame}`
-                        ) : (
-                            "SELECT ENGAGEMENT TIME"
-                        )}
+                        <span className="drop-shadow-[0_1px_2px_rgba(255,255,255,0.3)]">
+                            {isSlotExpired ? (
+                                <>
+                                    <span className="animate-pulse">💀</span> TIMELINE EXPIRED
+                                </>
+                            ) : selectedTimeFrame ? (
+                                `DEPLOY AT ${selectedTimeFrame}`
+                            ) : (
+                                "SELECT ENGAGEMENT TIME"
+                            )}
+                        </span>
                     </button>
                 </div>
             </div>
@@ -350,7 +497,65 @@ const BookSlot = () => {
                     background: #667eea;
                     box-shadow: 0 0 8px #667eea66;
                 }
+                
+                .toast-warroom {
+                    z-index: 9999;
+                    bottom: 2rem;
+                }
+                
+                .toast-warroom .Toastify__toast {
+                    min-height: 100px;
+                    backdrop-filter: blur(4px);
+                    background: rgba(17, 24, 39, 0.95) !important;
+                }
+                
+                .toast-warroom .Toastify__toast-body {
+                    padding: 0;
+                }
+                
+                .toast-warroom .Toastify__progress-bar {
+                    height: 3px;
+                }
+
+                .Toastify__toast-container {
+                    bottom: 6rem !important;
+                    z-index: 9999;
+                }
+
+                .Toastify__toast {
+                    background: #1F2937 !important;
+                    border: 2px solid #6D28D9 !important;
+                    border-radius: 0.5rem !important;
+                    font-family: 'Courier New', monospace !important;
+                }
+
+                .Toastify__toast-body {
+                    padding: 0 !important;
+                }
+
+                .Toastify__progress-bar {
+                    background: #6D28D9 !important;
+                }
             `}</style>
+            <ToastContainer
+                position="bottom-center"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={true}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="dark"
+                style={{ bottom: '80px', zIndex: 9999 }}
+                toastStyle={{
+                    background: '#1F2937',
+                    border: '2px solid #6D28D9',
+                    borderRadius: '0.5rem',
+                    fontFamily: 'monospace',
+                }}
+            />
         </div>
     );
 };

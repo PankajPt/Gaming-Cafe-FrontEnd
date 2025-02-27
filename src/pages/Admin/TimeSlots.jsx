@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import { fetchData } from "../../services/api.service";
 import { useAuthHandler } from "../../hooks/authHandler.js";
-import { FiChevronDown, FiClock, FiUser } from "react-icons/fi";
+import { FiChevronDown, FiClock, FiUser, FiTrash } from "react-icons/fi";
+import { toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const TimeSlots = () => {
     const [slots, setSlots] = useState([]);
@@ -42,6 +45,56 @@ const TimeSlots = () => {
 
         getBookings();
     }, []);
+
+    // Handle delete booking
+    const handleDeleteBooking = async (bookingId) => {
+        try {
+            const options = {
+                method: 'DELETE',
+                data: null,
+                file: null,
+                isBinary: false
+            };
+
+            const response = await fetchData(`admin/delete-booking/${bookingId}`, options);
+            
+            if (response.success) {
+                toast.success("Booking deleted successfully!", {
+                    position: "bottom-center",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                });
+
+                // Remove the deleted booking from the state
+                setSlots(prevSlots => prevSlots.filter(slot => slot._id !== bookingId));
+            } else {
+                toast.error("Failed to delete booking.", {
+                    position: "bottom-center",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                });
+            }
+        } catch (error) {
+            console.error("Error deleting booking:", error);
+            toast.error("An error occurred while deleting the booking.", {
+                position: "bottom-center",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
+        }
+    };
 
     // Group slots by date and then by timeFrame
     const groupedByDateAndTime = slots.reduce((acc, slot) => {
@@ -103,14 +156,23 @@ const TimeSlots = () => {
                                                 {groupedByDateAndTime[date][timeFrame].map((slot) => (
                                                     <div key={slot._id} className="p-3 bg-gray-700 rounded-md hover:bg-gray-600 
                                                     transition-colors duration-200 border border-gray-600 hover:border-purple-400">
-                                                        <div className="flex items-center gap-2 text-sm">
-                                                            <FiUser className="text-purple-300" />
-                                                            <span className="text-gray-300">
-                                                                {slot.fullname} 
-                                                                <span className="ml-2 text-purple-200">
-                                                                    @{slot.username}
+                                                        <div className="flex items-center justify-between">
+                                                            <div className="flex items-center gap-2 text-sm">
+                                                                <FiUser className="text-purple-300" />
+                                                                <span className="text-gray-300">
+                                                                    {slot.fullname} 
+                                                                    <span className="ml-2 text-purple-200">
+                                                                        @{slot.username}
+                                                                    </span>
                                                                 </span>
-                                                            </span>
+                                                            </div>
+                                                            <button
+                                                                onClick={() => handleDeleteBooking(slot._id)}
+                                                                className="p-2 text-red-400 hover:text-red-300 transition-colors"
+                                                                title="Delete Booking"
+                                                            >
+                                                                <FiTrash className="w-5 h-5" />
+                                                            </button>
                                                         </div>
                                                     </div>
                                                 ))}
@@ -123,6 +185,7 @@ const TimeSlots = () => {
                     ))
                 )}
             </div>
+            <ToastContainer />
         </div>
     );
 };

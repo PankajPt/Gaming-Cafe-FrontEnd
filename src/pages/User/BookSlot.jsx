@@ -500,61 +500,53 @@ const BookSlot = () => {
                 
                 .toast-warroom {
                     z-index: 9999;
-                    bottom: 2rem;
+                    bottom: 1rem;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    width: auto;
+                    max-width: 320px;
                 }
-                
+
                 .toast-warroom .Toastify__toast {
-                    min-height: 100px;
-                    backdrop-filter: blur(4px);
-                    background: rgba(17, 24, 39, 0.95) !important;
-                }
-                
-                .toast-warroom .Toastify__toast-body {
-                    padding: 0;
-                }
-                
-                .toast-warroom .Toastify__progress-bar {
-                    height: 3px;
-                }
-
-                .Toastify__toast-container {
-                    bottom: 6rem !important;
-                    z-index: 9999;
-                }
-
-                .Toastify__toast {
-                    background: #1F2937 !important;
+                    min-height: 60px; /* Reduced height for compact design */
+                    backdrop-filter: blur(6px);
+                    background: rgba(17, 24, 39, 0.95) !important; /* Dark semi-transparent */
                     border: 2px solid #6D28D9 !important;
                     border-radius: 0.5rem !important;
                     font-family: 'Courier New', monospace !important;
+                    padding: 8px !important;
                 }
 
-                .Toastify__toast-body {
-                    padding: 0 !important;
+                .toast-warroom .Toastify__toast-body {
+                    padding: 6px !important;
+                    font-size: 12px !important; /* Smaller font */
                 }
 
-                .Toastify__progress-bar {
+                .toast-warroom .Toastify__progress-bar {
+                    height: 2px !important;
                     background: #6D28D9 !important;
+                }
+
+                .Toastify__toast-container {
+                    bottom: 4rem !important;
+                    z-index: 9999;
                 }
             `}</style>
             <ToastContainer
-                position="bottom-center"
-                autoClose={5000}
-                hideProgressBar={false}
-                newestOnTop={true}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                theme="dark"
-                style={{ bottom: '80px', zIndex: 9999 }}
-                toastStyle={{
-                    background: '#1F2937',
-                    border: '2px solid #6D28D9',
-                    borderRadius: '0.5rem',
-                    fontFamily: 'monospace',
-                }}
+            position="bottom-center"
+            autoClose={3000}
+            hideProgressBar={false}
+            newestOnTop={true}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="dark"
+            className="fixed bottom-4 left-1/2 transform -translate-x-1/2 w-auto max-w-xs z-[9999]"
+            toastClassName="bg-gray-800 border border-purple-600 rounded-md p-2 text-sm shadow-lg backdrop-blur-md"
+            bodyClassName="text-xs font-mono p-2"
+            progressClassName="bg-purple-600 h-1"
             />
         </div>
     );

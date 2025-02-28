@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { MdEventNote, MdWarning } from 'react-icons/md';
 import { GiSpinningSword } from 'react-icons/gi';
-import { fetchEvents } from '../../services/event.service';
+import { fetchEvents } from '../../services/event.service.js';
 import { ImSpinner8 } from 'react-icons/im';
 
 const Events = () => {
@@ -11,35 +11,36 @@ const Events = () => {
 
     useEffect(() => {
         const getEvents = async () => {
+            setLoading(true);
+            setError(null);
+
             try {
                 const cachedData = sessionStorage.getItem('events');
+                
                 if (cachedData) {
-                    try {
-                        const parsedData = JSON.parse(cachedData);
-                        setEvents(Array.isArray(parsedData) ? parsedData : []);
-                    } catch {
-                        sessionStorage.removeItem('events');
-                        setEvents([]);
-                    }
+                    const parsedData = JSON.parse(cachedData);
+                    setEvents(Array.isArray(parsedData) ? parsedData : []);
+                    setLoading(false);
                     return;
                 }
 
                 const response = await fetchEvents();
                 if (!response.success) {
-                    setError(response.message);
-                    return;
+                    throw new Error(response.message || "Failed to load events.");
                 }
 
-                setEvents(response.data);
-                sessionStorage.setItem('events', JSON.stringify(response.data || []));
-            } catch (error) {
-                setError(error.message || "Failed to load events");
+                const data = Array.isArray(response.data) ? response.data : [];
+                setEvents(data);
+                sessionStorage.setItem('events', JSON.stringify(data));
+            } catch (err) {
+                setError(err.message || "Failed to load events.");
             } finally {
                 setLoading(false);
             }
         };
-        getEvents();
-    }, []);
+
+        getEvents(); // Always trigger on mount
+    }, []); // Removed dependency on `isFetched.current`
 
     if (loading) {
         return (
@@ -76,7 +77,7 @@ const Events = () => {
                             <div className="ml-4 flex-1">
                                 <h3 className="text-xl font-semibold text-blue-300">{event.title}</h3>
                                 <p className="text-gray-400 mt-2">
-                                    {new Date(event.date).toLocaleString('en-IN', {
+                                    {new Date(event.eventDate).toLocaleString('en-IN', {
                                         day: 'numeric',
                                         month: 'long',
                                         year: 'numeric',

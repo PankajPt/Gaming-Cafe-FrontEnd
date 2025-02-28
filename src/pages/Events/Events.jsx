@@ -77,7 +77,7 @@ const Events = () => {
                             <div className="ml-4 flex-1">
                                 <h3 className="text-xl font-semibold text-blue-300">{event.title}</h3>
                                 <p className="text-gray-400 mt-2">
-                                    {new Date(event.date).toLocaleString('en-IN', {
+                                    {new Date(event.eventDate).toLocaleString('en-IN', {
                                         day: 'numeric',
                                         month: 'long',
                                         year: 'numeric',

@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom/client'
 import './index.css'
 import { Route, RouterProvider, createBrowserRouter, createRoutesFromElements } from 'react-router-dom'
 import Layout from './Layout.jsx'
-import { User } from "./components/index.js"
 import {
   Contact,
   Home,
@@ -21,7 +20,6 @@ const router = createBrowserRouter(
       <Route path='' element={<Home />} />
       <Route path='events' element={<Events />} />
       <Route path='contact' element={<Contact />} />
-      <Route path='user/:userid' element={<User />} />
       <Route path='game-catalogue' element={<GameCatelogue />}/>
       <Route path='pricing' element={<Pricing />}/>
       <Route path='login' element={<LoginPage />}/>

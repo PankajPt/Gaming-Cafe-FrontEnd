@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { Logo } from '../index.js'
-import { FaDiscord, FaTwitter, FaGithub, FaInstagram, FaSteam } from 'react-icons/fa'
+import { FaDiscord, FaTwitter, FaInstagram, FaSteam } from 'react-icons/fa'
 
 export default function Footer() {
     return (
@@ -52,7 +52,7 @@ export default function Footer() {
                         </h3>
                         <div className="grid grid-cols-2 gap-4">
                             {[
-                                { icon: <FaDiscord className="text-2xl" />, name: 'Discord' },
+                                { icon: <FaDiscord className="text-2xl" />, name: 'Facebook' },
                                 { icon: <FaTwitter className="text-2xl" />, name: 'Twitter' },
                                 { icon: <FaInstagram className="text-2xl" />, name: 'Instagram' },
                                 { icon: <FaSteam className="text-2xl" />, name: 'Steam' },

@@ -121,7 +121,7 @@ export default function Header() {
                       }}
                       className="px-6 py-2 bg-gradient-to-r from-red-500 to-rose-600 text-white rounded-xl hover:shadow-red-glow transform hover:scale-105 transition-all duration-300"
                     >
-                      EXIT
+                      Logout
                     </button>
                   </li>
                 )}

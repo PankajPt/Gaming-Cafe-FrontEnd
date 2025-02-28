@@ -27,6 +27,7 @@ const router = createBrowserRouter(
       <Route path='forgot-password' element={<ForgotPasswordPage />}/>
       {/* Protected routes */}
       <Route path='user' element={<ProtectedRoute><UserPage /></ProtectedRoute>}/>
+      <Route path='manager' element={<ProtectedRoute><UserPage /></ProtectedRoute>}/>
       <Route path='admin' element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
     </Route>
   )

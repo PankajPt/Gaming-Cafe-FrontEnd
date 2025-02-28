@@ -1,0 +1,45 @@
+/* Home Page Custom CSS */
+.home-container {
+    background: linear-gradient(45deg, #0a0a0a 30%, #1a1a2e 100%);
+  }
+  
+  .glow-text {
+    text-shadow: 0 0 10px #4f46e5, 0 0 20px #4f46e5;
+  }
+  
+  .neon-border {
+    border: 2px solid #4f46e5;
+    box-shadow: 0 0 15px #4f46e5;
+  }
+  
+  .neon-border-t {
+    border-top: 2px solid #4f46e5;
+    box-shadow: 0 -5px 15px #4f46e5;
+  }
+  
+  .marquee {
+    animation: marquee 30s linear infinite;
+  }
+  
+  @keyframes marquee {
+    from { transform: translateX(100%); }
+    to { transform: translateX(-100%); }
+  }
+  
+  .pixel-cursor {
+    animation: blink 1s step-end infinite;
+  }
+  
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+  
+  .hover-glow {
+    transition: all 0.3s ease;
+  }
+  
+  .hover-glow:hover {
+    transform: scale(1.05);
+    filter: drop-shadow(0 0 10px #4f46e5);
+  }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useLayoutEffect } from 'react'
 import GameDescription from './Catelogue.jsx'
 import { fetchData } from '../../services/api.service.js'
 import { GiArrowDunk, GiSpinningSword } from 'react-icons/gi'
@@ -13,34 +13,38 @@ const GameCatelogue = () => {
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
     const isFetched = useRef(false)
+    const CACHE_KEY = 'game_catalogue';
 
-    useEffect(() => {
-        const cachedData = sessionStorage.getItem(CACHE_KEY);
-        
-        if (cachedData) {
-            setGames(JSON.parse(cachedData));
-            setLoading(false);
-            return;
-        }
-    
-        const getCatalogue = async () => {
-            try {
-                const response = await fetchData('users/catalogue', { method: 'GET' });
-                if (!response.success) {
-                    setError('Failed to load game catalogue. Please try again later.');
-                }
-    
-                const data = response.data;
-                sessionStorage.setItem(CACHE_KEY, JSON.stringify(data));
-                setGames(data);
-                isFetched.current = true;
-            } catch (err) {
-                setError('Failed to load game catalogue. Please try again later.');
-            } finally {
+    const getCatalogue = async () => {
+        setLoading(true); // Ensure loading state is set immediately
+
+        try {
+            const cachedData = sessionStorage.getItem(CACHE_KEY);
+
+            if (cachedData) {
+                setGames(JSON.parse(cachedData));
                 setLoading(false);
+                return;
             }
-        };
-    
+
+            const response = await fetchData('users/catalogue', { method: 'GET' });
+
+            if (!response.success) {
+                throw new Error('Failed to load game catalogue. Please try again later.');
+            }
+
+            const data = response.data;
+            sessionStorage.setItem(CACHE_KEY, JSON.stringify(data));
+            setGames(data);
+            isFetched.current = true;
+        } catch (err) {
+            setError(err.message || 'Failed to load game catalogue. Please try again later.');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useLayoutEffect(() => {
         if (!isFetched.current) {
             getCatalogue();
         }

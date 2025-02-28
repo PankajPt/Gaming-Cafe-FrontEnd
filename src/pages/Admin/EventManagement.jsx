@@ -65,10 +65,12 @@ const EventManagement = () => {
     };
 
     const handleDateChange = (date) => {
-        setFormData(prev => ({
-            ...prev,
-            date: date ? date.toISOString() : ""
-        }));
+        if (date) {
+            const formattedDate = date.toISOString().split('T')[0]; // Formats to YYYY-MM-DD
+            setFormData({ ...formData, date: formattedDate });
+        } else {
+            setFormData({ ...formData, date: '' });
+        }
     };
 
     const handleSubmit = async (e) => {
@@ -166,82 +168,60 @@ const EventManagement = () => {
                         />
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {/* Date Picker Section */}
-                        <div className="relative">
-                            <DatePicker
-                                selected={formData.date ? new Date(formData.date) : null}
-                                onChange={handleDateChange}
-                                minDate={new Date()}
-                                placeholderText="SELECT MISSION DATE"
-                                dateFormat="MMMM d, yyyy"
-                                className="w-full bg-gray-800/50 border-2 border-blue-500/30 rounded-xl px-4 py-3 text-gray-200 placeholder-gray-400 focus:outline-none focus:border-purple-400"
-                                popperClassName="!bg-gray-800 !border-2 !border-blue-500/30 !rounded-xl"
-                                calendarClassName="!bg-gray-800 !text-gray-200"
-                                wrapperClassName="w-full"
-                                customInput={
-                                    <div className="relative">
-                                        <input
-                                            className="w-full pr-10 bg-transparent text-gray-200"
-                                            value={formData.date ? new Date(formData.date).toLocaleDateString('en-US', {
-                                                month: 'long',
-                                                day: 'numeric',
-                                                year: 'numeric'
-                                            }) : ''}
-                                            readOnly
-                                        />
-                                        <FaCalendarAlt className="absolute right-4 top-4 text-blue-400 hover:text-purple-400 transition-colors" />
-                                    </div>
-                                }
-                                renderCustomHeader={({
-                                    date,
-                                    decreaseMonth,
-                                    increaseMonth,
-                                    prevMonthButtonDisabled,
-                                    nextMonthButtonDisabled,
-                                }) => (
-                                    <div className="flex items-center justify-between px-2 py-1 bg-gray-700">
-                                        <button
-                                            onClick={decreaseMonth}
-                                            disabled={prevMonthButtonDisabled}
-                                            className="text-blue-400 hover:text-purple-400 disabled:opacity-50"
-                                        >
-                                            ←
-                                        </button>
-                                        <span className="text-purple-400 font-orbitron">
-                                            {date.toLocaleString('default', { month: 'long', year: 'numeric' })}
-                                        </span>
-                                        <button
-                                            onClick={increaseMonth}
-                                            disabled={nextMonthButtonDisabled}
-                                            className="text-blue-400 hover:text-purple-400 disabled:opacity-50"
-                                        >
-                                            →
-                                        </button>
-                                    </div>
-                                )}
-                                dayClassName={(date) => 
-                                    date < new Date().setHours(0,0,0,0) ? '!text-gray-500' : '!text-gray-200 hover:!bg-blue-500/20'
-                                }
-                            />
-                        </div>
-
-                        <div className="relative">
-                            <label className="flex items-center justify-center w-full bg-gray-800/50 border-2 border-blue-500/30 rounded-xl px-4 py-3 cursor-pointer hover:bg-gray-800/70 transition-colors">
-                                <FaImage className="mr-2 text-blue-400" />
-                                <span className="text-gray-300">
-                                    {formData.thumbnail ? formData.thumbnail.name : 'Upload Thumbnail'}
-                                </span>
-                                <input
-                                    type="file"
-                                    name="thumbnail"
-                                    className="hidden"
-                                    onChange={handleChange}
-                                    accept="image/*"
-                                    required
-                                />
-                            </label>
-                        </div>
+                    <div className="relative">
+                        <DatePicker
+                            selected={formData.date ? new Date(formData.date) : null}
+                            onChange={handleDateChange}
+                            minDate={new Date()}
+                            placeholderText="SELECT MISSION DATE"
+                            dateFormat="MMMM d, yyyy" // Display format remains readable
+                            className="w-full bg-gray-800/50 border-2 border-blue-500/30 rounded-xl px-4 py-3 text-gray-200 placeholder-gray-400 focus:outline-none focus:border-purple-400"
+                            popperClassName="!bg-gray-800 !border-2 !border-blue-500/30 !rounded-xl"
+                            calendarClassName="!bg-gray-800 !text-gray-200"
+                            wrapperClassName="w-full"
+                            customInput={
+                                <div className="relative">
+                                    <input
+                                        className="w-full pr-10 bg-transparent text-gray-200"
+                                        value={formData.date ? new Date(formData.date).toLocaleDateString('en-US', {
+                                            year: 'numeric', month: 'long', day: 'numeric'
+                                        }) : ''}
+                                        readOnly
+                                    />
+                                    <FaCalendarAlt className="absolute right-4 top-4 text-blue-400 hover:text-purple-400 transition-colors" />
+                                </div>
+                            }
+                            renderCustomHeader={({
+                                date,
+                                decreaseMonth,
+                                increaseMonth,
+                                prevMonthButtonDisabled,
+                                nextMonthButtonDisabled,
+                            }) => (
+                                <div className="flex items-center justify-between px-2 py-1 bg-gray-700">
+                                    <button
+                                        onClick={decreaseMonth}
+                                        disabled={prevMonthButtonDisabled}
+                                        className="text-blue-400 hover:text-purple-400 disabled:opacity-50"
+                                    >
+                                        ←
+                                    </button>
+                                    <span className="text-purple-400 font-orbitron">
+                                        {date.toLocaleString('default', { month: 'long', year: 'numeric' })}
+                                    </span>
+                                    <button
+                                        onClick={increaseMonth}
+                                        disabled={nextMonthButtonDisabled}
+                                        className="text-blue-400 hover:text-purple-400 disabled:opacity-50"
+                                    >
+                                        →
+                                    </button>
+                                </div>
+                            )}
+                            dayClassName={(date) => 
+                                date < new Date().setHours(0,0,0,0) ? '!text-gray-500' : '!text-gray-200 hover:!bg-blue-500/20'
+                            }
+                        />
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

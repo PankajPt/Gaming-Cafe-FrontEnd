@@ -63,7 +63,6 @@ Create a `.env` file in the root directory and add the necessary environment var
 
 ### Example `.env` File
 ```
-.env
 VITE_BACKEND_BASE_URI=https://your-backend-uri/api/v1
 ```
 Create a `.env` file in the root directory and add the necessary environment variables.

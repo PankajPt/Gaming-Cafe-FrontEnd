@@ -61,6 +61,13 @@ Madgear Gaming Cafe is a web application for managing gaming cafe operations, in
 ## Environment Variables
 Create a `.env` file in the root directory and add the necessary environment variables.
 
+### Example `.env` File
+```
+.env
+VITE_BACKEND_BASE_URI=https://your-backend-uri/api/v1
+```
+Create a `.env` file in the root directory and add the necessary environment variables.
+
 ## Features
 - User authentication & profile management
 - Membership & subscription system

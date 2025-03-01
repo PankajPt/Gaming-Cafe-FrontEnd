@@ -167,7 +167,7 @@ const EventManagement = () => {
                             required
                         />
                     </div>
-
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="relative">
                         <DatePicker
                             selected={formData.date ? new Date(formData.date) : null}
@@ -223,7 +223,23 @@ const EventManagement = () => {
                             }
                         />
                     </div>
-
+                    <div className="relative">
+                            <label className="flex items-center justify-center w-full bg-gray-800/50 border-2 border-blue-500/30 rounded-xl px-4 py-3 cursor-pointer hover:bg-gray-800/70 transition-colors">
+                                <FaImage className="mr-2 text-blue-400" />
+                                <span className="text-gray-300">
+                                    {formData.thumbnail ? formData.thumbnail.name : 'Upload Thumbnail'}
+                                </span>
+                                <input
+                                    type="file"
+                                    name="thumbnail"
+                                    className="hidden"
+                                    onChange={handleChange}
+                                    accept="image/*"
+                                    required
+                                />
+                            </label>
+                        </div>
+                        </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {/* Victory Prize Input */}
                         <div className="relative">

@@ -1,5 +1,5 @@
 import { MdVerified } from 'react-icons/md';
-import { FaUser, FaCalendarAlt, FaGamepad, FaCrown, FaSignOutAlt } from 'react-icons/fa';
+import { FaUser, FaCalendarAlt, FaGamepad, FaCrown, FaSignOutAlt, FaKey } from 'react-icons/fa';
 import { GiPlasmaBolt } from 'react-icons/gi';
 
 // components
@@ -11,6 +11,7 @@ const LeftSideBar = ({ userDetails, isVerified, selectedSection, setSelectedSect
         { id: 'my-plan', icon: <FaCrown className="mr-3" />, label: 'Premium Plan' },
         { id: 'book-slot', icon: <FaCalendarAlt className="mr-3" />, label: 'Book Arena' },
         { id: 'events', icon: <FaGamepad className="mr-3" />, label: 'Live Events' },
+        { id: 'cipher', icon: <FaKey className="mr-3" />, label: 'Reset Cipher' },
     ];
 
     return (

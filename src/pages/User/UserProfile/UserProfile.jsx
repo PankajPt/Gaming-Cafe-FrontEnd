@@ -1,7 +1,6 @@
 // UserProfile.jsx
 import UserVerification from './UserVerification.jsx';
 import UserDetails from './UserDetails.jsx';
-import PasswordUpdate from './PasswordUpdate.jsx';
 import { GiSpellBook } from 'react-icons/gi';
 
 const UserProfile = ({ userDetails, isVerified, ...props }) => {
@@ -18,10 +17,7 @@ const UserProfile = ({ userDetails, isVerified, ...props }) => {
         isVerified={isVerified}
         {...props}
       />
-
       <UserDetails userDetails={userDetails} />
-
-      <PasswordUpdate {...props} />
     </div>
   );
 };

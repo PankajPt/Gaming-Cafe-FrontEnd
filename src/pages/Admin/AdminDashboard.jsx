@@ -6,10 +6,10 @@ import { useState } from 'react';
   import { MembershipPlans } from './Membership.jsx'
   import { TimeSlots } from './TimeSlots.jsx'
   import { EventManagement } from './EventManagement.jsx';
+  import PasswordUpdate from '../User/PasswordUpdate.jsx'
+
 
 const AdminDashboard = () => {
-  // const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
   const [activeSection, setActiveSection] = useState('users');
   const handleSection = (sectionId) => {
       setActiveSection(sectionId);
@@ -28,6 +28,7 @@ const AdminDashboard = () => {
         {activeSection === 'events' && <EventManagement />}
         {activeSection === 'slots' && <TimeSlots />}
         {activeSection === 'plans' && <MembershipPlans />}
+        {activeSection === 'cipher' && <PasswordUpdate />}
       </div>
     </div>
   );

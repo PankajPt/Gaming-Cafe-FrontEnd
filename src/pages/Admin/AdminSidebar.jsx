@@ -1,5 +1,5 @@
 import { MdPeople, MdSportsEsports, MdEvent, MdAccessTime } from "react-icons/md";
-import { FaGamepad } from "react-icons/fa";
+import { FaGamepad, FaKey } from "react-icons/fa";
 
 const AdminSidebar = ({activeSection, handleSection}) => {
     const sections = [
@@ -7,7 +7,8 @@ const AdminSidebar = ({activeSection, handleSection}) => {
         { id: 'games', icon: <MdSportsEsports />, label: 'Game Catalog' },
         { id: 'events', icon: <MdEvent />, label: 'Events' },
         { id: 'slots', icon: <MdAccessTime />, label: 'Time Slots' },
-        { id: 'plans', icon: <FaGamepad />, label: 'Membership Plans' }
+        { id: 'plans', icon: <FaGamepad />, label: 'Membership Plans' },
+        { id: 'cipher', icon: <FaKey />, label: 'Change Cipher' }
     ];
 
     return (

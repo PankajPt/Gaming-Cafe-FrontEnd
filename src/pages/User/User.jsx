@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useAuth } from '../../context/Auth.Context.jsx';
 import { useNavigate } from 'react-router-dom';
@@ -12,6 +11,7 @@ import Membership from './Membership.jsx'
 import BookSlot from './BookSlot.jsx'
 import Events from './Events.jsx';
 import LeftSideBar from './Navigation/LeftSidebar.jsx';
+import PasswordUpdate from './PasswordUpdate.jsx';
 
 const UserPage = () => {
   const navigate = useNavigate();
@@ -23,68 +23,8 @@ const UserPage = () => {
   const [selectedSection, setSelectedSection] = useState('profile');
   const [isVerificationSent, setIsVerificationSent] = useState(false);
   const [verificationError, setVerificationError] = useState(null);
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const [showPasswordUpdate, setShowPasswordUpdate] = useState(false);
-  const [passwords, setPasswords] = useState({
-    current: '',
-    newPassword: '',
-    confirm: '',
-  });
-  const [passwordsMatch, setPasswordsMatch] = useState(false);
-  const [updateStatus, setUpdateStatus] = useState(null);
-
   const { logout } = useAuth();
   const { refreshAndRetry, handleInvalidJWT } = useAuthHandler()
-
-  useEffect(() => {
-    setPasswordsMatch(passwords.newPassword === passwords.confirm);
-  }, [passwords.newPassword, passwords.confirm]);
-
-  const handlePasswordChange = (e) => {
-    setPasswords({
-      ...passwords,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const handlePasswordSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const options = {
-        method: 'POST',
-        data: passwords,
-        file: null,
-        isBinary: false
-    }
-      const response = await fetchData('users/reset-passwd-jwt', options)
-      if (!response.success) {
-        // using hook to check whether jwt is expired
-        if(response.message === 'jwt expired'){
-          const retryWithNewToken = await refreshAndRetry('users/reset-passwd-jwt', options)
-          if(!retryWithNewToken.success){
-            setUpdateStatus({ type: 'error', message: retryWithNewToken.message });
-            return
-          }
-          setUpdateStatus({ type: 'success', message: 'Password updated successfully!' });
-          setPasswords({ current: '', newPassword: '', confirm: '' });
-          setTimeout(() => setShowPasswordUpdate(false), 2000);
-        } else if (response.message === 'jwt malformed' || response.message === 'invalid signature' || response.message === 'Unauthorized request'){
-          await handleInvalidJWT()
-          return
-        }
-        setUpdateStatus({ type: 'error', message: response.message });
-        return
-      }
-
-      setUpdateStatus({ type: 'success', message: 'Password updated successfully!' });
-      setPasswords({ current: '', newPassword: '', confirm: '' });
-      setTimeout(() => setShowPasswordUpdate(false), 2000);
-    } catch (error) {
-      setUpdateStatus({ type: 'error', message: 'Failed to update password. Please try again.' });
-      console.error('Error updating password:', error);
-    }
-  };
-
 
   const sendVerificationMail = async () => {
     try {
@@ -122,11 +62,6 @@ const UserPage = () => {
   };
 
   const [activePlan] = useState('Premium Membership');
-  const [upcomingEvents] = useState([
-    { name: 'Yoga Workshop', date: 'March 25, 2024' },
-    { name: 'HIIT Challenge', date: 'April 2, 2024' },
-  ]);
-
   let isVerified = false;
   if (userDetails.isActiveUser === 'active') {
     isVerified = true;
@@ -152,13 +87,6 @@ const UserPage = () => {
           isVerificationSent={isVerificationSent}
           verificationError={verificationError}
           sendVerificationMail={sendVerificationMail}
-          showPasswordUpdate={showPasswordUpdate}
-          setShowPasswordUpdate={setShowPasswordUpdate}
-          passwords={passwords}
-          passwordsMatch={passwordsMatch}
-          handlePasswordChange={handlePasswordChange}
-          handlePasswordSubmit={handlePasswordSubmit}
-          updateStatus={updateStatus}
           />
         )}
 
@@ -176,11 +104,12 @@ const UserPage = () => {
         
         {/* Events Section */}
         {selectedSection === 'events' && (
-          <Events 
-          upcomingEvents={upcomingEvents}
-          />
+          <Events />
         )}
 
+        {selectedSection === 'cipher' && (
+          <PasswordUpdate />
+        )}
         {/* Logout Section */}
         {selectedSection === 'logout' && (
           <div className="bg-white p-8 rounded-2xl shadow-2xl text-center">

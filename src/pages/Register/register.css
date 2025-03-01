@@ -1,0 +1,46 @@
+@keyframes border-spin {
+    100% { transform: rotate(360deg); }
+  }
+  
+  /* Outer box glowing effect */
+  .form-container {
+    position: relative;
+    border-radius: 1rem;
+    overflow: hidden;
+  }
+  
+  /* The animated neon glowing border */
+  .form-container::before {
+    content: '';
+    position: absolute;
+    inset: -6px;
+    z-index: -1;
+    border-radius: 1rem;
+    background: conic-gradient(
+      from 0deg,
+      #00ffff, /* Neon Cyan */
+      #00ff00, /* Neon Green */
+      #00ffff
+    );
+    animation: border-spin 3s linear infinite;
+    filter: blur(12px); /* Stronger blur for glow effect */
+    box-shadow: 0 0 25px rgba(0, 255, 255, 0.8), 
+                0 0 35px rgba(0, 255, 0, 0.8);
+  }
+  
+  /* Inner box remains dark and visible */
+  .form-container::after {
+    content: '';
+    position: absolute;
+    inset: 3px;
+    background: linear-gradient(to bottom right, #1a1a1a 0%, #000000 100%);
+    border-radius: 1rem;
+    z-index: -1;
+  }
+    
+  
+        /* check css applied or not  */
+  /* body {
+    border: 5px solid lime !important;
+  }
+   */

@@ -126,16 +126,16 @@ const PasswordUpdate = () => {
           </div>
 
           <button
-  type="submit"
-  disabled={!isFormValid}
-  className={`w-full py-3 rounded-xl font-bold transition-all text-white
-    ${isFormValid 
-      ? 'bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-400 hover:to-blue-400 shadow-lg shadow-blue-500/50 hover:scale-105'
-      : 'bg-gray-700/50 cursor-not-allowed opacity-50'}`}
->
-  Initiate Security Override
-</button>
-
+            type="submit"
+            disabled={!isFormValid}
+            className={`w-full py-3 rounded-xl font-bold transition-all text-white
+              ${isFormValid 
+                ? 'bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-400 hover:to-blue-400 shadow-lg shadow-blue-500/50 hover:scale-105'
+                : 'bg-gray-700/50 cursor-not-allowed opacity-50'}`}
+          >
+            Initiate Security Override
+          </button>
+          
         </form>
       )}
     </div>

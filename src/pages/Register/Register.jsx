@@ -64,8 +64,7 @@ const RegisterPage = () => {
       const response = await fetchData('users/register', options)
 
       if (!response.success) {
-        const errorData = await response.json()
-        setError(errorData.message || 'Something went wrong during registration.')
+        setError(response.message || 'Something went wrong during registration.')
         return
       }
       setSuccess(true);

@@ -1,76 +1,47 @@
 /* Home Page Custom CSS */
 .home-container {
   background: linear-gradient(45deg, #0a0a0a 30%, #1a1a2e 100%);
-}
-
-.glow-text {
-  text-shadow: 0 0 10px #4f46e5, 0 0 20px #4f46e5;
-}
-
-.neon-border {
-  border: 2px solid #4f46e5;
-  box-shadow: 0 0 15px #4f46e5;
-}
-
-.neon-border-t {
-  border-top: 2px solid #4f46e5;
-  box-shadow: 0 -5px 15px #4f46e5;
-}
-
-.pixel-cursor {
-  animation: blink 1s step-end infinite;
-}
-
-@keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
-}
-
-.hover-glow {
-  transition: all 0.3s ease;
-}
-
-.hover-glow:hover {
-  transform: scale(1.05);
-  filter: drop-shadow(0 0 10px #4f46e5);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 /* Rolling Images */
-/* Rolling Images Container */
 .rolling-container {
-  position: absolute;
-  bottom: 5vh; /* Adjust position as needed */
-  left: 0;
-  right: 0;
-  height: 22vh; /* Increase height to fit larger images */
+  position: relative;
+  margin-top: 3rem;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 26vh;
   overflow: hidden;
   background: linear-gradient(to top, black, transparent);
-  white-space: nowrap;
 }
 
 /* Ensure images are properly sized */
 .rolling-container img {
-  height: 20vh; /* Keep it slightly smaller than container height */
+  height: 24vh;
   width: auto;
 }
 
 /* Adjust for small screens */
 @media (max-width: 768px) {
   .rolling-container {
-      bottom: 3vh;
-      height: 12vh; /* Adjust for smaller screens */
+    margin-top: 2rem;
+    height: 12vh;
   }
   .rolling-container img {
-      height: 10vh;
-      width: auto;
+    height: 10vh;
   }
 }
 
 /* Adjust marquee animation */
 .marquee {
   display: flex;
-  gap: 20px; /* Adds spacing between images */
-  animation: marquee 40s linear infinite;
+  gap: 20px;
+  animation: marquee 30s linear infinite;
 }
 
 /* Make sure it wraps properly */

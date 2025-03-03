@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
-import { Logo } from '../index.js';
 import { useAuth } from '../../context/Auth.Context.jsx';
-import { GiHamburgerMenu } from 'react-icons/gi';
-import { RiCloseFill } from 'react-icons/ri';
+import { GiHamburgerMenu, GiDiamondTrophy } from 'react-icons/gi';
+import { RiCloseFill, RiCustomerService2Fill } from 'react-icons/ri';
 import { FaGamepad, FaCrown } from 'react-icons/fa';
+import { MdOutlineEventAvailable } from 'react-icons/md';
+import { logo } from '../../assets/index.assets.js';
 
 export default function Header() {
   const { userRole, logout } = useAuth();
@@ -19,19 +20,38 @@ export default function Header() {
 
   return (
     <header className="sticky z-50 top-0 bg-gradient-to-b from-gray-900 to-gray-800 border-b-2 border-blue-500/30 shadow-2xl">
-      {/* Animated Top Border */}
+      {/* Original Blue/Purple Animated Top Border */}
       <div className="absolute top-0 w-full h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-blue-500 animate-pulse blur-sm" />
-      
       <nav className="px-4 lg:px-6 py-3">
         <div className="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl">
-          {/* Logo with Neon Effect */}
+          {/* Green Logo Section */}
           <Link 
             to="/" 
-            className="flex items-center group hover:scale-105 transition-transform duration-300"
+            className="flex items-center group transition-all duration-300 hover:text-green-400"
           >
-            <div className="relative p-2 bg-gradient-to-br from-blue-900/50 to-purple-900/30 rounded-xl border-2 border-blue-500/30">
-              <Logo className="h-12 w-48 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400" />
-              <div className="absolute inset-0 border-2 border-blue-500/20 rounded-xl group-hover:border-blue-400/50 transition-all duration-300" />
+            <div className="flex items-center gap-3">
+              {/* PNG Logo with Neon Green Effect */}
+              <div className="relative h-16 w-16 neon-glow">
+                <img 
+                  src={logo} 
+                  alt="MadGear Logo" 
+                  className="h-full w-full object-contain filter brightness-125 contrast-110"
+                />
+                <div className="absolute inset-0 bg-gradient-to-br from-green-400/20 to-lime-400/10 mix-blend-overlay" />
+              </div>
+
+              {/* Text Logo with Green Gradient */}
+              <div className="flex flex-col relative">
+                <div className="font-orbitron text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-lime-400 text-3xl tracking-wider">
+                  MADGEAR
+                  <div className="absolute inset-0 bg-gradient-to-r from-green-400/20 to-lime-400/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                </div>
+                <span className="font-mono text-xs text-lime-300/80 tracking-widest mt-[-4px] ml-[2px]">
+                  GAMING CAFE
+                </span>
+                {/* Neon Green Underline */}
+                <div className="absolute -bottom-1 left-0 w-0 h-[2px] bg-gradient-to-r from-green-400 to-lime-400 group-hover:w-full transition-all duration-300" />
+              </div>
             </div>
           </Link>
 
@@ -59,19 +79,19 @@ export default function Header() {
               {[
                 { path: '/', name: 'Home', icon: <FaGamepad className="mr-2" /> },
                 { path: '/game-catalogue', name: 'Game Catalogue', icon: <FaCrown className="mr-2" /> },
-                { path: '/events', name: 'Events' },
-                { path: '/contact', name: 'Contact' },
-                { path: '/pricing', name: 'Premium' },
+                { path: '/events', name: 'Events', icon: <MdOutlineEventAvailable className='mr-2' /> },
+                { path: '/contact', name: 'Contact', icon: <RiCustomerService2Fill className='mr-2' />},
+                { path: '/pricing', name: 'Premium', icon: <GiDiamondTrophy className='mr-2' /> },
               ].map((item) => (
                 <li key={item.path}>
                   <NavLink
                     to={item.path}
                     onClick={closeMenu}
                     className={({ isActive }) =>
-                      `relative flex items-center px-4 py-2 text-gray-300 hover:text-blue-400 transition-all duration-300
+                      `relative flex items-center px-4 py-2 text-gray-300 hover:text-green-400 transition-all duration-300
                       ${isActive ? 'text-blue-400' : ''}
                       before:content-[''] before:absolute before:-bottom-1 before:left-0 before:w-0 before:h-[2px] 
-                      before:bg-gradient-to-r before:from-blue-400 before:to-purple-400 before:transition-all before:duration-300 
+                      before:bg-gradient-to-r before:from-green-400 before:to-lime-400 before:transition-all before:duration-300 
                       hover:before:w-full group`
                     }
                   >

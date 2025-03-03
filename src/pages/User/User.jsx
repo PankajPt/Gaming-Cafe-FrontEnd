@@ -1,10 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useAuth } from '../../context/Auth.Context.jsx';
 import { useNavigate } from 'react-router-dom';
-import { fetchData } from '../../services/api.service.js'
-import { useAuthHandler } from '../../hooks/authHandler.js'
-
 // components
 import UserProfile from './UserProfile/UserProfile.jsx'
 import Membership from './Membership.jsx'
@@ -21,45 +18,7 @@ const UserPage = () => {
   }
   const userDetails = JSON.parse(userData);
   const [selectedSection, setSelectedSection] = useState('profile');
-  const [isVerificationSent, setIsVerificationSent] = useState(false);
-  const [verificationError, setVerificationError] = useState(null);
   const { logout } = useAuth();
-  const { refreshAndRetry, handleInvalidJWT } = useAuthHandler()
-
-  const sendVerificationMail = async () => {
-    try {
-      const options = {
-        method: 'GET',
-        data: null,
-        file: null,
-        isBinary: false
-    }
-      const response = await fetchData('users/send-verification-link', options)
-      if (!response.success) {
-        if(response.message === 'jwt expired'){
-          const retryWithNewToken = await refreshAndRetry('users/send-verification-link', options)
-          if(!retryWithNewToken.success){
-            setVerificationError('An error occurred. Please try again later.');
-            return
-          }
-          setIsVerificationSent(true); // Hide the verification banner
-          setVerificationError(null); // Clear any previous errors
-          alert('Verification email sent successfully! Please check your inbox.');
-
-        } else if (response.message === 'jwt malformed' || response.message === 'invalid signature' || response.message === 'Unauthorized request'){
-          await handleInvalidJWT()
-          return
-        }
-        setVerificationError('Failed to send verification email. Please try again.');
-        return
-      }
-      setIsVerificationSent(true); // Hide the verification banner
-      setVerificationError(null); // Clear any previous errors
-      alert('Verification email sent successfully! Please check your inbox.');
-    } catch (error) {
-      setVerificationError('An error occurred. Please try again later.');
-    }
-  };
 
   const [activePlan] = useState('Premium Membership');
   let isVerified = false;
@@ -84,9 +43,6 @@ const UserPage = () => {
           <UserProfile
           userDetails={userDetails}
           isVerified={isVerified}
-          isVerificationSent={isVerificationSent}
-          verificationError={verificationError}
-          sendVerificationMail={sendVerificationMail}
           />
         )}
 

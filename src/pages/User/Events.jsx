@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useRef, useLayoutEffect } from 'react';
 import { MdEventNote, MdWarning } from 'react-icons/md';
 import { GiSpinningSword } from 'react-icons/gi';
 import { fetchEvents } from '../../services/event.service.js';
@@ -8,39 +8,45 @@ const Events = () => {
     const [events, setEvents] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const isFetched = useRef(false);
 
-    useEffect(() => {
-        const getEvents = async () => {
-            setLoading(true);
-            setError(null);
-
-            try {
-                const cachedData = sessionStorage.getItem('events');
-                
-                if (cachedData) {
+    const getEvents = async () => {
+        setLoading(true);
+        try {
+            const cachedData = sessionStorage.getItem('events');
+            if (cachedData) {
+                try {
                     const parsedData = JSON.parse(cachedData);
                     setEvents(Array.isArray(parsedData) ? parsedData : []);
-                    setLoading(false);
-                    return;
+                } catch {
+                    sessionStorage.removeItem('events');
+                    setEvents([]);
                 }
-
-                const response = await fetchEvents();
-                if (!response.success) {
-                    throw new Error(response.message || "Failed to load events.");
-                }
-
-                const data = Array.isArray(response.data) ? response.data : [];
-                setEvents(data);
-                sessionStorage.setItem('events', JSON.stringify(data));
-            } catch (err) {
-                setError(err.message || "Failed to load events.");
-            } finally {
                 setLoading(false);
+                return;
             }
-        };
 
-        getEvents(); // Always trigger on mount
-    }, []); // Removed dependency on `isFetched.current`
+            const response = await fetchEvents();
+            if (!response.success) {
+                setError(error.message || "Failed to load events");
+            }
+
+            const data = Array.isArray(response.data) ? response.data : [];
+            setEvents(data);
+            sessionStorage.setItem('events', JSON.stringify(data));
+            isFetched.current = true;
+        } catch (error) {
+            setError(error.message || "Failed to load events");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useLayoutEffect(() => {
+        if (!isFetched.current) {
+            getEvents();
+        }
+    }, []);
 
     if (loading) {
         return (

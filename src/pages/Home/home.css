@@ -1,45 +1,80 @@
 /* Home Page Custom CSS */
 .home-container {
-    background: linear-gradient(45deg, #0a0a0a 30%, #1a1a2e 100%);
+  background: linear-gradient(45deg, #0a0a0a 30%, #1a1a2e 100%);
+}
+
+.glow-text {
+  text-shadow: 0 0 10px #4f46e5, 0 0 20px #4f46e5;
+}
+
+.neon-border {
+  border: 2px solid #4f46e5;
+  box-shadow: 0 0 15px #4f46e5;
+}
+
+.neon-border-t {
+  border-top: 2px solid #4f46e5;
+  box-shadow: 0 -5px 15px #4f46e5;
+}
+
+.pixel-cursor {
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.hover-glow {
+  transition: all 0.3s ease;
+}
+
+.hover-glow:hover {
+  transform: scale(1.05);
+  filter: drop-shadow(0 0 10px #4f46e5);
+}
+
+/* Rolling Images */
+/* Rolling Images Container */
+.rolling-container {
+  position: absolute;
+  bottom: 5vh; /* Adjust position as needed */
+  left: 0;
+  right: 0;
+  height: 22vh; /* Increase height to fit larger images */
+  overflow: hidden;
+  background: linear-gradient(to top, black, transparent);
+  white-space: nowrap;
+}
+
+/* Ensure images are properly sized */
+.rolling-container img {
+  height: 20vh; /* Keep it slightly smaller than container height */
+  width: auto;
+}
+
+/* Adjust for small screens */
+@media (max-width: 768px) {
+  .rolling-container {
+      bottom: 3vh;
+      height: 12vh; /* Adjust for smaller screens */
   }
-  
-  .glow-text {
-    text-shadow: 0 0 10px #4f46e5, 0 0 20px #4f46e5;
+  .rolling-container img {
+      height: 10vh;
+      width: auto;
   }
-  
-  .neon-border {
-    border: 2px solid #4f46e5;
-    box-shadow: 0 0 15px #4f46e5;
-  }
-  
-  .neon-border-t {
-    border-top: 2px solid #4f46e5;
-    box-shadow: 0 -5px 15px #4f46e5;
-  }
-  
-  .marquee {
-    animation: marquee 30s linear infinite;
-  }
-  
-  @keyframes marquee {
-    from { transform: translateX(100%); }
-    to { transform: translateX(-100%); }
-  }
-  
-  .pixel-cursor {
-    animation: blink 1s step-end infinite;
-  }
-  
-  @keyframes blink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0; }
-  }
-  
-  .hover-glow {
-    transition: all 0.3s ease;
-  }
-  
-  .hover-glow:hover {
-    transform: scale(1.05);
-    filter: drop-shadow(0 0 10px #4f46e5);
-  }
+}
+
+/* Adjust marquee animation */
+.marquee {
+  display: flex;
+  gap: 20px; /* Adds spacing between images */
+  animation: marquee 40s linear infinite;
+}
+
+/* Make sure it wraps properly */
+@keyframes marquee {
+  from { transform: translateX(100%); }
+  to { transform: translateX(-100%); }
+}

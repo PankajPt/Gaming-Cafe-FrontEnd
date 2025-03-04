@@ -1,36 +1,34 @@
-import { motion } from 'framer-motion'
+import { motion } from 'framer-motion';
 
-const GameDescription = ({ game, isImageFirst }) => {
+const GameDescription = ({ game }) => {
     return (
         <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
-            className={`bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl border-2 border-blue-500/30 shadow-[0_0_30px_-10px_rgba(59,130,246,0.3)] overflow-hidden flex flex-col md:flex-row gap-6 p-6 ${
-                isImageFirst ? 'md:flex-row' : 'md:flex-row-reverse'
-            }`}
+            className="bg-gray-900 rounded-3xl shadow-lg p-6 flex flex-col items-center gap-6 hover:shadow-blue-500/50 hover:scale-105 transition-all duration-300 overflow-hidden"
         >
-            <div className="flex-1 relative overflow-hidden rounded-xl border-2 border-blue-500/30">
+            <div className="relative w-full max-w-md overflow-hidden rounded-2xl">
                 <img
                     src={game.thumbnail.url}
                     alt={game.title}
-                    className="w-full h-64 object-cover hover:scale-105 transition-transform duration-300"
+                    className="w-full h-auto object-cover transition-transform duration-500 hover:scale-110"
                 />
             </div>
             
-            <div className="flex-1 space-y-4">
-                <h2 className="text-3xl font-bold text-blue-400 font-orbitron">
+            <div className="text-center space-y-4">
+                <h2 className="text-4xl font-extrabold text-blue-400 font-orbitron uppercase tracking-wide">
                     {game.title}
                 </h2>
-                <p className="text-gray-300 text-lg leading-relaxed">
+                <p className="text-gray-300 text-lg leading-relaxed max-w-lg">
                     {game.description}
                 </p>
-                <button className="mt-4 px-6 py-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-lg hover:shadow-purple-glow transition-all duration-300">
-                    View Achievements →
+                <button className="px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-lg text-lg font-semibold shadow-lg hover:shadow-purple-500/50 transition-all duration-300">
+                    Explore Achievements →
                 </button>
             </div>
         </motion.div>
-    )
-}
+    );
+};
 
-export default GameDescription
+export default GameDescription;

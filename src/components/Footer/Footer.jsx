@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { Logo } from '../index.js'
-import { FaDiscord, FaTwitter, FaInstagram, FaSteam } from 'react-icons/fa'
+import { logo } from '../../assets/index.assets.js';
+import { FaFacebook, FaTwitter, FaInstagram, FaSteam } from 'react-icons/fa'
 
 export default function Footer() {
     return (
@@ -10,9 +10,33 @@ export default function Footer() {
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-8 lg:gap-12">
                     {/* Logo Section */}
                     <div className="space-y-4">
-                        <Link to="/" className="inline-block">
-                            <div className="bg-gradient-to-r from-blue-600/20 to-purple-600/20 p-3 rounded-xl border-2 border-blue-500/30 hover:border-blue-400/50 transition-all">
-                                <Logo className="h-8 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400" />
+                        <Link 
+                            to="/" 
+                            className="flex items-center group transition-all duration-300 hover:text-green-400"
+                        >
+                            <div className="flex items-center gap-3">
+                            {/* PNG Logo with Neon Green Effect */}
+                            <div className="relative h-16 w-16 neon-glow">
+                                <img 
+                                src={logo} 
+                                alt="MadGear Logo" 
+                                className="h-full w-full object-contain filter brightness-125 contrast-110"
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-br from-green-400/20 to-lime-400/10 mix-blend-overlay" />
+                            </div>
+
+                            {/* Text Logo with Green Gradient */}
+                            <div className="flex flex-col relative">
+                                <div className="font-orbitron text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-lime-400 text-3xl tracking-wider">
+                                MADGEAR
+                                <div className="absolute inset-0 bg-gradient-to-r from-green-400/20 to-lime-400/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                                </div>
+                                <span className="font-mono text-xs text-lime-300/80 tracking-widest mt-[-4px] ml-[2px]">
+                                GAMING CAFE
+                                </span>
+                                {/* Neon Green Underline */}
+                                <div className="absolute -bottom-1 left-0 w-0 h-[2px] bg-gradient-to-r from-green-400 to-lime-400 group-hover:w-full transition-all duration-300" />
+                            </div>
                             </div>
                         </Link>
                         <p className="text-gray-400 text-sm">
@@ -52,7 +76,7 @@ export default function Footer() {
                         </h3>
                         <div className="grid grid-cols-2 gap-4">
                             {[
-                                { icon: <FaDiscord className="text-2xl" />, name: 'Facebook' },
+                                { icon: <FaFacebook className="text-2xl" />, name: 'Facebook' },
                                 { icon: <FaTwitter className="text-2xl" />, name: 'Twitter' },
                                 { icon: <FaInstagram className="text-2xl" />, name: 'Instagram' },
                                 { icon: <FaSteam className="text-2xl" />, name: 'Steam' },
@@ -103,7 +127,7 @@ export default function Footer() {
                         © {new Date().getFullYear()} MadGear Arena. All rights reserved.
                     </p>
                     <div className="flex space-x-6">
-                        <span className="text-gray-400 text-sm">v2.1.5</span>
+                        <span className="text-gray-400 text-sm">v1.0.0</span>
                         <span className="text-gray-400 text-sm">🔒 SSL Secured</span>
                         <span className="text-gray-400 text-sm">🕹️ #StayInTheGame</span>
                     </div>

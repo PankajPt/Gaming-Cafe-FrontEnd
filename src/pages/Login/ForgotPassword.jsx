@@ -41,8 +41,7 @@ const ForgotPasswordPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-purple-900 to-indigo-900 p-4">
-      {/* Custom Animations */}
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-4">
       <style>
         {`
           @keyframes float {
@@ -55,14 +54,14 @@ const ForgotPasswordPage = () => {
         `}
       </style>
 
-      <div className="relative w-full max-w-md px-8 py-12 space-y-8 bg-gray-900 rounded-3xl shadow-2xl border-2 border-indigo-500 transform transition-transform duration-500 hover:scale-105 group">
+      <div className="relative w-full max-w-md px-8 py-12 space-y-8 bg-gray-900 rounded-3xl shadow-2xl border border-gray-700 transform transition-transform duration-500 hover:scale-105 group hover:border-green-400">
         {/* Glowing Border Effect */}
-        <div className="absolute -inset-2 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-3xl blur opacity-30 group-hover:opacity-50 transition duration-500 animate-pulse pointer-events-none"></div>
+        <div className="absolute -inset-2 bg-gradient-to-r from-green-400 to-teal-600 rounded-3xl blur opacity-10 group-hover:opacity-20 transition-opacity duration-300 pointer-events-none"></div>
 
         {/* Floating Icon */}
         <div className="animate-float text-center">
           <svg 
-            className="w-20 h-20 mx-auto text-purple-400" 
+            className="w-20 h-20 mx-auto text-green-400" 
             fill="none" 
             stroke="currentColor" 
             viewBox="0 0 24 24"
@@ -72,7 +71,7 @@ const ForgotPasswordPage = () => {
         </div>
 
         <div className="text-center space-y-4">
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-400 to-indigo-400 bg-clip-text text-transparent">
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-green-400 to-teal-400 bg-clip-text text-transparent">
             Reset Your Password
           </h1>
           <p className="text-gray-300 text-lg">Enter your email to continue your quest</p>
@@ -86,12 +85,12 @@ const ForgotPasswordPage = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Gamer email"
-              className="w-full px-4 py-3 text-gray-100 bg-gray-800 rounded-lg border-2 border-gray-700 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 placeholder:text-gray-400 transition-all pr-12 
-                        hover:border-purple-500 hover:shadow-glow"
+              className="w-full px-4 py-3 text-gray-100 bg-gray-800 rounded-lg border border-gray-700 focus:border-green-400 focus:ring-2 focus:ring-green-400/50 placeholder:text-gray-400 transition-all pr-12 
+                        hover:border-green-400 hover:shadow-glow"
               required
             />
             <svg
-              className="absolute right-3 top-3.5 w-6 h-6 text-gray-400 group-hover:text-purple-400 transition-colors"
+              className="absolute right-3 top-3.5 w-6 h-6 text-gray-400 group-hover:text-green-400 transition-colors"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -103,8 +102,8 @@ const ForgotPasswordPage = () => {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full px-6 py-3 text-lg font-semibold text-white bg-gradient-to-r from-purple-600 to-indigo-600 rounded-lg 
-                      hover:from-purple-500 hover:to-indigo-500 transition-all transform hover:scale-[1.02] 
+            className="w-full px-6 py-3 text-lg font-semibold text-white bg-gradient-to-r from-green-600 to-teal-600 rounded-lg 
+                      hover:from-green-500 hover:to-teal-500 transition-all transform hover:scale-[1.02] 
                       flex items-center justify-center gap-2 relative overflow-hidden
                       disabled:opacity-50 disabled:cursor-not-allowed"
           >
@@ -129,7 +128,7 @@ const ForgotPasswordPage = () => {
           </button>
         </form>
         
-        {/* Success Error message section: */}
+        {/* Success/Error messages */}
         {successMessage && (
           <div className="text-center p-3 text-green-400 bg-green-900/20 rounded-lg border border-green-400/30 animate-fade-in">
             ✅ {successMessage}
@@ -137,16 +136,16 @@ const ForgotPasswordPage = () => {
         )}
 
         {errorMessage && (
-        <div className="text-center p-3 text-red-400 bg-red-900/20 rounded-lg border border-red-400/30 animate-fade-in">
+          <div className="text-center p-3 text-red-400 bg-red-900/20 rounded-lg border border-red-400/30 animate-fade-in">
             ⚠️ {errorMessage}
-        </div>
+          </div>
         )}
 
         <div className="text-center text-gray-400 text-sm">
           Remember your password?{' '}
           <Link 
             to="/login" 
-            className="text-purple-400 hover:text-purple-300 font-semibold underline transition-colors 
+            className="text-green-400 hover:text-green-300 font-semibold underline transition-colors 
                       hover:scale-105 inline-block hover:animate-pulse"
           >
             Continue Gaming

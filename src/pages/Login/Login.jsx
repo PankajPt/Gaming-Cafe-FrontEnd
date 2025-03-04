@@ -66,7 +66,7 @@ const LoginPage = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-purple-900 to-indigo-900">
       <div className="relative w-full max-w-md px-8 py-12 space-y-8 bg-gray-900 rounded-3xl shadow-2xl border-2 border-indigo-500 transform transition-transform duration-500 hover:scale-105 group">
-        <div className="absolute -inset-2 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-3xl blur opacity-30 group-hover:opacity-50 transition duration-500 animate-pulse pointer-events-none"></div>
+        <div className="absolute -inset-2 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-3xl blur opacity-30 group-hover:opacity-50"></div>
         <div className="text-center space-y-2">
           <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-400 to-indigo-400 bg-clip-text text-transparent">
             Player Login

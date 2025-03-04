@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'; 
+import { useState, useEffect, useRef } from 'react';
 import { CheckIcon } from '@heroicons/react/20/solid';
 import { subscriptionPlans } from '../../services/subscription.service.js';
 
@@ -45,46 +45,45 @@ const Pricing = () => {
   }, []);
 
   return (
-    <div className="relative isolate bg-white px-6 py-24 sm:py-32 lg:px-8">
+    <div className="relative isolate bg-gradient-to-b from-gray-900 to-black px-6 py-24 sm:py-32 lg:px-8">
       <div className="mx-auto max-w-4xl text-center">
-        <h2 className="text-base font-semibold text-indigo-600">Pricing</h2>
-        <p className="mt-2 text-5xl font-semibold tracking-tight text-gray-900 sm:text-6xl">
+        <h2 className="text-base font-semibold text-green-400">Pricing</h2>
+        <p className="mt-2 text-5xl font-bold tracking-tight text-white sm:text-6xl">
           Choose the right plan for you
         </p>
       </div>
-      <p className="mx-auto mt-6 max-w-2xl text-lg text-center text-gray-600 sm:text-xl">
-        Choose an affordable plan that’s packed with the best features for engaging your audience, creating customer
-        loyalty, and driving sales.
+      <p className="mx-auto mt-6 max-w-2xl text-lg text-center text-gray-300 sm:text-xl">
+        Pick an affordable plan packed with the best features to engage your audience, build loyalty, and drive sales.
       </p>
-      <div className="mx-auto mt-16 grid gap-6 sm:grid-cols-1 lg:max-w-4xl lg:grid-cols-1 lg:gap-8">
+      <div className="mx-auto mt-16 grid gap-6 sm:grid-cols-1 lg:max-w-5xl lg:grid-cols-3 lg:gap-8">
         {plans.map((plan) => (
           <div
             key={plan._id}
             className={classNames(
-              'relative rounded-3xl p-8 ring-1 ring-gray-300 transition-transform duration-300 hover:scale-105 hover:shadow-lg hover:bg-gray-900 hover:text-white',
-              'bg-white text-black',
+              'relative rounded-3xl p-8 ring-1 ring-gray-700 transition-transform duration-300 hover:scale-105 hover:shadow-xl',
+              'hover:shadow-green-500/40 hover:ring-1 hover:ring-green-500 bg-gray-800 text-white',
               flippedPlan === plan._id ? 'rotate-y-180' : ''
             )}
           >
             {!flippedPlan || flippedPlan !== plan._id ? (
               <>
-                <h3 className="text-base font-semibold text-indigo-600">{plan.title}</h3>
+                <h3 className="text-lg font-semibold text-green-400">{plan.title}</h3>
                 <p className="mt-4 flex items-baseline gap-x-2">
-                  <span className="text-5xl font-semibold">₹{plan.price}</span>
-                  <span className="text-base text-gray-500">/month</span>
+                  <span className="text-5xl font-bold">₹{plan.price}</span>
+                  <span className="text-base text-gray-400">/month</span>
                 </p>
-                <p className="mt-6 text-base">{plan.description}</p>
+                <p className="mt-6 text-base text-gray-300">{plan.description}</p>
                 <ul role="list" className="mt-8 space-y-3 text-sm">
                   {plan.features.map((feature) => (
-                    <li key={feature} className="flex gap-x-3">
-                      <CheckIcon className="h-6 w-6 text-indigo-600" aria-hidden="true" />
+                    <li key={feature} className="flex gap-x-3 text-gray-300">
+                      <CheckIcon className="h-6 w-6 text-green-400" aria-hidden="true" />
                       {feature}
                     </li>
                   ))}
                 </ul>
                 <button
                   onClick={() => setFlippedPlan(plan._id)}
-                  className="mt-8 inline-block w-full rounded-md bg-indigo-600 px-4 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                  className="mt-8 inline-block w-full rounded-lg bg-green-600 px-5 py-3 text-center text-lg font-semibold text-white shadow-md hover:bg-green-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-gray-800"
                 >
                   Get started today
                 </button>
@@ -116,4 +115,4 @@ const Pricing = () => {
   );
 };
 
-export default Pricing 
+export default Pricing;

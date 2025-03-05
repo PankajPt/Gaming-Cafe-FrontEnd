@@ -7,6 +7,24 @@
   align-items: center;
 }
 
+/* Glowing Effect */
+.glow-text {
+  text-shadow: 0 0 8px rgba(128, 0, 255, 0.8), 
+               0 0 15px rgba(128, 0, 255, 0.6),
+               0 0 30px rgba(128, 0, 255, 0.4);
+  transition: text-shadow 0.3s ease-in-out;
+}
+
+/* Blinking Cursor Effect */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.pixel-cursor {
+  animation: blink 1s infinite;
+}
+
 /* Rolling Images */
 .rolling-container {
   position: relative;

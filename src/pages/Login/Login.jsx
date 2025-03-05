@@ -51,6 +51,7 @@ const LoginPage = () => {
 
     if (typeof response === "string") {
       setError(response);
+      setTimeout(()=> setError(null), 5000)
       if(response === 'Invalid password'){
         setAttemptFailed(true)
       }
@@ -158,12 +159,12 @@ const LoginPage = () => {
             </p>
           )}
 
-        <div className="text-center space-y-4">
+        <div className="text-sm text-center text-green-400 mt-4 relative z-10">
           <div className="text-gray-400 text-sm">
             Not registered?{" "}
             <Link
               to="/register"
-              className="text-green-400 hover:text-green-300 font-semibold underline transition-colors"
+              className="hover:underline hover:text-green-300 transition-colors inline-block px-2 py-1"
             >
               Create account
             </Link>

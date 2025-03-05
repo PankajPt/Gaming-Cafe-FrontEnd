@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import 'react-datepicker/dist/react-datepicker.css';
-import { useAuth } from '../../context/Auth.Context.jsx';
 import { useNavigate } from 'react-router-dom';
 // components
 import UserProfile from './UserProfile/UserProfile.jsx'
@@ -18,13 +17,13 @@ const UserPage = () => {
   }
   const userDetails = JSON.parse(userData);
   const [selectedSection, setSelectedSection] = useState('profile');
-  const { logout } = useAuth();
 
   const [activePlan] = useState('Premium Membership');
   let isVerified = false;
   if (userDetails.isActiveUser === 'active') {
     isVerified = true;
   }
+
 
   return (
     <div className="flex min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
@@ -45,39 +44,11 @@ const UserPage = () => {
           isVerified={isVerified}
           />
         )}
+        {selectedSection === 'my-plan' && (<Membership activePlan={activePlan}/>)}
+        {selectedSection === 'book-slot' && (<BookSlot />)}
+        {selectedSection === 'events' && (<Events />)}
+        {selectedSection === 'change-cipher' && ( <PasswordUpdate />)}
 
-          {/* Membership Sections */}
-          {selectedSection === 'my-plan' && (
-            <Membership
-            activePlan={activePlan}
-            />
-          )}
-
-        {/* Book Slot Section */}
-        {selectedSection === 'book-slot' && (
-          <BookSlot />
-        )}
-        
-        {/* Events Section */}
-        {selectedSection === 'events' && (
-          <Events />
-        )}
-
-        {selectedSection === 'cipher' && (
-          <PasswordUpdate />
-        )}
-        {/* Logout Section */}
-        {selectedSection === 'logout' && (
-          <div className="bg-white p-8 rounded-2xl shadow-2xl text-center">
-            <h2 className="text-3xl font-bold text-blue-600 mb-4">Ready to Leave?</h2>
-            <p className="text-gray-600 mb-8">We hope to see you back soon!</p>
-            <button 
-            onClick={logout}
-            className="bg-red-500 hover:bg-red-600 text-white px-8 py-3 rounded-xl shadow-lg transition transform hover:scale-105">
-              Confirm Logout
-            </button>
-          </div>
-        )}
       </div>
     </div>
   );

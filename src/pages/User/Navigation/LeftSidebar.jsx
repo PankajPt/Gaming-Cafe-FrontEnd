@@ -1,25 +1,24 @@
 import { MdVerified } from 'react-icons/md';
 import { FaUser, FaCalendarAlt, FaGamepad, FaCrown, FaSignOutAlt, FaKey } from 'react-icons/fa';
 import { GiPlasmaBolt } from 'react-icons/gi';
-
-// components
 import Avatar from './Avatar';
+import './user.nav.css'
 
 const LeftSideBar = ({ userDetails, isVerified, selectedSection, setSelectedSection }) => {
-    const menuItems = [
+    const sections = [
         { id: 'profile', icon: <FaUser className="mr-3" />, label: 'Player Profile' },
         { id: 'my-plan', icon: <FaCrown className="mr-3" />, label: 'Premium Plan' },
         { id: 'book-slot', icon: <FaCalendarAlt className="mr-3" />, label: 'Book Arena' },
         { id: 'events', icon: <FaGamepad className="mr-3" />, label: 'Live Events' },
-        { id: 'cipher', icon: <FaKey className="mr-3" />, label: 'Reset Cipher' },
+        { id: 'change-cipher', icon: <FaKey className="mr-3" />, label: 'Change Cipher' },
     ];
 
     return (
-        <div className="w-72 bg-gradient-to-b from-gray-900 to-gray-800 p-6 shadow-2xl border-r-2 border-blue-500/30 sticky top-0 h-screen overflow-hidden">
+        <div className="w-72 bg-gradient-to-b from-gray-900 to-gray-800 p-6 shadow-2xl border-r-2 border-blue-500/30 sticky top-0 h-screen overflow-y-auto scrollbar-thin scrollbar-track-gray-900/50 scrollbar-thumb-blue-500 hover:scrollbar-thumb-blue-400 scrollbar-rounded">
+
             {/* Glowing effect */}
-            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-transparent blur-sm" />
-            
-            <div className="flex flex-col items-center mb-10 mt-6">
+            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-transparent blur-sm z-20" />
+            <div className="flex flex-col items-center mb-10 mt-6 relative z-10">
                 {/* Avatar with glowing border */}
                 <div className={`relative mb-4 ${isVerified ? 'pulse' : ''}`}>
                     <Avatar />
@@ -45,12 +44,12 @@ const LeftSideBar = ({ userDetails, isVerified, selectedSection, setSelectedSect
                 </div>
             </div>
 
-            <ul className="space-y-4">
-                {menuItems.map((item) => (
+            <ul className="space-y-4 relative z-10"> {/* Added relative z-10 */}
+                {sections.map((item) => (
                     <li
                         key={item.id}
                         className={`group flex items-center px-4 py-3 rounded-xl cursor-pointer 
-                            transition-all duration-300 transform hover:translate-x-2 
+                            transition-all duration-300
                             ${
                                 selectedSection === item.id
                                     ? 'bg-gradient-to-r from-blue-600/30 to-transparent border-l-4 border-blue-400 shadow-blue-glow'
@@ -67,8 +66,9 @@ const LeftSideBar = ({ userDetails, isVerified, selectedSection, setSelectedSect
                 ))}
             </ul>
 
+
             {/* Animated background elements */}
-            <div className="absolute bottom-0 left-0 w-full opacity-10">
+            <div className="absolute bottom-0 left-0 w-full opacity-10 z-0">
                 <div className="w-full h-24 bg-gradient-to-t from-blue-500 to-transparent" />
             </div>
         </div>

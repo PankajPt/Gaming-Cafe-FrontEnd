@@ -4,29 +4,26 @@ import './home.css'; // Import CSS directly
 
 const Home = () => {
   return (
-    <div className="home-container text-white overflow-hidden flex flex-col items-center"> 
-      {/* Hero Section */}
-      <section className="relative min-h-screen flex flex-col items-center justify-center pt-20 w-full">
+    <div className="home-container text-white overflow-hidden flex flex-col items-center">
+      <section className="relative min-h-screen flex flex-col items-center justify-center pt-12 md:pt-20 w-full">
         <div className="relative z-10 text-center px-4 -mt-8 w-full">
-          {/* MADGEAR_ */}
-          <h1 className="text-6xl md:text-8xl font-bold mb-6 glow-text mx-auto">
+          <h1 className="text-4xl md:text-6xl lg:text-8xl font-bold mb-4 md:mb-6 glow-text mx-auto">
             MAD<span className="text-purple-500">GEAR</span>
             <span className="pixel-cursor">_</span>
           </h1>
           
-          {/* >> LEVEL_UP YOUR GAME << */}
-          <p className="text-xl md:text-3xl mb-8 font-mono text-cyan-300 mx-auto">
+          <p className="text-lg md:text-xl lg:text-3xl mb-4 md:mb-8 font-mono text-cyan-300 mx-auto">
             {`>>`} LEVEL_UP YOUR GAME {`<<`}
           </p>
 
-          {/* BOOK YOUR BATTLE STATION */}
           <Link 
             to="/login"
-            className="inline-block px-8 py-4 bg-purple-600 hover-glow neon-border rounded-lg text-xl font-bold mx-auto"
+            className="inline-block px-4 md:px-8 py-2 md:py-4 bg-purple-600 hover-glow neon-border rounded-lg text-base md:text-xl font-bold mx-auto"
           >
             BOOK YOUR BATTLE STATION
           </Link>
         </div>
+
 
         {/* Scrolling Game Characters */}
         <div className="rolling-container">

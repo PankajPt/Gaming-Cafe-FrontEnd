@@ -53,6 +53,15 @@
   .rolling-container img {
     height: 10vh;
   }
+  .marquee {
+    gap: 10px;
+    animation-duration: 30s;
+  }
+  
+  /* Add mobile-specific text scaling */
+  .glow-text {
+    font-size: 2.5rem !important;
+  }
 }
 
 /* Adjust marquee animation */

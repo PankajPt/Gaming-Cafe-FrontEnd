@@ -37,7 +37,7 @@ Madgear Gaming Cafe is a web application for managing gaming cafe operations, in
 - Tailwind CSS (Styling)
 - Vite (Build Tool)
 - React Router (Routing)
-- Firebase (Auth & Database, if used)
+
 
 ## Installation
 

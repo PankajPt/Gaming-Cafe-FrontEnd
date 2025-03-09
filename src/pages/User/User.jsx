@@ -30,7 +30,7 @@ const UserPage = () => {
             {isMenuOpen ? <FiX size={28} /> : <FiMenu size={28} />}
           </button>
           <h2 className="text-xl font-bold text-blue-300 font-orbitron">
-            {userDetails.username}
+            @{userDetails.username}
           </h2>
           <div className="w-8" /> {/* Spacer for balance */}
         </div>
@@ -61,7 +61,7 @@ const UserPage = () => {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 p-4 lg:p-8 lg:ml-72">
+      <div className="flex-1 p-4 lg:p-8 w-full">
         {selectedSection === 'profile' && <UserProfile userDetails={userDetails} isVerified={isVerified} />}
         {selectedSection === 'my-plan' && <Membership activePlan="Premium Membership" />}
         {selectedSection === 'book-slot' && <BookSlot />}

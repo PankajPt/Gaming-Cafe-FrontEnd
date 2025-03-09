@@ -16,7 +16,7 @@ const UserDetails = ({ userDetails }) => {
           <GiSpy className="text-2xl text-purple-400 mr-3" />
           <span className="text-sm font-semibold text-blue-300 uppercase tracking-wide">Operative Handle</span>
         </div>
-        <p className="text-2xl font-bold text-blue-100">{userDetails.username}</p>
+        <p className="text-2xl font-bold text-blue-100">@{userDetails.username}</p>
       </div>
 
       <div className="col-span-full bg-gradient-to-br from-blue-900/50 to-purple-900/30 p-6 rounded-2xl border-2 border-blue-500/30 shadow-[0_0_15px_-5px_rgba(59,130,246,0.3)]">

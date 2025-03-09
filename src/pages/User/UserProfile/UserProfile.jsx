@@ -14,7 +14,6 @@ const UserProfile = ({ userDetails, isVerified}) => {
 
       <UserVerification 
         isVerified={isVerified}
-        // {...props}
       />
       <UserDetails userDetails={userDetails} />
     </div>

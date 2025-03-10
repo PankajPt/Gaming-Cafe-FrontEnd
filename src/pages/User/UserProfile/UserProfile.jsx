@@ -15,7 +15,7 @@ const UserProfile = ({ userDetails, isVerified}) => {
       <UserVerification 
         isVerified={isVerified}
       />
-      <UserDetails userDetails={userDetails} />
+      <UserDetails userDetails={userDetails} isVerified={isVerified}/>
     </div>
   );
 };

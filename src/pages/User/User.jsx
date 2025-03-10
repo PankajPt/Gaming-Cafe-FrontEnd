@@ -7,6 +7,9 @@ import BookSlot from './BookSlot.jsx';
 import Events from './Events.jsx';
 import LeftSideBar from './Navigation/LeftSidebar.jsx';
 import PasswordUpdate from './PasswordUpdate.jsx';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import './user.css'
 
 const UserPage = () => {
   const navigate = useNavigate();
@@ -16,7 +19,7 @@ const UserPage = () => {
   
   if (!userData) navigate('/login');
   const userDetails = JSON.parse(userData);
-  const isVerified = userDetails.isActiveUser === 'active';
+  const isVerified = userDetails.isActiveUser
 
   return (
     <div className="flex flex-col lg:flex-row min-h-screen bg-gradient-to-b from-gray-900 to-gray-800">
@@ -68,6 +71,22 @@ const UserPage = () => {
         {selectedSection === 'events' && <Events />}
         {selectedSection === 'change-cipher' && <PasswordUpdate />}
       </div>
+      <ToastContainer
+            position="bottom-center"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={true}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="dark"
+            className="fixed bottom-4 left-1/2 transform -translate-x-1/2 w-auto max-w-xs z-[9999]"
+            toastClassName="bg-gray-800 border border-purple-600 rounded-md p-2 text-sm shadow-lg backdrop-blur-md"
+            bodyClassName="text-xs font-mono p-2"
+            progressClassName="bg-purple-600 h-1"
+      />
     </div>
   );
 };

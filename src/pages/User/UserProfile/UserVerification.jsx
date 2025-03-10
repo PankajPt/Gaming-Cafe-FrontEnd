@@ -3,6 +3,7 @@ import { FaShieldAlt, FaEnvelopeOpenText } from 'react-icons/fa';
 import { GiPlasmaBolt } from 'react-icons/gi';
 import { fetchData } from '../../../services/api.service.js';
 import { useAuthHandler } from '../../../hooks/authHandler';
+import { toast } from 'react-toastify';
 
 const UserVerification = ({ isVerified }) => {
 
@@ -35,25 +36,25 @@ const UserVerification = ({ isVerified }) => {
           if(response.message === 'jwt expired'){
             const retryWithNewToken = await refreshAndRetry('users/send-verification-link', options)
             if(!retryWithNewToken.success){
-              setVerificationError('An error occurred. Please try again later.');
+              toast.error('An error occurred. Please try again later.');
               return
             }
             setIsVerificationSent(true); // Hide the verification banner
-            alert('Verification email sent successfully! Please check your inbox.');
+            toast.success('Verification email sent successfully! Please check your inbox.');
   
           } else if (response.message === 'jwt malformed' || response.message === 'invalid signature' || response.message === 'Unauthorized request'){
             await handleInvalidJWT()
             return
           } else {
-            setVerificationError(response.message || 'Failed to send verification email. Please try again.');
+            toast.error(response.message || 'Failed to send verification email. Please try again.');
             return
           }
         }
         setIsVerificationSent(true); // Hide the verification banner
-        alert('Verification email sent successfully! Please check your inbox.');
+        toast.success('Verification email sent successfully! Please check your inbox.');
       } catch (error) {
         // E-UVCB: Error from user verification catch block
-        setVerificationError('E-UVCB: An error occurred. Please try again later.');
+        toast.error('E-UVCB: An error occurred. Please try again later.');
       } finally {
         setTimeout(()=>{
           setVerificationError(null);

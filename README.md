@@ -38,7 +38,7 @@ Madgear Gaming Cafe is a web application for managing gaming cafe operations, in
 - Vite (Build Tool)
 - React Router (Routing)
 
-# Madgear Gaming Cafe - Frontend Setup Guide
+## Madgear Gaming Cafe - Frontend Setup Guide
 
 ## 🚀 Getting Started
 

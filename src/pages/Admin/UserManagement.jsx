@@ -196,7 +196,7 @@ const UserManagement = () => {
                                 <td className="px-6 py-4 text-gray-300">{user.email}</td>
                                 <td className="px-6 py-4">
                                     <div className="flex items-center gap-2">
-                                        {user.isActiveUser === 'active' ? (
+                                        {user.isActiveUser ? (
                                             <div className="flex items-center gap-1 text-green-400">
                                                 <MdVerified className="text-xl animate-pulse" />
                                                 <span className="text-sm">ACTIVE</span>

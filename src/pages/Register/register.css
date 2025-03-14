@@ -37,9 +37,33 @@
     border-radius: 1rem;
     z-index: -1;
   }
-    
+
+  /* Password strength transition */
+@keyframes strength-pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+  100% { transform: scale(1); }
+}
+
+.form-container .group:hover .password-strength {
+  animation: strength-pulse 1.5s infinite;
+}
+
+.password-criteria svg {
+  transition: all 0.3s ease;
+}
+
+/* Glow effects */
+.error-glow {
+  animation: error-glow 1s ease-in-out infinite alternate;
+}
+
+@keyframes error-glow {
+  from { box-shadow: 0 0 5px rgba(239, 68, 68, 0.5); }
+  to { box-shadow: 0 0 15px rgba(239, 68, 68, 0.8); }
+}
   
-        /* check css applied or not  */
+  /* check css applied or not  */
   /* body {
     border: 5px solid lime !important;
   }

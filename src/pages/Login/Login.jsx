@@ -70,17 +70,17 @@ const LoginPage = () => {
       <div className="absolute -inset-2 bg-gradient-to-r from-green-400 to-green-600 rounded-3xl blur opacity-10 group-hover:opacity-20 transition-opacity duration-300"></div>
       
       <div className="text-center space-y-2">
-        <h1 className="text-4xl font-bold bg-gradient-to-r from-green-400 to-teal-400 bg-clip-text text-transparent">
-            Player Login
-          </h1>
-          <p className="text-gray-300 text-lg">Continue your gaming journey</p>
-        </div>
+        <h1 className="text-4xl font-bold bg-gradient-to-r from-green-400 to-teal-400 bg-clip-text text-transparent pb-1">
+          Player Login
+        </h1>
+        <p className="text-gray-300 text-lg pt-1">Continue your gaming journey</p>
+      </div>
 
-        {error && (
+      {error && (
           <div className="p-3 text-red-400 bg-red-900/50 rounded-lg border border-red-400/50">
             ⚠️ {error}
           </div>
-        )}
+      )}
 
         <form className="space-y-6" onSubmit={handleSubmit}>
           <div className="space-y-4">

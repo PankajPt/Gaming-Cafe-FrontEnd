@@ -10,13 +10,34 @@ const RegisterPage = () => {
     username: "",
     email: "",
     password: "",
+    confirmPassword: "",
     avatar: null,
   });
 
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [passwordStrength, setPasswordStrength] = useState(0);
+  const [passwordCriteria, setPasswordCriteria] = useState({
+    hasMinLength: false,
+    hasUpperCase: false,
+    hasNumber: false,
+    hasSpecialChar: false,
+  });
 
+  const checkPasswordStrength = (password) => {
+    const criteria = {
+      hasMinLength: password.length >= 8,
+      hasUpperCase: /[A-Z]/.test(password),
+      hasNumber: /\d/.test(password),
+      hasSpecialChar: /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(password),
+    };
+    setPasswordCriteria(criteria);
+    
+    const metCount = Object.values(criteria).filter(Boolean).length;
+    const strength = (metCount / 4) * 100;
+    setPasswordStrength(strength);
+  };
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -24,16 +45,30 @@ const RegisterPage = () => {
       setFormData((prev) => ({ ...prev, [name]: files[0] }));
     } else {
       setFormData((prev) => ({ ...prev, [name]: value }));
+      
+      if (name === "password") {
+        checkPasswordStrength(value);
+      }
     }
-    console.log(files)
   };
-  
 
   const isFormValid = () => {
-    return formData.fullname && formData.username && formData.email && formData.password;
+    return (
+      formData.fullname &&
+      formData.username &&
+      formData.email &&
+      formData.password &&
+      formData.password === formData.confirmPassword &&
+      passwordStrength >= 75
+    );
   };
 
   const navigate = useNavigate()
+  
+  const getStrengthColor = () => {
+    const hue = (passwordStrength * 1.2); // 0-120 (red to green)
+    return `hsl(${hue}, 100%, 50%)`;
+  };
   
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -43,6 +78,18 @@ const RegisterPage = () => {
     if (!isFormValid()) {
       setLoading(false)
       setError("Please fill out all required fields.");
+      return;
+    }
+
+    if (formData.password !== formData.confirmPassword) {
+      setError("Passwords do not match");
+      setLoading(false);
+      return;
+    }
+
+    if (passwordStrength < 75) {
+      setError("Password does not meet complexity requirements");
+      setLoading(false);
       return;
     }
 
@@ -154,6 +201,44 @@ const RegisterPage = () => {
               />
             </div>
 
+            <div className={`relative group ${error ? 'error-glow' : ''} !border-red-500`}>
+              <FaLock className="absolute left-4 top-1/2 -translate-y-1/2 text-purple-400 group-focus-within:text-blue-400 transition-colors" />
+              <input
+                type="password"
+                name="confirmPassword"
+                placeholder="Confirm Password"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                className="w-full pl-12 pr-4 py-3 rounded-xl bg-gray-900/30 border-2 border-purple-500/30 focus:border-blue-400 focus:ring-2 focus:ring-blue-500/20 text-gray-100 placeholder-gray-400 transition-all shadow-[0_0_15px_-5px_rgba(99,102,241,0.3)] focus:shadow-blue-500/20"
+              />
+            </div>
+            
+             {/* Password Strength Indicator */}
+            <div className="space-y-2">
+              <div className="h-2 rounded-full bg-gray-700 overflow-hidden">
+                <div 
+                  className="h-full transition-all duration-300" 
+                  style={{ 
+                    width: `${passwordStrength}%`,
+                    background: getStrengthColor()
+                  }}
+                ></div>
+              </div>
+              <div className="grid grid-cols-2 gap-2 text-xs">
+                <div className={`flex items-center ${passwordCriteria.hasMinLength ? 'text-green-400' : 'text-gray-400'}`}>
+                  <FaCheckCircle className="mr-1" /> 8+ Characters
+                </div>
+                <div className={`flex items-center ${passwordCriteria.hasUpperCase ? 'text-green-400' : 'text-gray-400'}`}>
+                  <FaCheckCircle className="mr-1" /> Uppercase
+                </div>
+                <div className={`flex items-center ${passwordCriteria.hasNumber ? 'text-green-400' : 'text-gray-400'}`}>
+                  <FaCheckCircle className="mr-1" /> Number
+                </div>
+                <div className={`flex items-center ${passwordCriteria.hasSpecialChar ? 'text-green-400' : 'text-gray-400'}`}>
+                  <FaCheckCircle className="mr-1" /> Special Char
+                </div>
+              </div>
+            </div>
             <div className={`relative group ${error ? 'error-glow' : ''} !border-red-500`}>
               <FaCamera className="absolute left-4 top-1/2 -translate-y-1/2 text-purple-400 group-focus-within:text-blue-400 transition-colors" />
               <input

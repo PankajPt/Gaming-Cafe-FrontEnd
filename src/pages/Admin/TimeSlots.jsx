@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { fetchData } from "../../services/api.service";
 import { useAuthHandler } from "../../hooks/authHandler.js";
-import { FiChevronDown, FiClock, FiUser, FiTrash } from "react-icons/fi";
+import { FiChevronDown, FiClock, FiUser, FiTrash, FiCalendar } from "react-icons/fi";
 import { toast } from "react-toastify";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -104,6 +104,46 @@ const TimeSlots = () => {
         return acc;
     }, {});
 
+      // Empty state animation component
+      const EmptyState = () => (
+        <div className="flex flex-col items-center justify-center py-20 space-y-8">
+            <div className="relative w-48 h-48 flex items-center justify-center">
+                {/* Floating particles */}
+                {[...Array(8)].map((_, i) => (
+                    <div
+                        key={i}
+                        className="absolute w-2 h-2 bg-purple-400 rounded-full animate-float"
+                        style={{
+                            animationDelay: `${i * 0.2}s`,
+                            top: `${Math.random() * 100}%`,
+                            left: `${Math.random() * 100}%`,
+                        }}
+                    />
+                ))}
+                {/* Central icon with gradient pulse */}
+                <div className="relative z-10 p-8 bg-gray-800 rounded-full shadow-2xl">
+                    <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500/20 to-purple-500/20 animate-pulse"></div>
+                    <FiCalendar className="text-6xl text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 animate-bounce" />
+                </div>
+            </div>
+
+            <div className="text-center space-y-4">
+                <h2 className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+                    Arena is Empty!
+                </h2>
+                <p className="text-gray-400 text-lg max-w-md">
+                    No battles scheduled yet... The controllers are waiting for players!
+                </p>
+            </div>
+
+            <div className="flex space-x-4 opacity-75">
+                <div className="w-3 h-3 bg-blue-400 rounded-full animate-bounce"></div>
+                <div className="w-3 h-3 bg-purple-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                <div className="w-3 h-3 bg-pink-400 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
+            </div>
+        </div>
+    );
+
     return (
         <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 p-8 text-white">
             <div className="max-w-4xl mx-auto">
@@ -121,6 +161,8 @@ const TimeSlots = () => {
                             Loading Battle Stations...
                         </p>
                     </div>
+                ) : slots.length === 0 ? (
+                    <EmptyState />
                 ) : (
                     Object.keys(groupedByDateAndTime).map((date) => (
                         <div key={date} className="mb-4 group">

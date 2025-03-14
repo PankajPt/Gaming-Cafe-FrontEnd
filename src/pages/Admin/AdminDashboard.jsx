@@ -16,13 +16,13 @@ const AdminDashboard = () => {
   };
 
   return (
-    <div className="flex min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
+    <div className="flex flex-col lg:flex-row min-h-screen bg-gradient-to-b from-gray-900 to-gray-800">
       <AdminSidebar 
       activeSection={activeSection}
       handleSection={handleSection}
       />
       {/* Main Content */}
-      <div className="flex-1 p-8 max-w-6xl">
+      <div className="flex-1 p-4 lg:p-8 w-full">
         {activeSection === 'users' && <UserManagement />}
         {activeSection === 'games' && <ManageCatalogue />}
         {activeSection === 'events' && <EventManagement />}

@@ -25,32 +25,17 @@ const EventManagement = () => {
 
     useEffect(() => {
         const getEvents = async () => {
-            try {
-                const cachedData = sessionStorage.getItem('events');
-                if (cachedData) {
-                    try {
-                        const parsedData = JSON.parse(cachedData);
-                        setEvents(Array.isArray(parsedData) ? parsedData : []);
-                    } catch {
-                        sessionStorage.removeItem('events'); // Remove corrupted data
-                        setEvents([]); // Fallback to empty array
-                    }
-                    return;
-                }
-    
+            try {            
                 const response = await fetchEvents();
                 if (!response.success) {
                     toast.error(response.message);
                     return;
                 }
-    
-                setEvents(response.data);
-                sessionStorage.setItem('events', JSON.stringify(response.data || []));
+                setEvents(response.data || []);
             } catch (error) {
                 toast.error(error.message || "An error occurred while fetching events.");
             }
         };
-    
         getEvents();
     }, []);
     
@@ -289,14 +274,14 @@ const EventManagement = () => {
                                 <div>
                                     <h4 className="font-medium text-blue-300">{event.title}</h4>
                                     <p className="text-sm text-gray-400 mt-1">
-                                        {event.date
-                                            ? new Date(event.date).toLocaleString('en-IN', {
+                                        {event.eventDate
+                                            ? new Date(event.eventDate).toLocaleString('en-IN', {
                                                 day: 'numeric',
                                                 month: 'long',
                                                 year: 'numeric',
-                                                hour: '2-digit',
-                                                minute: '2-digit',
-                                                hour12: true
+                                                // hour: '2-digit',
+                                                // minute: '2-digit',
+                                                // hour12: true
                                             })
                                             : "No Date Available"}
                                     </p>

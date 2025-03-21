@@ -59,7 +59,7 @@ const RegisterPage = () => {
       formData.email &&
       formData.password &&
       formData.password === formData.confirmPassword &&
-      passwordStrength >= 75
+      passwordStrength >= 100
     );
   };
 
@@ -87,7 +87,7 @@ const RegisterPage = () => {
       return;
     }
 
-    if (passwordStrength < 75) {
+    if (passwordStrength < 100) {
       setError("Password does not meet complexity requirements");
       setLoading(false);
       return;

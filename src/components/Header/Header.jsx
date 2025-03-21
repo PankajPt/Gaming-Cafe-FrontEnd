@@ -6,6 +6,8 @@ import { RiCloseFill, RiCustomerService2Fill } from 'react-icons/ri';
 import { FaGamepad, FaCrown } from 'react-icons/fa';
 import { MdOutlineEventAvailable } from 'react-icons/md';
 import { logo } from '../../assets/index.assets.js';
+import ThemeToggle from '../../components/ThemeToggle';
+import { FiSun, FiMoon } from 'react-icons/fi';
 
 export default function Header() {
   const { userRole, logout } = useAuth();
@@ -14,6 +16,22 @@ export default function Header() {
   
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const closeMenu = () => setIsMenuOpen(false);
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    // Initialize state from localStorage or system preference
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) return savedTheme === 'dark';
+    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+  });
+
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.classList.add('dark');
+      localStorage.setItem('theme', 'dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
+    }
+  }, [isDarkMode]);
 
   // Close menu on ESC key press
   useEffect(() => {
@@ -30,7 +48,7 @@ export default function Header() {
   };
 
   return (
-    <header className="sticky z-50 top-0 bg-gradient-to-b from-gray-900 to-gray-800 border-b-2 border-blue-500/30 shadow-2xl">
+    <header className="sticky z-50 top-0 bg-gradient-to-b from-gray-100 to-gray-200 dark:from-gray-900 dark:to-gray-800 border-b-2 border-gray-300 dark:border-blue-500/30 shadow-2xl">
       {/* Animated Top Border */}
       <div className="absolute top-0 w-full h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-blue-500 animate-pulse blur-sm" />
       
@@ -39,7 +57,7 @@ export default function Header() {
           {/* Logo Section */}
           <Link 
             to="/" 
-            className="flex items-center group transition-all duration-300 hover:text-green-400"
+            className="flex items-center group transition-all duration-300 hover:text-green-400 dark:hover:text-green-300"
           >
             <div className="flex items-center gap-3">
               <div className="relative h-16 w-16 neon-glow">
@@ -51,10 +69,10 @@ export default function Header() {
                 <div className="absolute inset-0 bg-gradient-to-br from-green-400/20 to-lime-400/10 mix-blend-overlay" />
               </div>
               <div className="flex flex-col relative">
-                <div className="font-orbitron text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-lime-400 text-3xl tracking-wider">
+                <div className="font-orbitron text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-lime-400 dark:from-green-300 dark:to-lime-300 text-3xl tracking-wider">
                   MADGEAR
                 </div>
-                <span className="font-mono text-xs text-lime-300/80 tracking-widest mt-[-4px] ml-[2px]">
+                <span className="font-mono text-xs text-gray-600 dark:text-lime-300/80 tracking-widest mt-[-4px] ml-[2px]">
                   GAMING CAFE
                 </span>
               </div>
@@ -108,10 +126,10 @@ export default function Header() {
                     to={item.path}
                     onClick={closeMenu}
                     className={({ isActive }) =>
-                      `relative flex items-center px-4 py-3 lg:py-2 text-gray-300 hover:text-green-400 
-                      transition-all duration-300 text-xl lg:text-base
-                      ${isActive ? 'text-blue-400' : ''}
-                      border-b border-gray-700 lg:border-0
+                      `relative flex items-center px-4 py-3 lg:py-2 text-gray-600 dark:text-gray-300 hover:text-green-400 
+                      dark:hover:text-green-300 transition-all duration-300 text-xl lg:text-base
+                      ${isActive ? 'text-blue-400 dark:text-blue-300' : ''}
+                      border-b border-gray-200 dark:border-gray-700 lg:border-0
                       before:content-[''] before:absolute before:-bottom-1 before:left-0 before:w-0 before:h-[2px] 
                       before:bg-gradient-to-r before:from-green-400 before:to-lime-400 before:transition-all before:duration-300 
                       hover:before:w-full group`
@@ -123,6 +141,28 @@ export default function Header() {
                 </li>
               ))}
 
+              {/* Dark Mode Switch */}
+              {/* <li className="w-full lg:w-auto">
+                <button
+                  onClick={() => setIsDarkMode(!isDarkMode)}
+                  className="relative flex items-center px-4 py-3 lg:py-2 text-gray-600 dark:text-gray-300 hover:text-green-400 
+                    dark:hover:text-green-300 transition-all duration-300 text-xl lg:text-base
+                    border-b border-gray-200 dark:border-gray-700 lg:border-0
+                    before:content-[''] before:absolute before:-bottom-1 before:left-0 before:w-0 before:h-[2px] 
+                    before:bg-gradient-to-r before:from-green-400 before:to-lime-400 before:transition-all before:duration-300 
+                    hover:before:w-full group"
+                >
+                  {isDarkMode ? (
+                    <FiSun className="mr-2 text-yellow-400" />
+                  ) : (
+                    <FiMoon className="mr-2 text-blue-400" />
+                  )}
+                  <span className="tracking-wide">
+                    {isDarkMode ? 'Light' : 'Dark'}
+                  </span>
+                </button>
+              </li> */}
+
               {/* Auth Buttons */}
               <div className="flex flex-col lg:flex-row items-start lg:items-center gap-6 lg:ml-6 mt-8 lg:mt-0 w-full lg:w-auto">
                 {!userRole ? (
@@ -130,8 +170,7 @@ export default function Header() {
                     <li className="w-full lg:w-auto">
                       <NavLink
                         to="/login"
-                        onClick={closeMenu}
-                        className="w-full lg:w-auto px-6 py-3 lg:py-2 text-center text-blue-400 border-2 border-blue-400/50 rounded-xl hover:bg-blue-400/10 hover:border-blue-400 hover:shadow-blue-glow transition-all duration-300 block"
+                        className="w-full lg:w-auto px-6 py-3 lg:py-2 text-center text-blue-400 dark:text-blue-300 border-2 border-blue-400/50 dark:border-blue-300/50 rounded-xl hover:bg-blue-400/10 dark:hover:bg-blue-300/10 hover:border-blue-400 dark:hover:border-blue-300 hover:shadow-blue-glow transition-all duration-300 block"
                       >
                         Log in
                       </NavLink>

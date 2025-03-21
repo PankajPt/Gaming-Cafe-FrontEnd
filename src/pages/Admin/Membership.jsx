@@ -173,22 +173,22 @@ const MembershipPlans = () => {
     };
 
     return (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 dark:bg-gray-900 min-h-screen p-6">
             {/* Add Plan Card */}
-            <div className="bg-white rounded-2xl shadow-xl p-6">
-                <h3 className="text-2xl font-semibold text-blue-600 mb-4">Create Membership Plan</h3>
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6">
+                <h3 className="text-2xl font-semibold text-blue-600 dark:text-blue-400 mb-4">Create Membership Plan</h3>
                 <form onSubmit={handleAddPlan} className="space-y-4">
                     <select
                         name="title"
                         value={newPlan.title}
                         onChange={handleChange}
-                        className="w-full border rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500"
+                        className="w-full border rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-500"
                         required
                     >
-                        <option value="">Select Plan Duration</option>
-                        <option value="monthly">Monthly</option>
-                        <option value="quarterly">Quarterly</option>
-                        <option value="yearly">Yearly</option>
+                        <option value="" className="dark:bg-gray-700">Select Plan Duration</option>
+                        <option value="monthly" className="dark:bg-gray-700">Monthly</option>
+                        <option value="quarterly" className="dark:bg-gray-700">Quarterly</option>
+                        <option value="yearly" className="dark:bg-gray-700">Yearly</option>
                     </select>
                     
                     <textarea
@@ -196,7 +196,7 @@ const MembershipPlans = () => {
                         value={newPlan.description}
                         name="description"
                         onChange={handleChange}
-                        className="w-full border rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500"
+                        className="w-full border rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
                         rows="3"
                         required
                     />
@@ -206,7 +206,7 @@ const MembershipPlans = () => {
                         value={newPlan.features}
                         name="features"
                         onChange={handleFeatureChange}
-                        className="w-full border rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500"
+                        className="w-full border rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
                         rows="3"
                         required
                     />
@@ -221,14 +221,15 @@ const MembershipPlans = () => {
                         className="w-full border rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 
                                 [-webkit-appearance:none] 
                                 [&::-webkit-inner-spin-button]:[-webkit-appearance:none]
-                                [-moz-appearance:textfield]"
+                                [-moz-appearance:textfield]
+                                dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
                         required
                     />
                     {/* File Upload Section */}
                     <div className={`border-2 border-dashed rounded-xl p-6 text-center transition-all cursor-pointer
                         ${newPlan.paymentQR ? 
-                            'border-green-500 bg-green-50 hover:border-green-600' : 
-                            'border-gray-300 hover:border-blue-500'}`}
+                            'border-green-500 bg-green-50 hover:border-green-600 dark:bg-green-900/20 dark:border-green-400' : 
+                            'border-gray-300 hover:border-blue-500 dark:border-gray-600 dark:hover:border-blue-400'}`}
                     >
                         <label className="flex flex-col items-center space-y-2 relative">
                             {newPlan.paymentQR && (
@@ -259,16 +260,18 @@ const MembershipPlans = () => {
                                     d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" 
                                 />
                             </svg>
-                            <span className={`font-medium transition-colors ${newPlan.paymentQR ? 'text-green-600' : 'text-gray-600'}`}>
+                            <span className={`font-medium transition-colors ${newPlan.paymentQR ? 
+                            'text-green-600 dark:text-green-400' : 
+                            'text-gray-600 dark:text-gray-300'}`}>
                                 {newPlan.paymentQR ? 
                                     newPlan.paymentQR.name : 
                                     'Upload Payment QR Code (PNG/JPG)'
                                 }
                             </span>
                             {!newPlan.paymentQR && (
-                                <span className="text-sm text-gray-500">
-                                    Click to browse files
-                                </span>
+                            <span className="text-sm text-gray-500 dark:text-gray-400">
+                                Click to browse files
+                            </span>
                             )}
                             <input
                                 type="file"
@@ -282,7 +285,8 @@ const MembershipPlans = () => {
 
                     <button
                         type="submit"
-                        className="w-full bg-green-500 text-white py-3 rounded-xl hover:bg-green-600 transition-colors disabled:bg-green-300"
+                        className="w-full bg-green-500 text-white py-3 rounded-xl hover:bg-green-600 
+                               disabled:bg-green-300 dark:bg-green-600 dark:hover:bg-green-700"
                         disabled={!isValidForm(newPlan) || loading}
                     >
                         {loading ? (
@@ -296,13 +300,13 @@ const MembershipPlans = () => {
                 </form>
                 
                 {error && (
-                    <div className="mt-4 p-3 bg-red-100 text-red-600 rounded-lg">
+                    <div className="mt-4 p-3 bg-red-100 text-red-600 rounded-lg dark:bg-red-900/20 dark:text-red-400">
                         {error.message}
                     </div>
                 )}
                 
                 {success && (
-                    <div className="mt-4 p-3 bg-green-100 text-green-600 rounded-lg">
+                    <div className="mt-4 p-3 bg-green-100 text-green-600 rounded-lg dark:bg-green-900/20 dark:text-green-400">
                         {success.message}
                     </div>
                 )}
@@ -310,50 +314,52 @@ const MembershipPlans = () => {
             
             {planToDelete && (
                 <div className="fixed inset-0 bg-black bg-opacity-30 flex justify-center items-center z-50">
-                    <div className="bg-white p-6 rounded-xl shadow-lg text-center max-w-md w-full mx-4">
-                        <p className="text-lg font-semibold mb-4">Are you sure you want to delete this plan?</p>
+                    <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg text-center max-w-md w-full mx-4">
+                        <p className="text-lg font-semibold mb-4 dark:text-gray-100">Are you sure you want to delete this plan?</p>
                         <div className="flex justify-center gap-4">
-                            <button
-                                onClick={() => handleDeletePlan(planToDelete)}
-                                className="bg-red-500 text-white px-6 py-2 rounded-lg hover:bg-red-600 transition-colors"
-                            >
-                                Yes, Delete
-                            </button>
-                            <button
-                                onClick={() => setPlanToDelete(null)}
-                                className="bg-gray-200 px-6 py-2 rounded-lg hover:bg-gray-300 transition-colors"
-                            >
-                                Cancel
-                            </button>
+                        <button
+                        onClick={() => handleDeletePlan(planToDelete)}
+                        className="bg-red-500 text-white px-6 py-2 rounded-lg hover:bg-red-600 transition-colors dark:bg-red-600 dark:hover:bg-red-700"
+                        >
+                        Yes, Delete
+                        </button>
+                        <button
+                        onClick={() => setPlanToDelete(null)}
+                        className="bg-gray-200 px-6 py-2 rounded-lg hover:bg-gray-300 transition-colors dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-100"
+                        >
+                        Cancel
+                        </button>
                         </div>
                     </div>
                 </div>
             )}
             
             {/* Plans List Card */}
-            <div className="bg-white rounded-2xl shadow-xl p-6">
-                <h3 className="text-2xl font-semibold text-blue-600 mb-6">Existing Plans</h3>
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6">
+                <h3 className="text-2xl font-semibold text-blue-600 dark:text-blue-400 mb-6">Existing Plans</h3>
                 <div className="space-y-4">
-                    {plans.map(plan => (
-                        <div key={plan._id} className="p-4 bg-gray-50 rounded-xl hover:bg-blue-50 transition-colors">
+                {plans.map(plan => (
+                        <div key={plan._id} className="p-4 bg-gray-50 rounded-xl hover:bg-blue-50 
+                               dark:bg-gray-700 dark:hover:bg-gray-600 transition-colors">
                             <div className="flex justify-between items-start mb-3">
                                 <div>
-                                    <h4 className="text-xl font-semibold capitalize">{plan.title}</h4>
-                                    <p className="text-2xl font-bold text-blue-600 mt-1">
-                                    ₹{plan.price}<span className="text-sm text-gray-500">/month</span>
+                                    <h4 className="text-xl font-semibold capitalize dark:text-gray-100">{plan.title}</h4>
+                                    <p className="text-2xl font-bold text-blue-600 dark:text-blue-400 mt-1">
+                                    ₹{plan.price}<span className="text-sm text-gray-500 dark:text-gray-400">/month</span>
                                     </p>
                                 </div>
                                 <button
                                     onClick={() => setPlanToDelete(plan._id)}
-                                    className="text-red-500 hover:text-red-700 p-2 rounded-full hover:bg-red-100 transition-colors"
+                                    className="text-red-500 hover:text-red-700 p-2 rounded-full 
+                                           hover:bg-red-100 dark:text-red-400 dark:hover:text-red-300 dark:hover:bg-red-900/20"
                                 >
                                     <MdDelete className="text-xl" />
                                 </button>
                             </div>
-                            <p className="text-gray-600 mb-4">{plan.description}</p>
+                            <p className="text-gray-600 dark:text-gray-300 mb-4">{plan.description}</p>
                             <ul className="space-y-2">
                                 {plan.features.map((feature, index) => (
-                                    <li key={index} className="flex items-center text-gray-600">
+                                    <li key={index} className="flex items-center text-gray-600 dark:text-gray-300">
                                         <span className="mr-2">•</span>
                                         {feature}
                                     </li>

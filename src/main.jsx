@@ -14,6 +14,11 @@ import {
 import ProtectedRoute from './routes/Protected.routes.jsx'
 import { AuthProvider } from './context/Auth.Context.jsx'
 
+const root = ReactDOM.createRoot(document.getElementById('root'));
+
+const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+document.documentElement.classList.add(savedTheme);
+
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path='/' element={<Layout />}>
@@ -33,7 +38,7 @@ const router = createBrowserRouter(
   )
 )
 
-ReactDOM.createRoot(document.getElementById('root')).render(
+root.render(
   <React.StrictMode>
     <AuthProvider>
       <RouterProvider router={router} />

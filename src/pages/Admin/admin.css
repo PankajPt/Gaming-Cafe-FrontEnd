@@ -51,6 +51,9 @@
     animation: float 3s ease-in-out infinite;
 }
 
+.dark .custom-scroll::-webkit-scrollbar-track {
+    background: #111827;
+}
 /* body {
     border: 5px solid lime !important;
   } */

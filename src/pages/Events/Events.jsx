@@ -1,9 +1,9 @@
 import { useState, useLayoutEffect, useRef, useEffect } from 'react';
 import { MdEventNote, MdWarning } from 'react-icons/md';
-import { GiSpinningSword, GiTrophyCup  } from 'react-icons/gi';
+import { GiSpinningSword, GiTrophyCup } from 'react-icons/gi';
 import { fetchEvents } from '../../services/event.service.js';
 import { ImSpinner8 } from 'react-icons/im';
-import './event.css'
+import './event.css';
 
 const Events = () => {
     const [events, setEvents] = useState([]);
@@ -19,26 +19,31 @@ const Events = () => {
             if (cachedData) {
                 try {
                     const parsedData = JSON.parse(cachedData);
-                    setEvents(Array.isArray(parsedData) ? parsedData : []);
+                    if (Array.isArray(parsedData) && parsedData.length > 0) {
+                        setEvents(parsedData);
+                        setLoading(false);
+                        return;
+                    }
                 } catch {
                     sessionStorage.removeItem('events');
-                    setEvents([]);
                 }
-                setLoading(false);
-                return;
             }
 
             const response = await fetchEvents();
-            if (!response.success) {
-                setError(error.message || "Failed to load events");
+            if (!response.success || !Array.isArray(response.data)) {
+                throw new Error('Failed to load events');
             }
 
-            const data = Array.isArray(response.data) ? response.data : [];
-            setEvents(data);
-            sessionStorage.setItem('events', JSON.stringify(data));
-            isFetched.current = true;
+            const data = response.data;
+            if (data.length > 0) {
+                setEvents(data);
+                sessionStorage.setItem('events', JSON.stringify(data));
+                isFetched.current = true;
+            } else {
+                sessionStorage.removeItem('events'); // Clear only if response is empty
+            }
         } catch (error) {
-            setError(error.message || "Failed to load events");
+            setError(error.message || 'Failed to load events');
         } finally {
             setLoading(false);
         }
@@ -60,9 +65,11 @@ const Events = () => {
 
     if (error) {
         return (
-            <div className="bg-red-900/20 p-8 rounded-2xl border-2 border-red-500/30 flex items-center justify-center space-x-4">
-                <MdWarning className="text-4xl text-red-400" />
-                <p className="text-red-400 text-xl">{error}</p>
+            <div
+                className="min-h-screen flex flex-col items-center justify-center bg-gray-900 text-red-400 text-xl"
+            >
+                <MdWarning className="mr-3 text-3xl" />
+                {error}
             </div>
         );
     }
@@ -75,10 +82,10 @@ const Events = () => {
                     UPCOMING WARZONES
                 </span>
             </h2>
-            
+
             <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
                 {events.map((event) => (
-                    <div 
+                    <div
                         key={event._id}
                         className="group bg-gray-800/50 rounded-xl border-2 border-purple-500/30 hover:border-blue-400/50 transition-all duration-300 hover:shadow-2xl hover:shadow-purple-500/20 overflow-hidden"
                     >
@@ -101,8 +108,6 @@ const Events = () => {
                                         day: 'numeric',
                                         month: 'short',
                                         year: 'numeric',
-                                        // hour: '2-digit',
-                                        // minute: '2-digit'
                                     })}
                                 </p>
                             </div>

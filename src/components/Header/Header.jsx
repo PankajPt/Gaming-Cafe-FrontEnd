@@ -16,6 +16,7 @@ export default function Header() {
   
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const closeMenu = () => setIsMenuOpen(false);
+  // const [isDarkMode, setIsDarkMode] = useState(true)
   const [isDarkMode, setIsDarkMode] = useState(() => {
     // Initialize state from localStorage or system preference
     const savedTheme = localStorage.getItem('theme');
@@ -24,14 +25,18 @@ export default function Header() {
   });
 
   useEffect(() => {
-    if (isDarkMode) {
-      document.documentElement.classList.add('dark');
-      localStorage.setItem('theme', 'dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-      localStorage.setItem('theme', 'light');
-    }
-  }, [isDarkMode]);
+    document.documentElement.classList.add('dark'); // Force dark mode
+  }, []);
+  
+
+  // useEffect(() => {
+  //   const savedTheme = localStorage.getItem('theme');
+  //   const isDark = savedTheme ? savedTheme === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+    
+  //   document.documentElement.classList.toggle('dark', isDark);
+  //   setIsDarkMode(isDark);
+  // }, [isDarkMode]);
+  
 
   // Close menu on ESC key press
   useEffect(() => {

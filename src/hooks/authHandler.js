@@ -18,14 +18,14 @@ export const useAuthHandler = () => {
                 const retry = await fetchData(endpoint, options)
                 return retry                
             }
-            console.log(response)
+            // console.log(response)
             if (response.success === false && response.message === 'FRL') {
                 await logout();
                 return { success: false, forceLogout: true, message: response.error };
             }
             return response;
         } catch (error) {
-            console.error('Network error during token refresh:', error);
+            // console.error('Network error during token refresh:', error);
             return { success: false, forceLogout: false, message: 'Network error' };
         }
     };

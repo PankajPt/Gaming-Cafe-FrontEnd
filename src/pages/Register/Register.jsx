@@ -3,6 +3,8 @@ import { FaUser, FaEnvelope, FaLock, FaCamera, FaCheckCircle } from "react-icons
 import { useNavigate } from "react-router-dom";
 import { fetchData } from "../../services/api.service.js";
 import './register.css'
+import { toast } from "react-toastify";
+
 
 const RegisterPage = () => {
   const [formData, setFormData] = useState({
@@ -59,7 +61,7 @@ const RegisterPage = () => {
       formData.email &&
       formData.password &&
       formData.password === formData.confirmPassword &&
-      passwordStrength >= 75
+      passwordStrength >= 100
     );
   };
 
@@ -87,7 +89,7 @@ const RegisterPage = () => {
       return;
     }
 
-    if (passwordStrength < 75) {
+    if (passwordStrength < 100) {
       setError("Password does not meet complexity requirements");
       setLoading(false);
       return;
@@ -109,17 +111,41 @@ const RegisterPage = () => {
         isBinary: true
       }
       const response = await fetchData('users/register', options)
-
       if (!response.success) {
-        setError(response.message || 'Something went wrong during registration.')
-        return
+        if (response.statusCode === 409 && response.message === 'Duplicate entry') {
+          toast.error(
+            <div className="flex items-center gap-3 p-3 bg-red-800/80 backdrop-blur-md rounded-lg border border-red-500 shadow-lg">
+              <div className="text-red-400 text-lg">⚠️</div>
+              <div>
+                <p className="font-bold text-red-100">Registration failed! 🚨</p>
+                <p className="text-sm text-red-300">This username or email is already taken. Try another one!</p>
+              </div>
+            </div>,
+            { position: 'top-center'}
+          );
+          return;
+        }
+      
+        toast.error(
+          <div className="flex items-center gap-3 p-3 bg-red-800/80 backdrop-blur-md rounded-lg border border-red-500 shadow-lg">
+            <div className="text-red-400 text-lg">⚠️</div>
+            <div>
+              <p className="font-bold text-red-100">Registration failed! 🚨</p>
+              <p className="text-sm text-red-300">Something went wrong. Please try again.</p>
+            </div>
+          </div>,
+          { position: 'top-center' }
+        );
+        return; // Ensures function exits after showing the toast
       }
+      
       setSuccess(true);
       setTimeout(() => {
         navigate('/login')
       }, 5000);
     } catch (err) {
-      setError(err.message || "Something went wrong during registration.");
+      console.log(err)
+      setError("Something went wrong during registration. Please try again.");
     } finally {
       setLoading(false)
     }

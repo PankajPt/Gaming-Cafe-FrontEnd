@@ -175,6 +175,7 @@ export default function Header() {
                     <li className="w-full lg:w-auto">
                       <NavLink
                         to="/login"
+                        onClick={closeMenu}
                         className="w-full lg:w-auto px-6 py-3 lg:py-2 text-center text-blue-400 dark:text-blue-300 border-2 border-blue-400/50 dark:border-blue-300/50 rounded-xl hover:bg-blue-400/10 dark:hover:bg-blue-300/10 hover:border-blue-400 dark:hover:border-blue-300 hover:shadow-blue-glow transition-all duration-300 block"
                       >
                         Log in

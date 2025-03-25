@@ -1,4 +1,4 @@
-# Madgear Gaming Cafe - Frontend
+# Gaming Cafe - Frontend
 
 Madgear Gaming Cafe is a web application for managing gaming cafe operations, including user registration, membership, event management, and game catalog browsing.
 

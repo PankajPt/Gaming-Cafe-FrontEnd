@@ -53,7 +53,7 @@ export default function Header() {
   };
 
   return (
-    <header className="sticky z-50 top-0 bg-gradient-to-b from-gray-100 to-gray-200 dark:from-gray-900 dark:to-gray-800 border-b-2 border-gray-300 dark:border-blue-500/30 shadow-2xl">
+    <header className="sticky z-[60] top-0 bg-gradient-to-b from-gray-100 to-gray-200 dark:from-gray-900 dark:to-gray-800 border-b-2 border-gray-300 dark:border-blue-500/30 shadow-2xl">
       {/* Animated Top Border */}
       <div className="absolute top-0 w-full h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-blue-500 animate-pulse blur-sm" />
       

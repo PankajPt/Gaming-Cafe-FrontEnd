@@ -1,11 +1,17 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { logo } from '../../assets/index.assets.js';
 import { FaFacebook, FaTwitter, FaInstagram, FaSteam } from 'react-icons/fa'
 
-export default function Footer() {
+export default function Footer(isDashboard) {
+    const location = useLocation();
+    const isDashboardPage = location.pathname.startsWith('/admin') || location.pathname.startsWith('/user') || location.pathname.startsWith('/manager');
     return (
-        <footer className="bg-gradient-to-br from-gray-900 to-gray-800 border-t-2 border-blue-500/30 shadow-2xl">
+        <footer className={`bg-gradient-to-br from-gray-900 to-gray-800 border-t-2 border-blue-500/30 shadow-2xl 
+            ${isDashboardPage ? 'lg:ml-72 lg:w-[calc(100%-18rem)]' : ''}
+            ${isDashboard ? 'mt-auto' : 'mt-20'}
+            relative z-40 transition-all duration-300`
+          }>
             <div className="max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-8 lg:gap-12">
                     {/* Logo Section */}

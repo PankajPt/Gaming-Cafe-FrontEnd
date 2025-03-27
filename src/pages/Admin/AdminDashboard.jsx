@@ -1,13 +1,12 @@
 import { useState } from 'react';
-  // components
-  import { AdminSidebar } from './AdminSidebar.jsx'
-  import { UserManagement } from './UserManagement.jsx'
-  import { ManageCatalogue } from './ManageCatalogue.jsx'
-  import { MembershipPlans } from './Membership.jsx'
-  import { TimeSlots } from './TimeSlots.jsx'
-  import { EventManagement } from './EventManagement.jsx';
-  import PasswordUpdate from '../User/PasswordUpdate.jsx'
-
+// components
+import { AdminSidebar } from './AdminSidebar.jsx'
+import { UserManagement } from './UserManagement.jsx'
+import { ManageCatalogue } from './ManageCatalogue.jsx'
+import { MembershipPlans } from './Membership.jsx'
+import { TimeSlots } from './TimeSlots.jsx'
+import { EventManagement } from './EventManagement.jsx';
+import PasswordUpdate from '../User/PasswordUpdate.jsx'
 
 const AdminDashboard = () => {
   const [activeSection, setActiveSection] = useState('users');
@@ -22,7 +21,7 @@ const AdminDashboard = () => {
       handleSection={handleSection}
       />
       {/* Main Content */}
-      <div className="flex-1 p-4 lg:p-8 w-full">
+      <div className="flex-1 p-4 lg:p-8 w-full lg:ml-72 mt-5 min-h-[calc(100vh-6rem)] flex flex-col">
         {activeSection === 'users' && <UserManagement />}
         {activeSection === 'games' && <ManageCatalogue />}
         {activeSection === 'events' && <EventManagement />}

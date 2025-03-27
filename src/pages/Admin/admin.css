@@ -56,4 +56,40 @@
 }
 /* body {
     border: 5px solid lime !important;
-  } */
+} */
+  .custom-scroll::-webkit-scrollbar {
+    width: 6px;
+}
+
+.custom-scroll::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.custom-scroll::-webkit-scrollbar-thumb {
+    background: #3b82f6;
+    border-radius: 4px;
+}
+
+.custom-scroll::-webkit-scrollbar-thumb:hover {
+    background: #2563eb;
+}
+
+.user-terminal {
+    width: 100%;
+    max-width: 100%;
+    height: calc(100vh - 6rem);
+    overflow-y: auto;
+    white-space: nowrap;
+}
+
+
+body {
+    overflow-x: hidden;
+}
+
+.main-container {
+    width: 100%;
+    max-width: 100vw; /* Prevents extra width */
+    overflow-x: hidden; /* No horizontal scroll */
+}
+

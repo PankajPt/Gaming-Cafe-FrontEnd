@@ -5,7 +5,7 @@ import { FaFacebook, FaTwitter, FaInstagram, FaSteam } from 'react-icons/fa'
 
 export default function Footer(isDashboard) {
     const location = useLocation();
-    const isDashboardPage = location.pathname.startsWith('/admin') || location.pathname.startsWith('/user') || location.pathname.startsWith('/manager');
+    const isDashboardPage = location.pathname.startsWith('/admin') || location.pathname.startsWith('/manager');
     return (
         <footer className={`bg-gradient-to-br from-gray-900 to-gray-800 border-t-2 border-blue-500/30 shadow-2xl 
             ${isDashboardPage ? 'lg:ml-72 lg:w-[calc(100%-18rem)]' : ''}

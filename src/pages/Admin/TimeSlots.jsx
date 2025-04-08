@@ -106,46 +106,109 @@ const TimeSlots = () => {
 
       // Empty state animation component
       const EmptyState = () => (
-        <div className="flex flex-col items-center justify-center py-20 space-y-8">
-            <div className="relative w-48 h-48 flex items-center justify-center">
-                {/* Floating particles */}
-                {[...Array(8)].map((_, i) => (
-                    <div
-                        key={i}
-                        className="absolute w-2 h-2 bg-purple-400 rounded-full animate-float"
-                        style={{
-                            animationDelay: `${i * 0.2}s`,
-                            top: `${Math.random() * 100}%`,
-                            left: `${Math.random() * 100}%`,
-                        }}
-                    />
-                ))}
-                {/* Central icon with gradient pulse */}
-                <div className="relative z-10 p-8 bg-gray-800 rounded-full shadow-2xl">
-                    <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500/20 to-purple-500/20 animate-pulse"></div>
-                    <FiCalendar className="text-6xl text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 animate-bounce" />
-                </div>
+        <div className="relative flex flex-col items-center justify-center min-h-screen py-20 space-y-8 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 overflow-hidden">
+          {/* Animated background elements */}
+          <div className="absolute inset-0 opacity-20">
+            {[...Array(20)].map((_, i) => (
+              <div
+                key={i}
+                className="absolute w-1 h-1 bg-purple-400 rounded-full animate-star-glow"
+                style={{
+                  top: `${Math.random() * 100}%`,
+                  left: `${Math.random() * 100}%`,
+                  animationDelay: `${i * 0.5}s`,
+                }}
+              />
+            ))}
+          </div>
+      
+          <div className="relative w-60 h-60 flex items-center justify-center group">
+            {/* Animated orbital ring */}
+            <div className="absolute w-full h-full border-2 border-purple-500/30 rounded-full animate-spin-slow" />
+            
+            {/* Floating particles with trail effect */}
+            {[...Array(12)].map((_, i) => (
+              <div
+                key={i}
+                className="absolute w-2 h-2 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full animate-particle-float shadow-glow"
+                style={{
+                  animationDelay: `${i * 0.15}s`,
+                  top: `${48 + Math.sin((i * Math.PI)/6) * 40}%`,
+                  left: `${50 + Math.cos((i * Math.PI)/6) * 40}%`,
+                }}
+              />
+            ))}
+      
+            {/* Central icon with complex animations */}
+            <div className="relative z-10 p-10 bg-gray-900 rounded-full shadow-2xl transform transition-all duration-500 group-hover:scale-110">
+              <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500/30 to-purple-500/30 animate-pulse rotate" />
+              <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500/10 to-purple-500/10 animate-radar" />
+              <FiCalendar className="text-7xl text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 animate-shimmer" />
             </div>
-
-            <div className="text-center space-y-4">
-                <h2 className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
-                    Arena is Empty!
-                </h2>
-                <p className="text-gray-400 text-lg max-w-md">
-                    No battles scheduled yet... The controllers are waiting for players!
-                </p>
-            </div>
-
-            <div className="flex space-x-4 opacity-75">
-                <div className="w-3 h-3 bg-blue-400 rounded-full animate-bounce"></div>
-                <div className="w-3 h-3 bg-purple-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-                <div className="w-3 h-3 bg-pink-400 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
-            </div>
+          </div>
+      
+          {/* Text content with staggered animations */}
+          <div className="text-center space-y-6 animate-fade-in-up">
+            <h2 className="text-5xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent tracking-wide">
+              Arena is Empty!
+            </h2>
+            <p className="text-gray-300/90 text-xl max-w-lg leading-relaxed">
+              No battles scheduled yet... The controllers are <span className="text-purple-300 animate-pulse">waiting</span> for players!
+            </p>
+          </div>
+      
+          {/* Interactive CTA elements */}
+          <div className="flex space-x-6 opacity-90 hover:opacity-100 transition-opacity">
+            {['blue-400', 'purple-400', 'pink-400'].map((color, i) => (
+              <div 
+                key={color}
+                className={`w-4 h-4 bg-${color} rounded-full animate-bounce cursor-pointer transform transition-transform hover:scale-125`}
+                style={{ animationDelay: `${i * 0.15}s` }}
+              />
+            ))}
+          </div>
+      
+          {/* Add some subtle motion to the whole component */}
+          <style jsx global>{`
+            @keyframes particle-float {
+              0%, 100% { transform: translateY(0) rotate(0deg); }
+              50% { transform: translateY(-20px) rotate(180deg); }
+            }
+      
+            @keyframes shimmer {
+              0% { mask-position: -200%; }
+              100% { mask-position: 200%; }
+            }
+      
+            .animate-shimmer {
+              mask-image: linear-gradient(-75deg, rgba(0,0,0,0.6) 30%, #fff 50%, rgba(0,0,0,0.6) 70%);
+              mask-size: 200%;
+              animation: shimmer 2s infinite linear;
+            }
+      
+            .animate-star-glow {
+              animation: star-glow 1.5s ease-in-out infinite;
+            }
+      
+            @keyframes star-glow {
+              0%, 100% { opacity: 0.2; }
+              50% { opacity: 1; }
+            }
+      
+            .animate-radar {
+              animation: radar 3s linear infinite;
+            }
+      
+            @keyframes radar {
+              from { transform: scale(1); opacity: 1; }
+              to { transform: scale(2.5); opacity: 0; }
+            }
+          `}</style>
         </div>
-    );
+      );
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 p-8 text-white">
+        <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 p-4 text-white">
             <div className="max-w-4xl mx-auto">
                 <div className="flex items-center mb-8 gap-4">
                     <span className="text-4xl text-purple-400 animate-pulse">🎮</span>

@@ -14,7 +14,7 @@ const AdminSidebar = ({ activeSection, handleSection }) => {
     ];
 
     return (
-        <div className="w-72 bg-gradient-to-b from-gray-900 to-gray-800 p-6 shadow-2xl border-r-2 border-blue-500/30 fixed top-20 left-0 h-[calc(100vh-5rem)] overflow-y-auto z-50">
+        <div className="w-72 bg-gradient-to-b from-gray-900 to-gray-800 p-6 shadow-2xl border-r-2 border-blue-500/30 fixed top-20 left-0 bottom-0 h-auto overflow-y-auto z-50">
             {/* Glowing effect */}
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-transparent blur-sm" />
 

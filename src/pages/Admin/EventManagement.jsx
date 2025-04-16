@@ -82,7 +82,22 @@ const EventManagement = () => {
             };
 
             const response = await fetchData('admin/create-event', options);
-            if (!response.success) throw new Error(response.message);
+            if (!response.success) {
+                if(response.message === 'jwt expired'){
+                  const retryWithNewToken = await refreshAndRetry('admin/create-event', options)
+                  if(!retryWithNewToken.success){
+                    toast.error(retryWithNewToken.message);
+                    return
+                  }
+                  toast.success('Event created successfully!');
+                } else if (response.message === 'jwt malformed' || response.message === 'invalid signature' || response?.data?.forcedLogout) {
+                    await handleInvalidJWT();
+                    return
+                } else {
+                    toast.error(response.message);
+                    return
+                }
+              }
 
             setEvents(prev => {
                 const updatedEvents = [{ ...response.data }, ...prev];
@@ -105,7 +120,22 @@ const EventManagement = () => {
         try {
             const options = { method: 'DELETE' };
             const response = await fetchData(`admin/delete-event/${eventId}`, options);
-            if (!response.success) throw new Error(response.message);
+            if (!response.success) {
+                if(response.message === 'jwt expired'){
+                  const retryWithNewToken = await refreshAndRetry(`admin/delete-event/${eventId}`, options)
+                  if(!retryWithNewToken.success){
+                    toast.error(retryWithNewToken.message);
+                    return
+                  }
+                  toast.success('Event deleted successfully!');
+                } else if (response.message === 'jwt malformed' || response.message === 'invalid signature' || response?.data?.forcedLogout) {
+                    await handleInvalidJWT();
+                    return
+                } else {
+                    toast.error(response.message);
+                    return
+                }
+              }
 
             setEvents(prev => {
                 const updatedEvents = prev.filter(event => event._id !== eventId);

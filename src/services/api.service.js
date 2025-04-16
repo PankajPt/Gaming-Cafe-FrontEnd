@@ -16,7 +16,8 @@ export const fetchData = async(endpoint, {method = 'GET', data = null, file = nu
             return {
                 success: false,
                 statusCode: responseData?.statusCode,
-                message: responseData?.message
+                message: responseData?.message,
+                data: responseData?.data || "No Data Received"
             }
         }
         return responseData

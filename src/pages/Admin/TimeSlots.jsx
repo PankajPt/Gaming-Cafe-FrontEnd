@@ -25,13 +25,9 @@ const TimeSlots = () => {
                 const response = await fetchData('admin/get-bookings', options);
                 if (!response.success) {
                     if (response.message === 'jwt expired') {
-                        const retryWithNewToken = await refreshAndRetry('admin/get-bookings', options);
-                        if (!retryWithNewToken.success) {
-                            return;
-                        }
-                    } else if (response.message === 'jwt malformed' || response.message === 'invalid signature') {
+                        await refreshAndRetry('admin/get-bookings', options);
+                    } else if (response.message === 'jwt malformed' || response.message === 'invalid signature' || response?.data?.forcedLogout) {
                         await handleInvalidJWT();
-                        return;
                     }
                     return;
                 }

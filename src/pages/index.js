@@ -8,6 +8,7 @@ import UserPage from './User/User.jsx'
 import Pricing from './Pricing/Pricing.jsx'
 import AdminDashboard from './Admin/AdminDashboard.jsx'
 import ForgotPasswordPage from './Login/ForgotPassword.jsx'
+import SubmitPasswordForm from "./Login/SubmitPassword.jsx"
 
 export {
     Contact,
@@ -19,5 +20,6 @@ export {
     UserPage,
     Pricing,
     AdminDashboard,
-    ForgotPasswordPage
+    ForgotPasswordPage,
+    SubmitPasswordForm
 }

@@ -4,13 +4,10 @@ import './index.css'
 import { Route, RouterProvider, createBrowserRouter, createRoutesFromElements } from 'react-router-dom'
 import Layout from './Layout.jsx'
 import {
-  Contact,
-  Home,
-  Events,
-  GameCatelogue,
-  LoginPage,
-  Pricing,
-  RegisterPage, UserPage, AdminDashboard, ForgotPasswordPage} from './pages/index.js'
+  Contact, Home, Events,
+  GameCatelogue, LoginPage, Pricing,
+  RegisterPage, UserPage, AdminDashboard, 
+  ForgotPasswordPage, SubmitPasswordForm } from './pages/index.js'
 import ProtectedRoute from './routes/Protected.routes.jsx'
 import { AuthProvider } from './context/Auth.Context.jsx'
 
@@ -30,6 +27,7 @@ const router = createBrowserRouter(
       <Route path='login' element={<LoginPage />}/>
       <Route path='register' element={<RegisterPage />}/>
       <Route path='forgot-password' element={<ForgotPasswordPage />}/>
+      <Route path='submit-password' element={<SubmitPasswordForm />}/>
       {/* Protected routes */}
       <Route path='user' element={<ProtectedRoute><UserPage /></ProtectedRoute>}/>
       <Route path='manager' element={<ProtectedRoute><UserPage /></ProtectedRoute>}/>

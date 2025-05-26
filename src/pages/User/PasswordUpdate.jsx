@@ -45,9 +45,7 @@ const PasswordUpdate = () => {
             return;
           }
           toast.success('Password updated successfully!');
-        } else if (
-          ['jwt malformed', 'invalid signature', 'Unauthorized request'].includes(response.message)
-        ) {
+        } else if (response?.data?.forcedLogout) {
           await handleInvalidJWT();
           return;
         }

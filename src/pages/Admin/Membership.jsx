@@ -111,7 +111,7 @@ const MembershipPlans = () => {
                     setNewPlan({ title: '', description: '', features: '', price: '', paymentQR: null });
                     setTimeout(() => setSuccess(null), 5000);
                     return;
-                } else if (response.message === 'jwt malformed' || response.message === 'invalid signature' || response?.data?.forcedLogout) {
+                } else if (response?.data?.forcedLogout) {
                     await handleInvalidJWT();
                     return
                 } else {
@@ -154,7 +154,7 @@ const MembershipPlans = () => {
                     setPlans((prev) => prev.filter(plan => plan._id !== planId));
                     setTimeout(() => setSuccess(null), 5000);
                     return;
-                } else if (response.message === 'jwt malformed' || response.message === 'invalid signature' || response?.data?.forcedLogout) {
+                } else if (response?.data?.forcedLogout) {
                     await handleInvalidJWT();
                     return
                 } else {

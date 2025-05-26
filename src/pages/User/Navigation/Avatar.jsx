@@ -94,7 +94,7 @@ const Avatar = () => {
             setProfilePic(retryWithNewToken.avatar);
             sessionStorage.setItem('userData', JSON.stringify(retryWithNewToken))
             toast.success('Profile picture updated successfully!!!')
-          } else if (response.message === 'jwt malformed' || response.message === 'invalid signature') {
+          } else if (response?.data?.forcedLogout) {
             await handleInvalidJWT();
             return;
           } else {

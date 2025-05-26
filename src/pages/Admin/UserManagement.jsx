@@ -42,7 +42,7 @@ const UserManagement = () => {
                                 return;
                             }
                             setUsers(retryWithNewToken.data);
-                        } else if (response.message === 'jwt malformed' || response.message === 'invalid signature' || response?.data?.forcedLogout) {
+                        } else if (response?.data?.forcedLogout) {
                             await handleInvalidJWT();
                             return
                         } else {
@@ -129,7 +129,7 @@ const UserManagement = () => {
                             user._id === userId ? { ...user, role: retryWithNewToken.data.role } : user
                         )
                     );
-                } else if (response.message === 'jwt malformed' || response.message === 'invalid signature' || response?.data?.forcedLogout) {
+                } else if (response?.data?.forcedLogout) {
                     await handleInvalidJWT();
                     return
                 } else {
@@ -186,7 +186,7 @@ const UserManagement = () => {
                             } : user
                         )
                     );
-                } else if (response.message === 'jwt malformed' || response.message === 'invalid signature' || response?.data?.forcedLogout) {
+                } else if (response?.data?.forcedLogout) {
                     await handleInvalidJWT();
                     return
                 } else {

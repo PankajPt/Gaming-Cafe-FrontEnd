@@ -84,7 +84,7 @@ const ManageCatalogue = () => {
                     setSuccess({ type: 'success', message: 'New game added successfully!!' });
                     setNewGame({ title: '', description: '', image: '' });
                     return;
-                } else if (response.message === 'jwt malformed' || response.message === 'invalid signature' || response?.data?.forcedLogout) {
+                } else if (response?.data?.forcedLogout) {
                     await handleInvalidJWT();
                     return
                 } else {
@@ -120,7 +120,7 @@ const ManageCatalogue = () => {
                   setSuccess({ type: 'success', message: 'game deleted successfully!!' });
                   sessionStorage.setItem('gameCatalogue', JSON.stringify(retryWithNewToken.data));
 
-                } else if (response.message === 'jwt malformed' || response.message === 'invalid signature' || response?.data?.forcedLogout) {
+                } else if (response?.data?.forcedLogout) {
                     await handleInvalidJWT();
                     return
                 } else {

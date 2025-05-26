@@ -39,11 +39,7 @@ const UserDetails = ({ userDetails, isVerified }) => {
           setShowEmailInput(false);
           setEmailUpdated(true);
           return;
-        } else if (
-          response.message === 'jwt malformed' ||
-          response.message === 'invalid signature' ||
-          response.message === 'Unauthorized request'
-        ) {
+        } else if (response?.data?.forcedLogout) {
           await handleInvalidJWT();
           return;
         } else {

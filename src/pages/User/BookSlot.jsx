@@ -75,7 +75,7 @@ const BookSlot = () => {
                 if (response.message === 'jwt expired') {
                     response = await refreshAndRetry(endpoint, options);
                     if (!response.success) return null;
-                } else if (response.message === 'jwt malformed' || response.message === 'invalid signature') {
+                } else if (response?.data?.forcedLogout) {
                     await handleInvalidJWT();
                     return null;
                 }

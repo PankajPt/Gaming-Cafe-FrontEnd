@@ -120,6 +120,16 @@ Create a `.env` file in the root directory and add the necessary environment var
 - Game catalog browsing & booking
 - Admin dashboard for event & user management
 
+## Live Demo
+- Check out the live frontend of the Madgear Gaming Cafe here:
+```
+https://madgear.vercel.app
+```
+- User authentication & profile management
+- Membership & subscription system
+- Game catalog browsing & booking
+- Admin dashboard for event & user management
+
 ## Deployment
 This project is configured for deployment on **Vercel**.
 To deploy, run:

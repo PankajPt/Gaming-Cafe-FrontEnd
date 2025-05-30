@@ -121,7 +121,7 @@ Create a `.env` file in the root directory and add the necessary environment var
 - Admin dashboard for event & user management
 
 ## Live Demo
-- Check out the live frontend of the Madgear Gaming Cafe here:
+Check out the live frontend of the Madgear Gaming Cafe here:
 ```
 https://madgear.vercel.app
 ```

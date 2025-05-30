@@ -1,7 +1,7 @@
 import React from 'react'
 import { whatsappIcon } from '../../assets/index.assets.js'
 import { FaPhoneAlt, FaEnvelope, FaMapMarkerAlt } from 'react-icons/fa'
-import { GiCircuitry } from 'react-icons/gi'
+import GitHubProfileCard from './GitHubProfileCard'
 
 export default function Contact() {
     const whatsappLink = 'https://wa.me/917835808909'
@@ -40,11 +40,11 @@ export default function Contact() {
 
                     <div className="bg-gradient-to-br from-blue-900/50 to-purple-900/30 p-8 rounded-2xl border-2 border-blue-500/30 shadow-[0_0_30px_-10px_rgba(59,130,246,0.3)]">
                         <div className="flex flex-col items-center space-y-4">
-                            <div className="p-4 bg-purple-500/20 rounded-full">
+                            {/* <div className="p-4 bg-purple-500/20 rounded-full">
                                 <FaEnvelope className="text-3xl text-purple-400" />
-                            </div>
-                            <h3 className="text-2xl font-bold text-purple-400 font-orbitron">Digital Courier</h3>
-                            <p className="text-gray-300 text-lg break-all">contact@madgear.com</p>
+                            </div> */}
+                            <h3 className="text-2xl font-bold text-purple-400 font-orbitron">Dev Support</h3>
+                            <GitHubProfileCard />
                         </div>
                     </div>
 
